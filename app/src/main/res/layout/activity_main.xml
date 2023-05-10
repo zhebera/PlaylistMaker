@@ -1,76 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#1A1B22"
-              android:padding="20dp" android:orientation="vertical">
-
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Вопрос:"
-                android:layout_gravity="start"
-                android:textColor="#ffffff"
-                android:textSize="20sp"/>
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2/10"
-                android:layout_gravity="end"
-                android:textColor="#ffffff"
-                android:textSize="20sp"/>
-    </FrameLayout>
-
-    <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="20dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/poster"
-    />
-
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_activity_background"
+        android:orientation="vertical">
+    
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Рейтинг этого фильма больше, чем 9?:"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_marginTop="33dp"
-            android:layout_marginHorizontal="63dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff"
-            android:textSize="23sp"/>
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/primary_text_size"
+            android:layout_marginBottom="40dp"
+            android:layout_marginStart="@dimen/medium_padding"
+            android:layout_marginTop="14dp"
+    />
 
-    <LinearLayout
+    <Button
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="33dp">
-        
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:text="нет"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginEnd="10dp"
-            android:textColor="#1A1B22"
-            android:backgroundTint="#ffffff"/>
+            android:backgroundTint="@color/white"
+            android:layout_marginHorizontal="@dimen/medium_padding"
 
-        <Button
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:text="да"
-                android:layout_weight="1"
-                android:layout_marginStart="10dp"
-                android:textColor="#1A1B22"
-                android:backgroundTint="#ffffff"/>
+            android:text="@string/main_activity_button_search"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/primary_text_size"
+            android:textAllCaps="false"
+            android:gravity="center"
 
-    </LinearLayout>
+            app:cornerRadius="@dimen/main_activity_button_corner_radius"
+
+            app:icon="@drawable/search"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/icon_padding"
+            app:iconTint="@color/black"
+            />
+
+
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:layout_marginHorizontal="@dimen/medium_padding"
+            android:layout_marginVertical="@dimen/medium_padding"
+
+            android:text="@string/main_activity_button_library"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/primary_text_size"
+            android:textAllCaps="false"
+            android:gravity="center"
+
+            app:cornerRadius="@dimen/main_activity_button_corner_radius"
+            app:icon="@drawable/library"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/icon_padding"
+            app:iconTint="@color/black"/>
+
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:layout_marginHorizontal="@dimen/medium_padding"
+            android:layout_marginBottom="28dp"
+
+            android:text="@string/main_activity_button_settings"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/primary_text_size"
+            android:textAllCaps="false"
+            android:gravity="center"
+
+            app:cornerRadius="@dimen/main_activity_button_corner_radius"
+            app:icon="@drawable/settings"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/icon_padding"
+            app:iconTint="@color/black"/>
 
 </LinearLayout>
