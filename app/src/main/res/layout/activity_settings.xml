@@ -7,19 +7,34 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/main_activity_button_settings"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/primary_text_size"
-                android:textStyle="bold"
+                android:orientation="horizontal"
+                android:paddingTop="20dp">
 
-                android:drawableStart="@drawable/arrow_back"
-                android:paddingLeft="20dp"
-                android:paddingTop="20dp"
-                android:drawablePadding="28dp"
-        />
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/btn_main_activity"
+                        android:src="@drawable/arrow_back"
+                        android:layout_gravity="center"
+                        android:paddingLeft="20dp"
+                        />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/main_activity_button_settings"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/primary_text_size"
+                        android:textStyle="bold"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingLeft="28dp"/>
+
+        </LinearLayout>
+
+
 
         <FrameLayout
                 android:layout_width="match_parent"
