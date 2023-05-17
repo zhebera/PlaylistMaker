@@ -6,4 +6,7 @@
     <dimen name="secondary_text_size">16sp</dimen>
     <dimen name="main_activity_button_corner_radius">16dp</dimen>
     <dimen name="settings_activity_txt_frame_padding">21dp</dimen>
+    <dimen name="settings_activity_padding">20dp</dimen>
+    <dimen name="settings_activity_txt_margin_end">40dp</dimen>
+    <dimen name="settings_activity_img_margin_vertical">22dp</dimen>
 </resources>

@@ -16,19 +16,6 @@ class MainActivity : AppCompatActivity() {
         val btnLibrary = findViewById<Button>(R.id.btn_library)
         val btnSettings = findViewById<Button>(R.id.btn_settings)
 
-        /** Обработка нажатия кнопок поиска и медиатеки двумя способами
-        val btnSearchClickListener = object : View.OnClickListener{
-            override fun onClick(v: View?) {
-                Toast.makeText(this@MainActivity, "Нажата кнопка поиска", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        btnSearch.setOnClickListener(btnSearchClickListener)
-
-        btnLibrary.setOnClickListener{
-            Toast.makeText(this@MainActivity, "Нажата кнопка медиатеки", Toast.LENGTH_SHORT).show()
-        }*/
-
         btnSearch.setOnClickListener {
             val searchIntent = Intent(this, SearchActivity::class.java)
             startActivity(searchIntent)

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -11,7 +10,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="20dp">
+                android:paddingTop="@dimen/settings_activity_padding">
 
                 <ImageView
                         android:layout_width="wrap_content"
@@ -19,7 +18,7 @@
                         android:id="@+id/btn_main_activity"
                         android:src="@drawable/arrow_back"
                         android:layout_gravity="center"
-                        android:paddingLeft="20dp"
+                        android:paddingLeft="@dimen/settings_activity_padding"
                         />
 
                 <TextView
@@ -33,8 +32,6 @@
                         android:paddingLeft="28dp"/>
 
         </LinearLayout>
-
-
 
         <FrameLayout
                 android:layout_width="match_parent"
@@ -63,7 +60,7 @@
                         android:textColor="@color/black"
                         android:layout_marginVertical="@dimen/settings_activity_txt_frame_padding"
                         android:layout_marginStart="@dimen/medium_padding"
-                        android:layout_marginEnd="44dp"
+                        android:layout_marginEnd="@dimen/settings_activity_txt_margin_end"
                         android:layout_gravity="start"
                 />
 
@@ -73,7 +70,7 @@
                         android:src="@drawable/share"
                         android:layout_marginEnd="@dimen/settings_activity_txt_frame_padding"
                         android:layout_gravity="end"
-                        android:layout_marginVertical="22dp"
+                        android:layout_marginVertical="@dimen/settings_activity_img_margin_vertical"
                 />
 
         </FrameLayout>
@@ -89,7 +86,7 @@
                         android:textColor="@color/black"
                         android:layout_marginVertical="@dimen/settings_activity_txt_frame_padding"
                         android:layout_marginStart="@dimen/medium_padding"
-                        android:layout_marginEnd="40dp"
+                        android:layout_marginEnd="@dimen/settings_activity_txt_margin_end"
                         android:layout_gravity="start"
                 />
 
@@ -99,7 +96,7 @@
                         android:src="@drawable/support"
                         android:layout_marginEnd="21dp"
                         android:layout_gravity="end"
-                        android:layout_marginVertical="22dp"
+                        android:layout_marginVertical="@dimen/settings_activity_img_margin_vertical"
                 />
         </FrameLayout>
 
@@ -114,7 +111,7 @@
                         android:textColor="@color/black"
                         android:layout_marginVertical="@dimen/settings_activity_txt_frame_padding"
                         android:layout_marginStart="@dimen/medium_padding"
-                        android:layout_marginEnd="40dp"
+                        android:layout_marginEnd="@dimen/settings_activity_txt_margin_end"
                         android:layout_gravity="start"
                 />
 
@@ -124,7 +121,7 @@
                         android:src="@drawable/arrow_forward"
                         android:layout_marginEnd="23dp"
                         android:layout_gravity="end"
-                        android:layout_marginVertical="24dp"
+                        android:layout_marginVertical="@dimen/settings_activity_img_margin_vertical"
                 />
         </FrameLayout>
 
