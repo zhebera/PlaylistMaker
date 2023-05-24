@@ -8,5 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="main_activity_background">#3772E7</color>
+    <color name="settings_activity_background">@color/white</color>
     <color name="text_color">#1A1B22</color>
+    <color name="settings_text_color">@color/black</color>
+    <color name="switch_color_on">#3772E7</color>
 </resources>
