@@ -38,4 +38,14 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+    <style name="EditTextMaket">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:background">@drawable/edit_text_example</item>
+        <item name="android:drawableTint">@color/edit_text_insert_txt</item>
+        <item name="android:textColor">@color/edit_text_insert_txt</item>
+        <item name="android:textColorHint">@color/edit_text_insert_txt</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/secondary_text_size</item>
+    </style>
 </resources>
