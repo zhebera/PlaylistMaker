@@ -21,6 +21,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/settings_text_color</item>
+        <item name="fontWeight">400</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:layout_marginVertical">@dimen/settings_activity_txt_frame_padding</item>
         <item name="android:layout_marginStart">@dimen/medium_padding</item>
