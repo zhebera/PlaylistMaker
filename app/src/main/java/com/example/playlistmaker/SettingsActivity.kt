@@ -23,8 +23,13 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         btnShareApplication.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SEND, Uri.parse(getString(R.string.practicum_android_developer_link)))
-            startActivity(intent)
+            val intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.practicum_android_developer_link))
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(intent,null)
+            startActivity(shareIntent)
         }
 
         btnSupportConnect.setOnClickListener {
