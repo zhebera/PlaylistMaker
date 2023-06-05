@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MainActivityButtons" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:layout_marginHorizontal">@dimen/medium_padding</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textSize">@dimen/primary_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center</item>
+        <item name="cornerRadius">@dimen/main_activity_button_corner_radius</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/icon_padding</item>
+        <item name="iconTint">@color/black</item>
+    </style>
+    <style name="SettingsActivityTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/settings_text_color</item>
+        <item name="fontWeight">400</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:layout_marginVertical">@dimen/settings_activity_txt_frame_padding</item>
+        <item name="android:layout_marginStart">@dimen/medium_padding</item>
+        <item name="android:layout_marginEnd">@dimen/settings_activity_txt_margin_end</item>
+        <item name="android:layout_gravity">start</item>
+    </style>
+    <style name="SettingsActivityImageView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:layout_marginVertical">@dimen/settings_activity_img_margin_vertical</item>
+        <item name="android:layout_marginEnd">@dimen/settings_activity_txt_frame_padding</item>
+    </style>
+    <style name="SettingsActivityFrameLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+</resources>

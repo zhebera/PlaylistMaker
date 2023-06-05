@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/settings_activity_background"
         android:orientation="vertical">
 
         <LinearLayout
@@ -13,116 +13,65 @@
                 android:paddingTop="@dimen/settings_activity_padding">
 
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:id="@+id/btn_main_activity"
-                        android:src="@drawable/arrow_back"
-                        android:layout_gravity="center"
-                        android:paddingLeft="@dimen/settings_activity_padding"
-                        />
+                    style="@style/HeadingActivityArrowBackImage"
+                    android:id="@+id/btn_main_activity" />
 
                 <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="@string/main_activity_button_settings"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/primary_text_size"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingLeft="28dp"/>
+                        style="@style/HeadingActivityTextView"
+                        android:text="@string/main_activity_button_settings" />
 
         </LinearLayout>
 
         <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/SettingsActivityFrameLayout"
                 android:layout_marginTop="40dp">
 
                 <Switch
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/SettingsActivityTextView"
                         android:text="@string/settings_activity_theme_switch"
-                        android:layout_marginVertical="@dimen/settings_activity_txt_frame_padding"
-                        android:layout_marginStart="@dimen/medium_padding"
-                        android:textSize="@dimen/secondary_text_size"
-
-                />
+                        android:layout_marginEnd="8dp" />
         </FrameLayout>
 
         <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                style="@style/SettingsActivityFrameLayout"
+                android:id="@+id/btn_share_application">
 
                 <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_activity_share_txt"
-                        android:textColor="@color/black"
-                        android:layout_marginVertical="@dimen/settings_activity_txt_frame_padding"
-                        android:layout_marginStart="@dimen/medium_padding"
-                        android:layout_marginEnd="@dimen/settings_activity_txt_margin_end"
-                        android:layout_gravity="start"
-                />
+                        style="@style/SettingsActivityTextView"
+                        android:text="@string/settings_activity_share_txt"/>
 
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/share"
-                        android:layout_marginEnd="@dimen/settings_activity_txt_frame_padding"
-                        android:layout_gravity="end"
-                        android:layout_marginVertical="@dimen/settings_activity_img_margin_vertical"
-                />
+                        style="@style/SettingsActivityImageView"
+                        android:src="@drawable/share"/>
 
         </FrameLayout>
 
         <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                style="@style/SettingsActivityFrameLayout"
+                android:id="@+id/btn_support_connect">
+
 
                 <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_activity_support_txt"
-                        android:textColor="@color/black"
-                        android:layout_marginVertical="@dimen/settings_activity_txt_frame_padding"
-                        android:layout_marginStart="@dimen/medium_padding"
-                        android:layout_marginEnd="@dimen/settings_activity_txt_margin_end"
-                        android:layout_gravity="start"
-                />
+                        style="@style/SettingsActivityTextView"
+                        android:text="@string/settings_activity_support_txt"/>
 
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/support"
-                        android:layout_marginEnd="21dp"
-                        android:layout_gravity="end"
-                        android:layout_marginVertical="@dimen/settings_activity_img_margin_vertical"
-                />
+                        style="@style/SettingsActivityImageView"
+                        android:src="@drawable/support"/>
         </FrameLayout>
 
         <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                style="@style/SettingsActivityFrameLayout"
+                android:id="@+id/btn_user_agreement">
 
                 <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_activity_agreement_txt"
-                        android:textColor="@color/black"
-                        android:layout_marginVertical="@dimen/settings_activity_txt_frame_padding"
-                        android:layout_marginStart="@dimen/medium_padding"
-                        android:layout_marginEnd="@dimen/settings_activity_txt_margin_end"
-                        android:layout_gravity="start"
-                />
+                        style="@style/SettingsActivityTextView"
+                        android:text="@string/settings_activity_agreement_txt"/>
 
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/SettingsActivityImageView"
                         android:src="@drawable/arrow_forward"
-                        android:layout_marginEnd="23dp"
-                        android:layout_gravity="end"
-                        android:layout_marginVertical="@dimen/settings_activity_img_margin_vertical"
-                />
+                        android:layout_marginEnd="23dp"/>
         </FrameLayout>
 
 </LinearLayout>
