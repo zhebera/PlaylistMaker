@@ -15,7 +15,7 @@
             android:fontFamily="@font/ys_display_medium"
             android:textSize="@dimen/primary_text_size"
             android:layout_marginBottom="40dp"
-            android:layout_marginStart="@dimen/medium_padding"
+            android:layout_marginStart="@dimen/left_padding_standart"
             android:layout_marginTop="14dp"/>
 
     <Button
@@ -27,7 +27,7 @@
     <Button
             android:id="@+id/btn_library"
             style="@style/MainActivityButtons"
-            android:layout_marginVertical="@dimen/medium_padding"
+            android:layout_marginVertical="@dimen/left_padding_standart"
             android:text="@string/main_activity_button_library"
             app:icon="@drawable/library"/>
 
