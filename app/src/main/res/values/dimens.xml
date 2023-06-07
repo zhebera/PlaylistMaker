@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="medium_padding">16dp</dimen>
-    <dimen name="icon_padding">10dp</dimen>
-    <dimen name="primary_text_size">22sp</dimen>
-    <dimen name="secondary_text_size">16sp</dimen>
-    <dimen name="main_activity_button_corner_radius">16dp</dimen>
-    <dimen name="settings_activity_txt_frame_padding">21dp</dimen>
-    <dimen name="settings_activity_padding">20dp</dimen>
+
+    <dimen name="settings_activity_vertical_padding">21dp</dimen>
+    <dimen name="primary_left_padding">20dp</dimen>
     <dimen name="settings_activity_txt_margin_end">40dp</dimen>
     <dimen name="settings_activity_img_margin_vertical">22dp</dimen>
+
+    <dimen name="left_padding_standart">16dp</dimen>
+    <dimen name="main_activity_button_corner_radius">16dp</dimen>
+    <dimen name="main_activity_icon_padding">10dp</dimen>
+    <dimen name="size_image_song">45dp</dimen>
+    <dimen name="secondary_image_padding">13dp</dimen>
+
+    <dimen name="primary_text_size">22sp</dimen>
+    <dimen name="secondary_text_size">16sp</dimen>
 </resources>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:style="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white_medium_black"
     android:orientation="vertical"
     tools:context=".SearchActivity">
 
@@ -12,35 +12,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/settings_activity_padding">
+            android:paddingTop="@dimen/primary_left_padding">
 
         <ImageView
-                style="@style/HeadingActivityArrowBackImage"
+                style="@style/PrimaryImage.HeadArrowBack"
                 android:id="@+id/btn_main_activity"
             />
 
         <TextView
-                style="@style/HeadingActivityTextView"
+                style="@style/PrimaryTextView.MediumBlackWhite.Head"
                 android:text="@string/main_activity_button_search"
             />
 
     </LinearLayout>
 
     <FrameLayout
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
+                  style="@style/FrameLayoutMaket"
                   android:layout_margin="16dp"
-                  android:orientation="horizontal"
-                  tools:context=".MainActivity">
+                  android:orientation="horizontal">
 
         <EditText
-                style="@style/EditTextMaket"
+                style="@style/SecondaryTextView.MediumBlackMediumBlack.EditText"
                 android:id="@+id/inputEditText"
                 android:inputType="text"
                 android:drawableStart="@drawable/search"
-                android:paddingStart="13dp"
+                android:paddingStart="@dimen/secondary_image_padding"
                 android:drawablePadding="11dp"
-                android:drawableTint="@color/edit_text_insert_txt"
+                android:drawableTint="@color/grey_medium_black"
                 android:hint="@string/main_activity_button_search"
                 android:maxLines="1"
                 android:saveEnabled="false"/>
@@ -51,9 +49,15 @@
                 android:layout_height="10dp"
                 android:layout_gravity="end|center_vertical"
                 android:src="@drawable/ic_clear"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_margin="11dp"
-                style:tint="@color/edit_text_insert_txt"/>
+                style:tint="@color/grey_medium_black"/>
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/trackRecyclerView"
+    />
 
 </LinearLayout>

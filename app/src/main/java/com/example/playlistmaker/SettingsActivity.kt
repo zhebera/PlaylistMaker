@@ -40,7 +40,6 @@ class SettingsActivity : AppCompatActivity() {
             intent.putExtra(Intent.EXTRA_EMAIL, getString(R.string.developer_mail_address))
             intent.putExtra(Intent.EXTRA_SUBJECT, subject)
             intent.putExtra(Intent.EXTRA_TEXT, message)
-            startActivity(intent)
         }
 
         btnUserAgreement.setOnClickListener {

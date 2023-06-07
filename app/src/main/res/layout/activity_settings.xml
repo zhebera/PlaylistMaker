@@ -3,73 +3,73 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/settings_activity_background"
+        android:background="@color/white_medium_black"
         android:orientation="vertical">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="@dimen/settings_activity_padding">
+                android:paddingTop="@dimen/primary_left_padding">
 
                 <ImageView
-                    style="@style/HeadingActivityArrowBackImage"
-                    android:id="@+id/btn_main_activity" />
+                        style="@style/PrimaryImage.HeadArrowBack"
+                        android:id="@+id/btn_main_activity"/>
 
                 <TextView
-                        style="@style/HeadingActivityTextView"
+                        style="@style/PrimaryTextView.MediumBlackWhite.Head"
                         android:text="@string/main_activity_button_settings" />
 
         </LinearLayout>
 
         <FrameLayout
-                style="@style/SettingsActivityFrameLayout"
+                style="@style/FrameLayoutMaket"
                 android:layout_marginTop="40dp">
 
                 <Switch
-                        style="@style/SettingsActivityTextView"
+                        style="@style/SecondaryTextView.BlackWhite.SettingsActivityText"
                         android:text="@string/settings_activity_theme_switch"
                         android:layout_marginEnd="8dp" />
         </FrameLayout>
 
         <FrameLayout
-                style="@style/SettingsActivityFrameLayout"
+                style="@style/FrameLayoutMaket"
                 android:id="@+id/btn_share_application">
 
                 <TextView
-                        style="@style/SettingsActivityTextView"
+                        style="@style/SecondaryTextView.BlackWhite.SettingsActivityText"
                         android:text="@string/settings_activity_share_txt"/>
 
                 <ImageView
-                        style="@style/SettingsActivityImageView"
+                        style="@style/SecondaryImage.GreyWhite.EndImage"
                         android:src="@drawable/share"/>
 
         </FrameLayout>
 
         <FrameLayout
-                style="@style/SettingsActivityFrameLayout"
+                style="@style/FrameLayoutMaket"
                 android:id="@+id/btn_support_connect">
 
 
                 <TextView
-                        style="@style/SettingsActivityTextView"
+                        style="@style/SecondaryTextView.BlackWhite.SettingsActivityText"
                         android:text="@string/settings_activity_support_txt"/>
 
                 <ImageView
-                        style="@style/SettingsActivityImageView"
+                        style="@style/SecondaryImage.GreyWhite.EndImage"
                         android:src="@drawable/support"/>
         </FrameLayout>
 
         <FrameLayout
-                style="@style/SettingsActivityFrameLayout"
+                style="@style/FrameLayoutMaket"
                 android:id="@+id/btn_user_agreement">
 
                 <TextView
-                        style="@style/SettingsActivityTextView"
+                        style="@style/SecondaryTextView.BlackWhite.SettingsActivityText"
                         android:text="@string/settings_activity_agreement_txt"/>
 
                 <ImageView
-                        style="@style/SettingsActivityImageView"
+                        style="@style/SecondaryImage.GreyWhite.EndImage"
                         android:src="@drawable/arrow_forward"
                         android:layout_marginEnd="23dp"/>
         </FrameLayout>
