@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class PlaylistAdapter(private val listTrack: List<Track>): RecyclerView.Adapter<PlaylistViewHolder>() {
+class PlaylistAdapter(): RecyclerView.Adapter<PlaylistViewHolder>() {
+
+    var listTrack = mutableListOf<Track>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context).inflate(R.layout.track,parent,false)
         return PlaylistViewHolder(layoutInflater)

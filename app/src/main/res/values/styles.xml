@@ -44,6 +44,9 @@
     <style name="SecondaryTextView.MediumBlackMediumBlack">
         <item name="android:textColor">@color/medium_black_medium_black</item>
     </style>
+    <style name="SecondaryTextView.MediumBlackWhite">
+        <item name="android:textColor">@color/medium_black_white</item>
+    </style>
     <style name="SecondaryTextView.GreyMediumBlack">
         <item name="android:textColor">@color/grey_medium_black</item>
     </style>

@@ -41,7 +41,9 @@
                 android:drawableTint="@color/grey_medium_black"
                 android:hint="@string/main_activity_button_search"
                 android:maxLines="1"
-                android:saveEnabled="false"/>
+                android:saveEnabled="false"
+                android:imeOptions="actionDone"
+                android:singleLine="true"/>
 
         <ImageView
                 android:id="@+id/clearIcon"
@@ -59,5 +61,41 @@
             android:layout_height="wrap_content"
             android:id="@+id/trackRecyclerView"
     />
+
+    <LinearLayout
+            android:id="@+id/placeHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingTop="110dp">
+
+        <ImageView
+                android:id="@+id/placeHolderImage"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+        />
+
+        <TextView
+                android:id="@+id/placeHolderMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/SecondaryTextView.MediumBlackWhite"
+                android:fontFamily="@font/ys_display_medium"
+                android:textSize="19sp"
+                android:gravity="center"
+                android:paddingHorizontal="24dp"
+                android:paddingTop="16dp"
+        />
+
+        <Button
+                android:id="@+id/placeHolderButton"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 </LinearLayout>

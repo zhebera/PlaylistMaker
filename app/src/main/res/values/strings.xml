@@ -12,4 +12,7 @@
     <string name="practicum_offer_link">https://yandex.ru/legal/practicum_offer/</string>
     <string name="practicum_android_developer_link">https://practicum.yandex.ru/android-developer/</string>
     <string name="developer_mail_address">zhebera@yandex.by</string>
+    <string name="not_found">Ничего не нашлось</string>
+    <string name="failed_connection">Проблемы со связью\n\n Загрузка не удалась. Проверьте\n подключение к интернету
+    </string>
 </resources>
