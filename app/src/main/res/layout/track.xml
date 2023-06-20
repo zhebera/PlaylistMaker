@@ -21,19 +21,23 @@
 
         <TextView
                 style="@style/SecondaryTextView.BlackWhite"
+                android:layout_width="270dp"
                 android:id="@+id/trackName"
                 tools:text="Name of song"
                 android:ellipsize="end"
+                android:maxLines ="1"
                 android:layout_marginTop="14dp"/>
 
         <LinearLayout
                 style="@style/FrameLayoutMaket"
+                android:layout_width="270dp"
                 android:orientation="horizontal">
 
             <TextView
                     style="@style/SecondaryTextView.GreyWhite.Track"
                     android:id="@+id/artistName"
                     android:ellipsize="end"
+                    android:maxLines ="1"
                     tools:text="Artist Name" />
 
             <ImageView
