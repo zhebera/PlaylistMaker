@@ -43,4 +43,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     /*Библиотека загрузки изображений*/
     implementation 'com.github.bumptech.glide:glide:4.15.1'
+    /*Библиотека для работы с сетью интернет*/
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 }
