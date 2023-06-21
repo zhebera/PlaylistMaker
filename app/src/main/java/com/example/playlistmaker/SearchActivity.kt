@@ -20,7 +20,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
-    companion object{
+    companion object {
         private const val BASE_URL = "https://itunes.apple.com"
     }
 
@@ -49,11 +49,11 @@ class SearchActivity : AppCompatActivity() {
         val trackRecyclerView = findViewById<RecyclerView>(R.id.trackRecyclerView)
 
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             savedSearchEditText = savedInstanceState.getString("SAVED_SEARCH_EDIT_TXT")
         }
 
-        val textWatcher = object: TextWatcher{
+        val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -65,7 +65,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         adapter.listTrack = listTracks
-        trackRecyclerView.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        trackRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         trackRecyclerView.adapter = adapter
 
         searchEditTxt.setText(savedSearchEditText)
@@ -98,12 +98,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
         outState.putString("SAVED_SEARCH_EDIT_TXT", savedSearchEditText)
+        super.onSaveInstanceState(outState)
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
-        showMessage("",null, false)
+        hideErrorMessage()
         return if (s.isNullOrEmpty()) {
             View.GONE
         } else {
@@ -111,54 +111,58 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateListTracks(){
+    private fun updateListTracks() {
 
-        if(!savedSearchEditText.isNullOrEmpty()){
-            playlistRetrofit.search(savedSearchEditText!!)
-                .enqueue(object: Callback<TrackResponse>{
+        val savedSearchTextCopy = savedSearchEditText
+
+        if (!savedSearchTextCopy.isNullOrEmpty()) {
+            playlistRetrofit.search(savedSearchTextCopy)
+                .enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
-                        if(response.isSuccessful){
+                        if (response.isSuccessful) {
                             listTracks.clear()
-                            if(response.body()!!.results.isNotEmpty()){
+                            if (response.body()?.results?.isNotEmpty() == true) {
                                 listTracks.addAll(response.body()!!.results)
                                 adapter.notifyDataSetChanged()
                             }
-                            if(listTracks.isEmpty())
-                                showMessage(getString(R.string.not_found), getDrawable(R.drawable.not_found), false)
-                            else{
-                                showMessage("",null, false)
+                            if (listTracks.isEmpty())
+                                showErrorMessage(getString(R.string.not_found), getDrawable(R.drawable.not_found), false)
+                            else {
+                                hideErrorMessage()
                             }
                         }
                     }
 
                     override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                        showMessage(getString(R.string.failed_connection), getDrawable(R.drawable.failed_connection), true)
+                        showErrorMessage(
+                            getString(R.string.failed_connection),
+                            getDrawable(R.drawable.failed_connection),
+                            true
+                        )
                     }
 
                 })
         }
     }
 
-    private fun showMessage(text: String, image: Drawable?, update: Boolean){
+    private fun showErrorMessage(text: String, image: Drawable?, update: Boolean){
+        listTracks.clear()
+        adapter.notifyDataSetChanged()
+        Glide.with(this)
+            .load(image)
+            .transform(CenterCrop())
+            .into(placeHolderImage)
 
-        if(text.isEmpty()){
-            placeHolder.visibility = View.GONE
-        }
-        else{
-            listTracks.clear()
-            adapter.notifyDataSetChanged()
-            Glide.with(this)
-                .load(image)
-                .transform(CenterCrop())
-                .into(placeHolderImage)
+        placeHolderMessage.text = text
+        placeHolder.visibility = View.VISIBLE
+        if (update)
+            btnPlaceHolderUpdate.visibility = View.VISIBLE
+        else
+            btnPlaceHolderUpdate.visibility = View.GONE
+    }
 
-            placeHolderMessage.text = text
-            placeHolder.visibility = View.VISIBLE
-            if(update)
-                btnPlaceHolderUpdate.visibility = View.VISIBLE
-            else
-                btnPlaceHolderUpdate.visibility = View.GONE
-        }
+    private fun hideErrorMessage(){
+        placeHolder.visibility = View.GONE
     }
 }
 
