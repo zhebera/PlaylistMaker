@@ -16,4 +16,6 @@
     <string name="failed_connection">Проблемы со связью\n\n Загрузка не удалась. Проверьте\n подключение к интернету
     </string>
     <string name="update">Обновить</string>
+    <string name="you_searched">Вы искали</string>
+    <string name="clear_history">Очистить историю</string>
 </resources>
