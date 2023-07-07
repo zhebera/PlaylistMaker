@@ -1,15 +1,20 @@
 package com.example.playlistmaker
 
 import Track
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 
-class PlaylistAdapter(): RecyclerView.Adapter<PlaylistViewHolder>() {
+class PlaylistAdapter(private val searchHistorySharedPref: SharedPreferences) :
+    RecyclerView.Adapter<PlaylistViewHolder>() {
 
     var listTrack = mutableListOf<Track>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context).inflate(R.layout.track,parent,false)
+        val layoutInflater = LayoutInflater.from(parent.context).inflate(R.layout.track, parent, false)
         return PlaylistViewHolder(layoutInflater)
     }
 
@@ -17,5 +22,13 @@ class PlaylistAdapter(): RecyclerView.Adapter<PlaylistViewHolder>() {
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         holder.bind(listTrack[position])
+
+        holder.itemView.setOnClickListener {
+            searchHistorySharedPref.edit()
+                .putString(SEARCH_HISTORY_NEW_TRACK, createJsonFromListTracks(listTrack[position]))
+                .apply()
+        }
     }
 }
+
+private fun createJsonFromListTracks(track: Track) = Gson().toJson(track)
