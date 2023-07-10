@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,6 +39,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var placeHolderMessage: TextView
     private lateinit var playlistAdapter: PlaylistAdapter
     private lateinit var searchHistoryAdapter: SearchHistoryAdapter
+    private lateinit var searchNewTrackListener: OnSharedPreferenceChangeListener
 
     private var savedSearchEditText: String? = null
 
@@ -62,7 +65,10 @@ class SearchActivity : AppCompatActivity() {
         val searchHistorySharedPrefNewTrack = getSharedPreferences(SEARCH_HISTORY_NEW_TRACK, MODE_PRIVATE)
         val searchHistorySharedPrefPlaylist = getSharedPreferences(SEARCH_HISTORY_PLAYLIST, MODE_PRIVATE)
         playlistAdapter = PlaylistAdapter(searchHistorySharedPrefNewTrack)
-        searchHistoryAdapter = SearchHistoryAdapter(searchHistorySharedPrefPlaylist)
+        searchHistoryAdapter = SearchHistoryAdapter()
+
+        val searchHistoryJson = searchHistorySharedPrefPlaylist.getString(SEARCH_HISTORY_PLAYLIST, null)
+        searchHistoryTracks.addAll(createListTrackFromJson(searchHistoryJson))
 
         if (savedInstanceState != null) {
             savedSearchEditText = savedInstanceState.getString("SAVED_SEARCH_EDIT_TXT")
@@ -106,9 +112,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchEditTxt.setOnFocusChangeListener { view, hasFocus ->
             searchHistory.visibility =
-                if (hasFocus && searchEditTxt.text.isEmpty()
-                    && searchHistoryAdapter.searchHistoryListTrack.isNullOrEmpty()
-                )
+                if (hasFocus && searchEditTxt.text.isEmpty() && searchHistoryTracks.isNotEmpty())
                     View.VISIBLE
                 else
                     View.GONE
@@ -131,24 +135,38 @@ class SearchActivity : AppCompatActivity() {
             searchHistoryTracks.clear()
             searchHistoryAdapter.notifyDataSetChanged()
             searchHistory.visibility = View.GONE
+            updateSearchHistoryPlaylistSharedPref(searchHistorySharedPrefPlaylist)
         }
 
-        val listener = OnSharedPreferenceChangeListener { sharedPref, key ->
+        searchNewTrackListener = OnSharedPreferenceChangeListener { sharedPref, key ->
             if (key == SEARCH_HISTORY_NEW_TRACK) {
                 val json = sharedPref.getString(SEARCH_HISTORY_NEW_TRACK, null)
                 val track = createTrackFromJson(json)
                 if (track != null) {
-                    searchHistoryAdapter.searchHistoryListTrack.add(0, track)
-                    if (searchHistoryAdapter.searchHistoryListTrack.size > 10)
-                        searchHistoryAdapter.searchHistoryListTrack.removeLast()
+                    var copyIndex:Int? = null
+                    searchHistoryTracks.forEachIndexed { index, historyTrack ->
+                        if(historyTrack.trackId == track.trackId)
+                            copyIndex = index
+                    }
 
+                    if(copyIndex != null){
+                        searchHistoryTracks.removeAt(copyIndex!!)
+                        searchHistoryAdapter.notifyItemRemoved(copyIndex!!)
+                    }
+
+                    searchHistoryTracks.add(0, track)
                     searchHistoryAdapter.notifyItemInserted(0)
-                    searchHistoryAdapter.notifyItemRemoved(10)
+
+                    if (searchHistoryTracks.size > 10) {
+                        searchHistoryTracks.removeLast()
+                        searchHistoryAdapter.notifyItemRemoved(10)
+                    }
                 }
+                updateSearchHistoryPlaylistSharedPref(searchHistorySharedPrefPlaylist)
             }
         }
 
-        searchHistorySharedPrefNewTrack.registerOnSharedPreferenceChangeListener(listener)
+        searchHistorySharedPrefNewTrack.registerOnSharedPreferenceChangeListener(searchNewTrackListener)
 
         btnPlaceHolderUpdate.setOnClickListener {
             updateListTracks()
@@ -226,9 +244,20 @@ class SearchActivity : AppCompatActivity() {
     private fun hideErrorMessage() {
         placeHolder.visibility = View.GONE
     }
+
+    private fun updateSearchHistoryPlaylistSharedPref(searchHistorySharedPrefPlaylist: SharedPreferences){
+        searchHistorySharedPrefPlaylist.edit()
+            .putString(SEARCH_HISTORY_PLAYLIST, createJsonFromListTrack(searchHistoryTracks))
+            .apply()
+    }
 }
 
 private fun createTrackFromJson(json: String?) = Gson().fromJson(json, Track::class.java)
+
+private fun createListTrackFromJson(json: String?) =
+    GsonBuilder().create().fromJson(json, object : TypeToken<MutableList<Track>>() {}.type) ?: mutableListOf<Track>()
+
+private fun createJsonFromListTrack(listTrack: List<Track>) = Gson().toJson(listTrack)
 
 
 

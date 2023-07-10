@@ -25,10 +25,10 @@ class PlaylistAdapter(private val searchHistorySharedPref: SharedPreferences) :
 
         holder.itemView.setOnClickListener {
             searchHistorySharedPref.edit()
-                .putString(SEARCH_HISTORY_NEW_TRACK, createJsonFromListTracks(listTrack[position]))
+                .putString(SEARCH_HISTORY_NEW_TRACK, createJsonFromTrack(listTrack[position]))
                 .apply()
         }
     }
 }
 
-private fun createJsonFromListTracks(track: Track) = Gson().toJson(track)
+private fun createJsonFromTrack(track: Track) = Gson().toJson(track)
