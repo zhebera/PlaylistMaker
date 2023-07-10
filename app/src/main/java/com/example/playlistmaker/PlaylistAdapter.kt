@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 
 class PlaylistAdapter(private val searchHistorySharedPref: SharedPreferences) :
     RecyclerView.Adapter<PlaylistViewHolder>() {
