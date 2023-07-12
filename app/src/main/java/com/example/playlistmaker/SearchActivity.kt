@@ -95,7 +95,7 @@ class SearchActivity : AppCompatActivity() {
         trackRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         trackRecyclerView.adapter = playlistAdapter
 
-        searchHistoryAdapter.searchHistoryListTrack = searchHistoryTracks
+        searchHistoryAdapter.listTrack = searchHistoryTracks
         searchHistoryRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         searchHistoryRecyclerView.adapter = searchHistoryAdapter
 

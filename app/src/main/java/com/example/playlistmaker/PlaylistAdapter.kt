@@ -7,17 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 
-class PlaylistAdapter(private val searchHistorySharedPref: SharedPreferences) :
-    RecyclerView.Adapter<PlaylistViewHolder>() {
-
-    var listTrack = mutableListOf<Track>()
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context).inflate(R.layout.track, parent, false)
-        return PlaylistViewHolder(layoutInflater)
-    }
-
-    override fun getItemCount() = listTrack.size
-
+class PlaylistAdapter(private val searchHistorySharedPref: SharedPreferences): TrackAdapter(){
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         holder.bind(listTrack[position])
 

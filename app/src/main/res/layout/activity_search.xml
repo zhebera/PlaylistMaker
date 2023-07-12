@@ -17,13 +17,11 @@
 
         <ImageView
                 style="@style/PrimaryImage.HeadArrowBack"
-                android:id="@+id/btn_main_activity"
-            />
+                android:id="@+id/btn_main_activity"/>
 
         <TextView
                 style="@style/PrimaryTextView.MediumBlackWhite.Head"
-                android:text="@string/main_activity_button_search"
-            />
+                android:text="@string/main_activity_button_search"/>
 
     </LinearLayout>
 
@@ -60,8 +58,7 @@
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/trackRecyclerView"
-    />
+            android:id="@+id/trackRecyclerView"/>
 
     <LinearLayout
             android:id="@+id/searchHistory"
@@ -81,21 +78,20 @@
                 tools:text="Вы искали"
                 android:gravity="center"/>
 
-            <androidx.recyclerview.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:id="@+id/searchHistoryRecyclerView"
                 tools:itemCount="10"
-                tools:listitem="@layout/track"
-                />
+                tools:listitem="@layout/track"/>
 
-            <Button
-                android:layout_marginVertical="24dp"
+        <Button
+                android:layout_marginTop="24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_weight="0"
                 android:id="@+id/searchHistoryClearButton"
+                android:layout_weight="0"
                 android:text="@string/clear_history"
                 android:textColor="@color/white_medium_black"
                 android:textSize="14sp"
@@ -106,7 +102,9 @@
                 app:cornerRadius="54dp"
                 android:backgroundTint="@color/medium_black_white"
                 android:layout_gravity="center_horizontal"/>
-        </LinearLayout>
+
+
+    </LinearLayout>
 
     <LinearLayout
             android:id="@+id/placeHolder"
@@ -122,9 +120,7 @@
                 android:layout_height="120dp"
                 android:layout_gravity="center_horizontal"
                 android:scaleType="centerCrop"
-                tools:src="@drawable/failed_connection"
-
-        />
+                tools:src="@drawable/failed_connection"/>
 
         <TextView
                 android:id="@+id/placeHolderMessage"
@@ -137,8 +133,7 @@
                 android:paddingHorizontal="24dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="24dp"
-                tools:text="@string/failed_connection"
-        />
+                tools:text="@string/failed_connection"/>
 
         <Button
                 android:layout_width="110dp"
@@ -155,8 +150,7 @@
                 android:textAllCaps="false"
                 app:cornerRadius="54dp"
                 android:backgroundTint="@color/medium_black_white"
-                android:layout_gravity="center_horizontal"
-        />
+                android:layout_gravity="center_horizontal"/>
 
     </LinearLayout>
 
