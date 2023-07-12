@@ -27,6 +27,7 @@
                 android:layout_marginTop="40dp">
 
                 <Switch
+                        android:id="@+id/themeSwitch"
                         style="@style/SecondaryTextView.BlackWhite.SettingsActivityText"
                         android:text="@string/settings_activity_theme_switch"
                         android:layout_marginEnd="8dp" />
