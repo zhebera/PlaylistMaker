@@ -2,7 +2,6 @@ package com.example.playlistmaker
 
 import android.app.Application
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

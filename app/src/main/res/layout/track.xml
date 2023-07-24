@@ -50,7 +50,7 @@
             <TextView
                     style="@style/SecondaryTextView.GreyWhite.Track"
                     android:layout_weight="0"
-                    android:id="@+id/trackTime"
+                    android:id="@+id/trackTimeTxt"
                     tools:text="Time"/>
         </LinearLayout>
 

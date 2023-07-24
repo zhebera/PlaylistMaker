@@ -252,7 +252,7 @@ class SearchActivity : AppCompatActivity() {
     }
 }
 
-private fun createTrackFromJson(json: String?) = Gson().fromJson(json, Track::class.java)
+fun createTrackFromJson(json: String?) = Gson().fromJson(json, Track::class.java)
 
 private fun createListTrackFromJson(json: String?) =
     GsonBuilder().create().fromJson(json, object : TypeToken<MutableList<Track>>() {}.type) ?: mutableListOf<Track>()
