@@ -1,11 +1,6 @@
 package com.example.playlistmaker
 
-import Track
 import android.content.SharedPreferences
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 
 class PlaylistAdapter(private val searchHistorySharedPref: SharedPreferences): TrackAdapter(){
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
@@ -15,8 +10,10 @@ class PlaylistAdapter(private val searchHistorySharedPref: SharedPreferences): T
             searchHistorySharedPref.edit()
                 .putString(SEARCH_HISTORY_NEW_TRACK, createJsonFromTrack(listTrack[position]))
                 .apply()
+
+            openAudioplayerActivity(holder, listTrack[position])
         }
     }
 }
 
-private fun createJsonFromTrack(track: Track) = Gson().toJson(track)
+
