@@ -7,6 +7,8 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -30,6 +32,7 @@ const val SEARCH_HISTORY_NEW_TRACK = "search_history_new_track"
 class SearchActivity : AppCompatActivity() {
     companion object {
         private const val BASE_URL = "https://itunes.apple.com"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
     private lateinit var searchEditTxt: EditText
@@ -40,12 +43,17 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var playlistAdapter: PlaylistAdapter
     private lateinit var searchHistoryAdapter: SearchHistoryAdapter
     private lateinit var searchNewTrackListener: OnSharedPreferenceChangeListener
+    private lateinit var progressBar: ProgressBar
+    private lateinit var trackRecyclerView: RecyclerView
 
     private var savedSearchEditText: String? = null
 
     private val playlistTracks = mutableListOf<Track>()
     private val searchHistoryTracks = mutableListOf<Track>()
     private val playlistRetrofit = PlaylistRetrofit(BASE_URL).playlistRetrofit
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { updateListTracks() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,9 +64,10 @@ class SearchActivity : AppCompatActivity() {
         placeHolderMessage = findViewById(R.id.placeHolderMessage)
         btnPlaceHolderUpdate = findViewById(R.id.placeHolderUpdateButton)
         searchEditTxt = findViewById(R.id.inputEditText)
+        progressBar = findViewById(R.id.progressBar)
         val btnMainActivity = findViewById<ImageView>(R.id.btn_main_activity)
         val btnClearEditTxt = findViewById<ImageView>(R.id.clearIcon)
-        val trackRecyclerView = findViewById<RecyclerView>(R.id.trackRecyclerView)
+        trackRecyclerView = findViewById(R.id.trackRecyclerView)
         val searchHistory = findViewById<LinearLayout>(R.id.searchHistory)
         val searchHistoryRecyclerView = findViewById<RecyclerView>(R.id.searchHistoryRecyclerView)
         val btnClearSearchHistory = findViewById<Button>(R.id.searchHistoryClearButton)
@@ -86,6 +95,8 @@ class SearchActivity : AppCompatActivity() {
                         View.VISIBLE
                     else
                         View.GONE
+
+                searchDebounce()
             }
 
             override fun afterTextChanged(s: Editable?) = Unit
@@ -192,9 +203,15 @@ class SearchActivity : AppCompatActivity() {
         val savedSearchTextCopy = savedSearchEditText
 
         if (!savedSearchTextCopy.isNullOrEmpty()) {
+
+            trackRecyclerView.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+
             playlistRetrofit.search(savedSearchTextCopy)
                 .enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
+                        progressBar.visibility = View.GONE
+                        trackRecyclerView.visibility = View.VISIBLE
                         if (response.isSuccessful) {
                             playlistTracks.clear()
                             if (response.body()?.results?.isNotEmpty() == true) {
@@ -214,6 +231,8 @@ class SearchActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                        progressBar.visibility = View.GONE
+                        trackRecyclerView.visibility = View.VISIBLE
                         showErrorMessage(
                             getString(R.string.failed_connection),
                             getDrawable(R.drawable.failed_connection),
@@ -249,6 +268,11 @@ class SearchActivity : AppCompatActivity() {
         searchHistorySharedPrefPlaylist.edit()
             .putString(SEARCH_HISTORY_PLAYLIST, createJsonFromListTrack(searchHistoryTracks))
             .apply()
+    }
+
+    private fun searchDebounce(){
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 }
 

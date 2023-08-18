@@ -1,7 +1,11 @@
 package com.example.playlistmaker
 
 import Track
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +15,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.concurrent.thread
 
 const val KEY_TRACK_ID = "key_track_id"
 
@@ -18,9 +23,20 @@ class AudioplayerActivity : AppCompatActivity() {
 
     companion object {
         private const val SAVED_AUDIOPLAYER_STATE = "saved_audioplayer_state"
+
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
     }
 
     private lateinit var track: Track
+    private val mediaPlayer = MediaPlayer()
+    private lateinit var playButton: ImageButton
+    private var playerState = STATE_DEFAULT
+    private val handler = Handler(Looper.getMainLooper())
+    var currentPosition = 0
+    val timer = Runnable{setTimer()}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +57,8 @@ class AudioplayerActivity : AppCompatActivity() {
         val releaseDate = findViewById<TextView>(R.id.releaseDate)
         val primaryGenreName = findViewById<TextView>(R.id.primaryGenreName)
         val country = findViewById<TextView>(R.id.country)
+        val timerTxt = findViewById<TextView>(R.id.timerTxt)
+        playButton = findViewById(R.id.playButton)
 
         btnBack.setOnClickListener {
             finish()
@@ -64,10 +82,63 @@ class AudioplayerActivity : AppCompatActivity() {
         ).year.toString()
         primaryGenreName.text = track.primaryGenreName
         country.text = track.country
+
+        preparePlayer()
+
+        playButton.setOnClickListener{
+            playControl()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(SAVED_AUDIOPLAYER_STATE, createJsonFromTrack(track))
         super.onSaveInstanceState(outState)
+    }
+
+    private fun playControl(){
+        when(playerState){
+            STATE_PLAYING -> {
+                pausePlayer()
+                //Реализовать таймер
+            }
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    private fun preparePlayer() {
+        mediaPlayer.setDataSource(track.previewUrl)
+        mediaPlayer.prepareAsync()
+        currentPosition = mediaPlayer.currentPosition
+        mediaPlayer.setOnPreparedListener {
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            playButton.setImageDrawable(getDrawable(R.drawable.play))
+            playerState = STATE_PREPARED
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        playButton.setImageDrawable(getDrawable(R.drawable.pause))
+        playerState = STATE_PLAYING
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        playButton.setImageDrawable(getDrawable(R.drawable.play))
+        playerState = STATE_PAUSED
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
     }
 }
