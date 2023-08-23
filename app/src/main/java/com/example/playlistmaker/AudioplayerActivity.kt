@@ -28,15 +28,18 @@ class AudioplayerActivity : AppCompatActivity() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
+
+        private const val REFRESH_TIMER = 300L
     }
 
     private lateinit var track: Track
-    private val mediaPlayer = MediaPlayer()
     private lateinit var playButton: ImageButton
+    private lateinit var timerTxt: TextView
+    private val mediaPlayer = MediaPlayer()
     private var playerState = STATE_DEFAULT
-    private val handler = Handler(Looper.getMainLooper())
-    var currentPosition = 0
-    val timer = Runnable{setTimer()}
+    private var handler: Handler? = null
+    private var currentPosition = 0
+    private val timer = setTimer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +60,9 @@ class AudioplayerActivity : AppCompatActivity() {
         val releaseDate = findViewById<TextView>(R.id.releaseDate)
         val primaryGenreName = findViewById<TextView>(R.id.primaryGenreName)
         val country = findViewById<TextView>(R.id.country)
-        val timerTxt = findViewById<TextView>(R.id.timerTxt)
+        timerTxt = findViewById(R.id.timerTxt)
         playButton = findViewById(R.id.playButton)
+        handler = Handler(Looper.getMainLooper())
 
         btnBack.setOnClickListener {
             finish()
@@ -85,7 +89,7 @@ class AudioplayerActivity : AppCompatActivity() {
 
         preparePlayer()
 
-        playButton.setOnClickListener{
+        playButton.setOnClickListener {
             playControl()
         }
     }
@@ -95,12 +99,12 @@ class AudioplayerActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun playControl(){
-        when(playerState){
+    private fun playControl() {
+        when (playerState) {
             STATE_PLAYING -> {
                 pausePlayer()
-                //Реализовать таймер
             }
+
             STATE_PREPARED, STATE_PAUSED -> {
                 startPlayer()
             }
@@ -117,17 +121,21 @@ class AudioplayerActivity : AppCompatActivity() {
         mediaPlayer.setOnCompletionListener {
             playButton.setImageDrawable(getDrawable(R.drawable.play))
             playerState = STATE_PREPARED
+            handler?.removeCallbacks(timer)
+            timerTxt.text = "00:00"
         }
     }
 
     private fun startPlayer() {
         mediaPlayer.start()
+        handler?.post(timer)
         playButton.setImageDrawable(getDrawable(R.drawable.pause))
         playerState = STATE_PLAYING
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
+        handler?.removeCallbacks(timer)
         playButton.setImageDrawable(getDrawable(R.drawable.play))
         playerState = STATE_PAUSED
     }
@@ -140,5 +148,18 @@ class AudioplayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
+    }
+
+    private fun setTimer(): Runnable{
+        return object: Runnable{
+            override fun run() {
+                timerTxt.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+
+                handler?.postDelayed(
+                    this,
+                    REFRESH_TIMER
+                )
+            }
+        }
     }
 }
