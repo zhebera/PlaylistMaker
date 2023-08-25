@@ -77,12 +77,12 @@
             app:layout_constraintBottom_toTopOf="@id/trackTimeTxt"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="@id/left_guideline"
-            app:layout_constraintEnd_toStartOf="@id/playButton"
+            app:layout_constraintEnd_toStartOf="@id/playButtonIb"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="50dp"/>
 
     <ImageButton
-            android:id="@+id/playButton"
+            android:id="@+id/playButtonIb"
             android:layout_width="83dp"
             android:layout_height="83dp"
             android:src="@drawable/play"
@@ -101,7 +101,7 @@
             android:id="@+id/timerTxt"
             app:layout_constraintEnd_toEndOf="@id/right_guideline"
             app:layout_constraintStart_toStartOf="@id/left_guideline"
-            app:layout_constraintTop_toBottomOf="@id/playButton"
+            app:layout_constraintTop_toBottomOf="@id/playButtonIb"
             android:layout_marginTop="4dp"
             android:text="0:30"
             android:textSize="14sp"
@@ -118,7 +118,7 @@
             app:layout_constraintTop_toBottomOf="@id/artistName"
             app:layout_constraintBottom_toTopOf="@id/trackTimeTxt"
             app:layout_constraintEnd_toStartOf="@id/right_guideline"
-            app:layout_constraintStart_toEndOf="@id/playButton"
+            app:layout_constraintStart_toEndOf="@id/playButtonIb"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="50dp"/>
 
@@ -129,7 +129,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/trackTime"
             app:layout_constraintBottom_toTopOf="@+id/collectionNameTxt"
-            app:layout_constraintTop_toBottomOf="@+id/playButton"
+            app:layout_constraintTop_toBottomOf="@+id/playButtonIb"
             app:layout_constraintHorizontal_weight="3"
             tools:text="Длительность"/>
     

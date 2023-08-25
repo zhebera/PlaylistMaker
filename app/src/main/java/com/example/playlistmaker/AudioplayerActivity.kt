@@ -15,28 +15,29 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.concurrent.thread
 
 const val KEY_TRACK_ID = "key_track_id"
 
 class AudioplayerActivity : AppCompatActivity() {
 
+    enum class State{
+        STATE_DEFAULT,
+        STATE_PREPARED,
+        STATE_PLAYING,
+        STATE_PAUSED
+    }
+
     companion object {
         private const val SAVED_AUDIOPLAYER_STATE = "saved_audioplayer_state"
 
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-
-        private const val REFRESH_TIMER = 300L
+        private const val REFRESH_TIMER_MILLIS = 300L
     }
 
     private lateinit var track: Track
     private lateinit var playButton: ImageButton
     private lateinit var timerTxt: TextView
     private val mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
+    private var playerState = State.STATE_DEFAULT
     private var handler: Handler? = null
     private var currentPosition = 0
     private val timer = setTimer()
@@ -61,7 +62,7 @@ class AudioplayerActivity : AppCompatActivity() {
         val primaryGenreName = findViewById<TextView>(R.id.primaryGenreName)
         val country = findViewById<TextView>(R.id.country)
         timerTxt = findViewById(R.id.timerTxt)
-        playButton = findViewById(R.id.playButton)
+        playButton = findViewById(R.id.playButtonIb)
         handler = Handler(Looper.getMainLooper())
 
         btnBack.setOnClickListener {
@@ -100,14 +101,16 @@ class AudioplayerActivity : AppCompatActivity() {
     }
 
     private fun playControl() {
-        when (playerState) {
-            STATE_PLAYING -> {
+        when(playerState) {
+            State.STATE_PLAYING -> {
                 pausePlayer()
             }
 
-            STATE_PREPARED, STATE_PAUSED -> {
+            State.STATE_PREPARED, State.STATE_PAUSED -> {
                 startPlayer()
             }
+
+            else -> {}
         }
     }
 
@@ -116,11 +119,11 @@ class AudioplayerActivity : AppCompatActivity() {
         mediaPlayer.prepareAsync()
         currentPosition = mediaPlayer.currentPosition
         mediaPlayer.setOnPreparedListener {
-            playerState = STATE_PREPARED
+            playerState = State.STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
             playButton.setImageDrawable(getDrawable(R.drawable.play))
-            playerState = STATE_PREPARED
+            playerState = State.STATE_PREPARED
             handler?.removeCallbacks(timer)
             timerTxt.text = "00:00"
         }
@@ -130,14 +133,14 @@ class AudioplayerActivity : AppCompatActivity() {
         mediaPlayer.start()
         handler?.post(timer)
         playButton.setImageDrawable(getDrawable(R.drawable.pause))
-        playerState = STATE_PLAYING
+        playerState = State.STATE_PLAYING
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
         handler?.removeCallbacks(timer)
         playButton.setImageDrawable(getDrawable(R.drawable.play))
-        playerState = STATE_PAUSED
+        playerState = State.STATE_PAUSED
     }
 
     override fun onPause() {
@@ -157,7 +160,7 @@ class AudioplayerActivity : AppCompatActivity() {
 
                 handler?.postDelayed(
                     this,
-                    REFRESH_TIMER
+                    REFRESH_TIMER_MILLIS
                 )
             }
         }
