@@ -1,6 +1,6 @@
 package com.example.playlistmaker
 
-import Track
+import com.example.playlistmaker.domain.models.Track
 import android.content.Context
 import android.util.TypedValue
 import android.view.View

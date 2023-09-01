@@ -1,12 +1,14 @@
 package com.example.playlistmaker
 
-import Track
+import com.example.playlistmaker.domain.models.Track
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.ui.AudioplayerActivity
+import com.example.playlistmaker.ui.KEY_TRACK_ID
 
 open class TrackAdapter : RecyclerView.Adapter<PlaylistViewHolder>() {
     companion object {
