@@ -15,12 +15,13 @@ import com.example.playlistmaker.createJsonFromTrack
 import com.example.playlistmaker.createTrackFromJson
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.dpToPx
+import com.example.playlistmaker.utils.consts.KEY_TRACK_ID
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-const val KEY_TRACK_ID = "key_track_id"
+
 
 class AudioplayerActivity : AppCompatActivity() {
 
