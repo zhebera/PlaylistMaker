@@ -19,12 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.example.playlistmaker.domain.models.TrackResponse
+import com.example.playlistmaker.utils.consts.SEARCH_HISTORY_NEW_TRACK
+import com.example.playlistmaker.utils.consts.SEARCH_HISTORY_PLAYLIST
+import com.example.playlistmaker.utils.createJsonFromListTrack
+import com.example.playlistmaker.utils.createListTrackFromJson
+import com.example.playlistmaker.utils.createTrackFromJson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
-const val SEARCH_HISTORY_PLAYLIST = "search_history_playlist"
-const val SEARCH_HISTORY_NEW_TRACK = "search_history_new_track"
 
 class SearchActivity : AppCompatActivity() {
     companion object {
