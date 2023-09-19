@@ -2,49 +2,53 @@ package com.example.playlistmaker.domain.impl
 
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerRepository
+import com.example.playlistmaker.utils.player.PlayerState
 
 class PlayerInteractorImpl(private val playerRepository: PlayerRepository): PlayerInteractor {
 
-    enum class State{
-        STATE_DEFAULT,
-        STATE_PREPARED,
-        STATE_PLAYING,
-        STATE_PAUSED
+    private var playerState = PlayerState.STATE_DEFAULT
+    private var playerFinish: Boolean = false
+
+    override fun getPlayerState(): PlayerState {
+        return playerState
     }
 
-    private var playerState = State.STATE_DEFAULT
-    override fun preparePlayer(url: String,
-                               onCompletionPlayer : () -> Unit) {
-        playerRepository.setDataSource(url)
-        playerRepository.prepareAsync()
-        playerRepository.getCurrentPosition()
-        playerRepository.setOnPreparedListener {
-            playerState = State.STATE_PREPARED
-        }
-        playerRepository.setOnCompletionListener {
-            onCompletionPlayer()
-            playerState = State.STATE_PREPARED
+    override fun getPlayerFinish(): Boolean {
+        return playerFinish
+    }
+    override fun preparePlayer(url: String) {
+        with(playerRepository){
+            setDataSource(url)
+            prepareAsync()
+            getCurrentPosition()
+            setOnPreparedListener {
+                playerState = PlayerState.STATE_PREPARED
+            }
+            setOnCompletionListener {
+                playerState = PlayerState.STATE_PREPARED
+                playerFinish = true
+            }
         }
     }
 
-    override fun playControl(onPlayerStart : () -> Unit, onPlayerPause : () -> Unit) {
+    override fun playControl() {
         when(playerState){
-            State.STATE_PLAYING -> pausePlayer(onPlayerPause)
-            State.STATE_PREPARED, State.STATE_PAUSED -> startPlayer(onPlayerStart)
+            PlayerState.STATE_PLAYING -> pausePlayer()
+            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> startPlayer()
             else -> {}
         }
     }
 
-    override fun startPlayer(onPlayerStart : () -> Unit) {
+    override fun startPlayer() {
         playerRepository.start()
-        onPlayerStart()
-        playerState = State.STATE_PLAYING
+        playerFinish = false
+        playerState = PlayerState.STATE_PLAYING
     }
 
-    override fun pausePlayer(onPlayerPause: () -> Unit) {
+    override fun pausePlayer() {
         playerRepository.pause()
-        onPlayerPause()
-        playerState = State.STATE_PAUSED
+        playerFinish = false
+        playerState = PlayerState.STATE_PAUSED
     }
 
     override fun release() {
