@@ -1,9 +1,13 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.example.playlistmaker.LibraryActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.SearchActivity
+import com.example.playlistmaker.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

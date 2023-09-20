@@ -1,6 +1,8 @@
 package com.example.playlistmaker
 
 import android.content.SharedPreferences
+import com.example.playlistmaker.utils.consts.SEARCH_HISTORY_NEW_TRACK
+import com.example.playlistmaker.utils.createJsonFromTrack
 
 class PlaylistAdapter(private val searchHistorySharedPref: SharedPreferences): TrackAdapter(){
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {

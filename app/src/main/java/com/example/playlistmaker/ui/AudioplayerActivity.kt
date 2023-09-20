@@ -1,7 +1,6 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui
 
-import Track
-import android.media.MediaPlayer
+import com.example.playlistmaker.domain.models.Track
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,36 +10,33 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
+import com.example.playlistmaker.utils.createJsonFromTrack
+import com.example.playlistmaker.utils.createTrackFromJson
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.dpToPx
+import com.example.playlistmaker.utils.consts.KEY_TRACK_ID
+import com.example.playlistmaker.utils.player.PlayerState
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-const val KEY_TRACK_ID = "key_track_id"
-
 class AudioplayerActivity : AppCompatActivity() {
-
-    enum class State{
-        STATE_DEFAULT,
-        STATE_PREPARED,
-        STATE_PLAYING,
-        STATE_PAUSED
-    }
 
     companion object {
         private const val SAVED_AUDIOPLAYER_STATE = "saved_audioplayer_state"
-
         private const val REFRESH_TIMER_MILLIS = 300L
     }
 
     private lateinit var track: Track
     private lateinit var playButton: ImageButton
     private lateinit var timerTxt: TextView
-    private val mediaPlayer = MediaPlayer()
-    private var playerState = State.STATE_DEFAULT
+
     private var handler: Handler? = null
-    private var currentPosition = 0
     private val timer = setTimer()
+    private val trackFinish = getTrackStatusFinishing()
+    private val mediaPlayerInteractor = Creator.providePlayerInteractor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,10 +84,10 @@ class AudioplayerActivity : AppCompatActivity() {
         primaryGenreName.text = track.primaryGenreName
         country.text = track.country
 
-        preparePlayer()
+        mediaPlayerInteractor.preparePlayer(track.previewUrl)
 
         playButton.setOnClickListener {
-            playControl()
+            playerControl()
         }
     }
 
@@ -100,63 +96,67 @@ class AudioplayerActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun playControl() {
-        when(playerState) {
-            State.STATE_PLAYING -> {
-                pausePlayer()
-            }
-
-            State.STATE_PREPARED, State.STATE_PAUSED -> {
-                startPlayer()
-            }
-
-            else -> {}
-        }
-    }
-
-    private fun preparePlayer() {
-        mediaPlayer.setDataSource(track.previewUrl)
-        mediaPlayer.prepareAsync()
-        currentPosition = mediaPlayer.currentPosition
-        mediaPlayer.setOnPreparedListener {
-            playerState = State.STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playButton.setImageDrawable(getDrawable(R.drawable.play))
-            playerState = State.STATE_PREPARED
-            handler?.removeCallbacks(timer)
-            timerTxt.text = "00:00"
-        }
-    }
-
-    private fun startPlayer() {
-        mediaPlayer.start()
-        handler?.post(timer)
-        playButton.setImageDrawable(getDrawable(R.drawable.pause))
-        playerState = State.STATE_PLAYING
-    }
-
-    private fun pausePlayer() {
-        mediaPlayer.pause()
-        handler?.removeCallbacks(timer)
-        playButton.setImageDrawable(getDrawable(R.drawable.play))
-        playerState = State.STATE_PAUSED
-    }
-
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        mediaPlayerInteractor.pausePlayer()
+        onPlayerPauseView()
+    }
+
+    private fun onPlayerPauseView() {
+        handler?.removeCallbacks(timer)
+        handler?.removeCallbacks(trackFinish)
+        playButton.setImageDrawable(getDrawable(R.drawable.play))
+    }
+
+    private fun onPlayerStartView() {
+        handler?.post(timer)
+        handler?.post(trackFinish)
+        playButton.setImageDrawable(getDrawable(R.drawable.pause))
+    }
+
+    private fun playerControl() {
+        mediaPlayerInteractor.playControl()
+
+        when (mediaPlayerInteractor.getPlayerState()) {
+            PlayerState.STATE_PLAYING -> onPlayerStartView()
+            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> onPlayerPauseView()
+            else -> Unit
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        mediaPlayerInteractor.release()
     }
 
-    private fun setTimer(): Runnable{
-        return object: Runnable{
+    private fun onTrackFinish() {
+        playButton.setImageDrawable(getDrawable(R.drawable.play))
+        handler?.removeCallbacks(timer)
+        timerTxt.text = getString(R.string.player_zero_timing)
+        handler?.removeCallbacks(trackFinish)
+    }
+
+    private fun setTimer(): Runnable {
+        return object : Runnable {
             override fun run() {
-                timerTxt.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+                timerTxt.text = SimpleDateFormat(getString(R.string.date_format_mm_ss), Locale.getDefault()).format(
+                    mediaPlayerInteractor.getCurrentPosition()
+                )
+
+                handler?.postDelayed(
+                    this,
+                    REFRESH_TIMER_MILLIS
+                )
+            }
+        }
+    }
+
+    private fun getTrackStatusFinishing(): Runnable {
+        return object : Runnable {
+            override fun run() {
+                if (mediaPlayerInteractor.getPlayerFinish()) {
+                    onTrackFinish()
+                }
 
                 handler?.postDelayed(
                     this,

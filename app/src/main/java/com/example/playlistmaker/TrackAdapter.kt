@@ -1,18 +1,20 @@
 package com.example.playlistmaker
 
-import Track
+import com.example.playlistmaker.domain.models.Track
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.ui.AudioplayerActivity
+import com.example.playlistmaker.utils.consts.KEY_TRACK_ID
+import com.example.playlistmaker.utils.createJsonFromTrack
 
 open class TrackAdapter : RecyclerView.Adapter<PlaylistViewHolder>() {
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
-
 
     var listTrack = mutableListOf<Track>()
     private var isClicked = true

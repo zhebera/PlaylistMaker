@@ -1,6 +1,4 @@
-package com.example.playlistmaker
-
-import Track
+package com.example.playlistmaker.domain.models
 
 data class TrackResponse(
     val resultCount: Int,
