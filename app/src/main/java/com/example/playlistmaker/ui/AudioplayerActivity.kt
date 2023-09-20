@@ -87,13 +87,7 @@ class AudioplayerActivity : AppCompatActivity() {
         mediaPlayerInteractor.preparePlayer(track.previewUrl)
 
         playButton.setOnClickListener {
-            mediaPlayerInteractor.playControl()
-
-            when(mediaPlayerInteractor.getPlayerState()){
-                PlayerState.STATE_PLAYING -> onPlayerStartView()
-                PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> onPlayerPauseView()
-                else -> {}
-            }
+            playerControl()
         }
     }
 
@@ -108,16 +102,26 @@ class AudioplayerActivity : AppCompatActivity() {
         onPlayerPauseView()
     }
 
-    private fun onPlayerPauseView(){
+    private fun onPlayerPauseView() {
         handler?.removeCallbacks(timer)
         handler?.removeCallbacks(trackFinish)
         playButton.setImageDrawable(getDrawable(R.drawable.play))
     }
 
-    private fun onPlayerStartView(){
+    private fun onPlayerStartView() {
         handler?.post(timer)
         handler?.post(trackFinish)
         playButton.setImageDrawable(getDrawable(R.drawable.pause))
+    }
+
+    private fun playerControl() {
+        mediaPlayerInteractor.playControl()
+
+        when (mediaPlayerInteractor.getPlayerState()) {
+            PlayerState.STATE_PLAYING -> onPlayerStartView()
+            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> onPlayerPauseView()
+            else -> Unit
+        }
     }
 
     override fun onDestroy() {
@@ -125,7 +129,7 @@ class AudioplayerActivity : AppCompatActivity() {
         mediaPlayerInteractor.release()
     }
 
-    private fun onTrackFinish(){
+    private fun onTrackFinish() {
         playButton.setImageDrawable(getDrawable(R.drawable.play))
         handler?.removeCallbacks(timer)
         timerTxt.text = getString(R.string.player_zero_timing)
@@ -135,7 +139,9 @@ class AudioplayerActivity : AppCompatActivity() {
     private fun setTimer(): Runnable {
         return object : Runnable {
             override fun run() {
-                timerTxt.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayerInteractor.getCurrentPosition())
+                timerTxt.text = SimpleDateFormat(getString(R.string.date_format_mm_ss), Locale.getDefault()).format(
+                    mediaPlayerInteractor.getCurrentPosition()
+                )
 
                 handler?.postDelayed(
                     this,
@@ -145,10 +151,10 @@ class AudioplayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun getTrackStatusFinishing(): Runnable{
-        return object : Runnable{
+    private fun getTrackStatusFinishing(): Runnable {
+        return object : Runnable {
             override fun run() {
-                if(mediaPlayerInteractor.getPlayerFinish()){
+                if (mediaPlayerInteractor.getPlayerFinish()) {
                     onTrackFinish()
                 }
 

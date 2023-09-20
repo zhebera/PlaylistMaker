@@ -4,7 +4,7 @@ import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.utils.player.PlayerState
 
-class PlayerInteractorImpl(private val playerRepository: PlayerRepository): PlayerInteractor {
+class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : PlayerInteractor {
 
     private var playerState = PlayerState.STATE_DEFAULT
     private var playerFinish: Boolean = false
@@ -16,8 +16,9 @@ class PlayerInteractorImpl(private val playerRepository: PlayerRepository): Play
     override fun getPlayerFinish(): Boolean {
         return playerFinish
     }
+
     override fun preparePlayer(url: String) {
-        with(playerRepository){
+        with(playerRepository) {
             setDataSource(url)
             prepareAsync()
             getCurrentPosition()
@@ -32,7 +33,7 @@ class PlayerInteractorImpl(private val playerRepository: PlayerRepository): Play
     }
 
     override fun playControl() {
-        when(playerState){
+        when (playerState) {
             PlayerState.STATE_PLAYING -> pausePlayer()
             PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> startPlayer()
             else -> {}

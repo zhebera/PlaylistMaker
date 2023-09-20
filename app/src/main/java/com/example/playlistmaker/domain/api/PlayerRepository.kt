@@ -8,9 +8,9 @@ interface PlayerRepository {
 
     fun getCurrentPosition(): Int
 
-    fun setOnPreparedListener(onPreparedListener : () -> Unit)
+    fun setOnPreparedListener(onPreparedListener: () -> Unit)
 
-    fun setOnCompletionListener(onCompletionListener : () -> Unit)
+    fun setOnCompletionListener(onCompletionListener: () -> Unit)
 
     fun start()
 

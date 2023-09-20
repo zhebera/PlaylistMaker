@@ -3,7 +3,7 @@ package com.example.playlistmaker.data.player
 import android.media.MediaPlayer
 import com.example.playlistmaker.domain.api.PlayerRepository
 
-class PlayerRepositoryImpl: PlayerRepository {
+class PlayerRepositoryImpl : PlayerRepository {
 
     private val mediaPlayer = MediaPlayer()
     override fun setDataSource(url: String) {
@@ -19,7 +19,7 @@ class PlayerRepositoryImpl: PlayerRepository {
     }
 
     override fun setOnPreparedListener(onPreparedListener: () -> Unit) {
-        mediaPlayer.setOnPreparedListener{
+        mediaPlayer.setOnPreparedListener {
             onPreparedListener()
         }
     }
