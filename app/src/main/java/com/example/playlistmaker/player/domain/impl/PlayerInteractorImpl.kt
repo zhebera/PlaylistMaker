@@ -36,7 +36,7 @@ class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : Pla
         when (playerState) {
             PlayerState.STATE_PLAYING -> pausePlayer()
             PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> startPlayer()
-            else -> {}
+            else -> Unit
         }
     }
 
