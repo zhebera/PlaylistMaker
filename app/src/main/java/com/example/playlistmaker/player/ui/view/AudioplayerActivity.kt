@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui
+package com.example.playlistmaker.player.ui.view
 
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.models.Track
@@ -15,7 +15,7 @@ import com.example.playlistmaker.utils.createTrackFromJson
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
 import com.example.playlistmaker.utils.KEY_TRACK_ID
 import com.example.playlistmaker.player.domain.models.PlayerState
-import com.example.playlistmaker.player.domain.presentation.PlayerViewModel
+import com.example.playlistmaker.player.ui.viewmodel.PlayerViewModel
 import com.example.playlistmaker.utils.dpToPx
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -26,6 +26,7 @@ class AudioplayerActivity : AppCompatActivity() {
 
     companion object {
         private const val SAVED_AUDIOPLAYER_STATE = "saved_audioplayer_state"
+        private const val PREPARED_TRACK = "prepared_track"
     }
 
     private lateinit var binding: ActivityAudioplayerBinding
@@ -45,9 +46,14 @@ class AudioplayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityAudioplayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        var preparedTrack = false
 
         if (savedInstanceState != null) {
             track = createTrackFromJson(savedInstanceState.getString(SAVED_AUDIOPLAYER_STATE))
+            preparedTrack = savedInstanceState.getBoolean(PREPARED_TRACK)
         }
 
         viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory())[PlayerViewModel::class.java]
@@ -65,8 +71,6 @@ class AudioplayerActivity : AppCompatActivity() {
         }
 
         track = createTrackFromJson(intent.getStringExtra(KEY_TRACK_ID))
-        binding = ActivityAudioplayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         initializeView()
 
@@ -74,7 +78,8 @@ class AudioplayerActivity : AppCompatActivity() {
             finish()
         }
 
-        viewModel.preparePlayer(track.previewUrl)
+        if(!preparedTrack)
+            viewModel.preparePlayer(track.previewUrl)
 
         playButton.setOnClickListener {
             viewModel.playControl()
@@ -115,6 +120,7 @@ class AudioplayerActivity : AppCompatActivity() {
     }
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(SAVED_AUDIOPLAYER_STATE, createJsonFromTrack(track))
+        outState.putBoolean(PREPARED_TRACK, true)
         super.onSaveInstanceState(outState)
     }
 

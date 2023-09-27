@@ -1,4 +1,4 @@
-package com.example.playlistmaker.settings.ui
+package com.example.playlistmaker.settings.ui.view
 
 import android.content.Intent
 import android.net.Uri
@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.settings.domain.presenter.SettingsViewModel
+import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModel
 import com.example.playlistmaker.creator.DarkThemeApp
 
 class SettingsActivity: AppCompatActivity() {

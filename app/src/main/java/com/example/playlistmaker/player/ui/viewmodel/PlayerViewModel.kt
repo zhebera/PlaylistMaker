@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.domain.presentation
+package com.example.playlistmaker.player.ui.viewmodel
 
 import android.app.Application
 import android.os.Handler
@@ -49,6 +49,7 @@ class PlayerViewModel(application: Application): AndroidViewModel(application) {
         handler.removeCallbacks(timer)
         handler.removeCallbacks(trackFinish)
         mediaPlayerInteractor.pausePlayer()
+        renderState(mediaPlayerInteractor.getPlayerState())
     }
 
     fun playControl(){

@@ -59,5 +59,4 @@ class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : Pla
     override fun getCurrentPosition(): Int {
         return playerRepository.getCurrentPosition()
     }
-
 }

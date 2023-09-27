@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.ui
+package com.example.playlistmaker.search.ui.view
 
 import android.content.Context
 import android.content.Intent
@@ -20,10 +20,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.player.ui.AudioplayerActivity
+import com.example.playlistmaker.player.ui.view.AudioplayerActivity
 import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.search.domain.models.SearchState
-import com.example.playlistmaker.search.domain.presentation.SearchViewModel
+import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.utils.KEY_TRACK_ID
 import com.example.playlistmaker.utils.createJsonFromTrack
 

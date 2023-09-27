@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.domain.presentation
+package com.example.playlistmaker.search.ui.viewmodel
 
 import android.app.Application
 import android.os.Handler
