@@ -32,7 +32,8 @@
         <LinearLayout
                 style="@style/FrameLayoutMaket"
                 android:layout_width="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginBottom="5dp">
 
             <TextView
                     style="@style/SecondaryTextView.GreyWhite.Track"

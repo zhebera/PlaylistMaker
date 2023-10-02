@@ -10,4 +10,5 @@
     <color name="medium_black_white">@color/white</color>
     <color name="medium_black_medium_black">#1A1B22</color>
     <color name="grey_medium_black">#1A1B22</color>
+    <color name="audioplayer_icon">#40ffffff</color>
 </resources>
