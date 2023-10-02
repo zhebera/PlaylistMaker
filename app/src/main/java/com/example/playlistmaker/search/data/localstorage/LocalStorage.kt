@@ -24,12 +24,12 @@ class LocalStorage(private val sharedPreferences: SharedPreferences) {
         val mutableList = getSavedHistory().toMutableList()
         if (remove) mutableList.clear() else {
 
-            var copyIndex:Int? = null
+            var copyIndex: Int? = null
             mutableList.forEachIndexed { index, historyTrack ->
-                if(historyTrack.trackId == track?.trackId)
+                if (historyTrack.trackId == track?.trackId)
                     copyIndex = index
             }
-            if(copyIndex != null) mutableList.removeAt(copyIndex!!)
+            if (copyIndex != null) mutableList.removeAt(copyIndex!!)
 
             mutableList.add(0, track!!)
         }

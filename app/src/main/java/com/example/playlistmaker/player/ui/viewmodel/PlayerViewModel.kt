@@ -1,29 +1,16 @@
 package com.example.playlistmaker.player.ui.viewmodel
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
+import androidx.lifecycle.*
+import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.models.PlayerState
 
-class PlayerViewModel(application: Application): AndroidViewModel(application) {
-    companion object{
+class PlayerViewModel(private val mediaPlayerInteractor: PlayerInteractor) : ViewModel() {
+    companion object {
         private const val REFRESH_TIMER_MILLIS = 300L
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(this[APPLICATION_KEY] as Application)
-            }
-        }
     }
 
-    private val mediaPlayerInteractor = Creator.providePlayerInteractor()
     private val handler = Handler(Looper.getMainLooper())
     private val timer = setTimer()
     private val trackFinish = getTrackStatusFinishing()
@@ -37,30 +24,30 @@ class PlayerViewModel(application: Application): AndroidViewModel(application) {
     private val _finishedPlay = MutableLiveData<Boolean>()
     val finishedPlay: LiveData<Boolean> = _finishedPlay
 
-    private fun renderState(state: PlayerState){
+    private fun renderState(state: PlayerState) {
         _playerState.postValue(state)
     }
 
-    fun preparePlayer(trackUrl: String){
+    fun preparePlayer(trackUrl: String) {
         mediaPlayerInteractor.preparePlayer(trackUrl)
     }
 
-    fun pausePlayer(){
+    fun pausePlayer() {
         handler.removeCallbacks(timer)
         handler.removeCallbacks(trackFinish)
         mediaPlayerInteractor.pausePlayer()
         renderState(mediaPlayerInteractor.getPlayerState())
     }
 
-    fun playControl(){
+    fun playControl() {
         mediaPlayerInteractor.playControl()
         handler.post(timer)
         handler.post(trackFinish)
         renderState(mediaPlayerInteractor.getPlayerState())
     }
 
-    fun finishPlay(){
-        if(_finishedPlay.value == true){
+    fun finishPlay() {
+        if (_finishedPlay.value == true) {
             handler.removeCallbacks(timer)
             handler.removeCallbacks(trackFinish)
         }

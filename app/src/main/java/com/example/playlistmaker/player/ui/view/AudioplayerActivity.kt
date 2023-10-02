@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -17,6 +16,7 @@ import com.example.playlistmaker.utils.KEY_TRACK_ID
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.player.ui.viewmodel.PlayerViewModel
 import com.example.playlistmaker.utils.dpToPx
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -42,7 +42,7 @@ class AudioplayerActivity : AppCompatActivity() {
     private lateinit var releaseDate: TextView
     private lateinit var primaryGenreName: TextView
     private lateinit var country: TextView
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel by viewModel<PlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,17 +56,15 @@ class AudioplayerActivity : AppCompatActivity() {
             preparedTrack = savedInstanceState.getBoolean(PREPARED_TRACK)
         }
 
-        viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory())[PlayerViewModel::class.java]
-
-        viewModel.playerState.observe(this){
+        viewModel.playerState.observe(this) {
             renderState(it)
         }
 
-        viewModel.timing.observe(this){
+        viewModel.timing.observe(this) {
             renderTimer(it)
         }
 
-        viewModel.finishedPlay.observe(this){
+        viewModel.finishedPlay.observe(this) {
             renderFinishPlay(it)
         }
 
@@ -78,7 +76,7 @@ class AudioplayerActivity : AppCompatActivity() {
             finish()
         }
 
-        if(!preparedTrack)
+        if (!preparedTrack)
             viewModel.preparePlayer(track.previewUrl)
 
         playButton.setOnClickListener {
@@ -118,6 +116,7 @@ class AudioplayerActivity : AppCompatActivity() {
         primaryGenreName.text = track.primaryGenreName
         country.text = track.country
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(SAVED_AUDIOPLAYER_STATE, createJsonFromTrack(track))
         outState.putBoolean(PREPARED_TRACK, true)
@@ -130,20 +129,20 @@ class AudioplayerActivity : AppCompatActivity() {
         onPlayerPauseView()
     }
 
-    private fun renderState(state: PlayerState){
-        when(state){
+    private fun renderState(state: PlayerState) {
+        when (state) {
             PlayerState.STATE_PLAYING -> onPlayerStartView()
             PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> onPlayerPauseView()
             else -> Unit
         }
     }
 
-    private fun renderTimer(timer: Int){
+    private fun renderTimer(timer: Int) {
         timerTxt.text = SimpleDateFormat(("mm:ss"), Locale.getDefault()).format(timer)
     }
 
-    private fun renderFinishPlay(finished: Boolean){
-        if(finished){
+    private fun renderFinishPlay(finished: Boolean) {
+        if (finished) {
             viewModel.finishPlay()
             playButton.setImageDrawable(getDrawable(R.drawable.play))
             timerTxt.text = getString(R.string.player_zero_timing)
