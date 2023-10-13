@@ -5,19 +5,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.playlistmaker.search.data.dto.Response
 import com.example.playlistmaker.search.data.dto.TrackRequest
-import com.example.playlistmaker.utils.BASE_URL
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
-class PlaylistRetrofit(private val context: Context) : NetworkClient {
-    private val retrofit =
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-    val playlistRetrofit = retrofit.create<ITunesApi>()
+class PlaylistRetrofit(private val playlistRetrofit: ITunesApi, private val context: Context) : NetworkClient {
 
     override fun doRequest(dto: Any): Response {
         if (!isConnected()) {

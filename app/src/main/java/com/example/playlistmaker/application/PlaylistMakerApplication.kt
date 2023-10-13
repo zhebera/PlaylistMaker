@@ -1,20 +1,26 @@
-package com.example.playlistmaker.creator
+package com.example.playlistmaker.application
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.di.*
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
+import org.koin.android.ext.android.getKoin
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
-class DarkThemeApp: Application(){
+class PlaylistMakerApplication: Application(){
 
     var darkTheme: Boolean = false
-    private lateinit var settingsInteractor: SettingsInteractor
 
     override fun onCreate() {
         super.onCreate()
-        settingsInteractor = Creator.provideSettingsInteractor(this)
+        startKoin {
+            androidContext(this@PlaylistMakerApplication)
+            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
+        }
+
+        val settingsInteractor: SettingsInteractor = getKoin().get()
         darkTheme = settingsInteractor.getTheme()
-        //val sharedPreferences = getSharedPreferences(DARK_THEME_ENABLED, MODE_PRIVATE)
-        //darkTheme = sharedPreferences.getBoolean(SHARED_PREFERENCES_THEME_KEY, false)
         switchDarkTheme(darkTheme)
     }
 

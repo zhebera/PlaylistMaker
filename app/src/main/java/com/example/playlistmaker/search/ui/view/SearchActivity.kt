@@ -13,7 +13,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -26,6 +25,7 @@ import com.example.playlistmaker.search.domain.models.SearchState
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.utils.KEY_TRACK_ID
 import com.example.playlistmaker.utils.createJsonFromTrack
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     companion object {
@@ -42,7 +42,7 @@ class SearchActivity : AppCompatActivity() {
     private var textWatcher: TextWatcher? = null
     private var isClicked = true
     private val handler = Handler(Looper.getMainLooper())
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModel<SearchViewModel>()
 
     private lateinit var binding: ActivitySearchBinding
 
@@ -74,8 +74,6 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory())[SearchViewModel::class.java]
-
         placeHolder = binding.placeHolder
         placeHolderImage = binding.placeHolderImage
         placeHolderMessage = binding.placeHolderMessage
@@ -101,7 +99,7 @@ class SearchActivity : AppCompatActivity() {
             showToast(it)
         }
 
-        viewModel.historyState.observe(this){
+        viewModel.historyState.observe(this) {
             showHistory(it, false)
         }
 
@@ -148,11 +146,10 @@ class SearchActivity : AppCompatActivity() {
             val history = viewModel.historyState.value
 
             searchHistory.visibility =
-                if (hasFocus && searchEditTxt.text.isEmpty() && !history.isNullOrEmpty()){
+                if (hasFocus && searchEditTxt.text.isEmpty() && !history.isNullOrEmpty()) {
                     showHistory(history, true)
                     View.VISIBLE
-                }
-                else
+                } else
                     View.GONE
         }
 
@@ -176,7 +173,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun startActivity(track: Track){
+    private fun startActivity(track: Track) {
         if (clickDebounce()) {
             val audioplayerIntent = Intent(this@SearchActivity, AudioplayerActivity::class.java)
             audioplayerIntent.putExtra(KEY_TRACK_ID, createJsonFromTrack(track))
@@ -222,8 +219,8 @@ class SearchActivity : AppCompatActivity() {
         playlistAdapter.notifyDataSetChanged()
     }
 
-    private fun showHistory(historyList: List<Track>, show: Boolean){
-        if(show){
+    private fun showHistory(historyList: List<Track>, show: Boolean) {
+        if (show) {
             trackRecyclerView.visibility = View.GONE
             placeHolder.visibility = View.GONE
             progressBar.visibility = View.GONE
