@@ -112,7 +112,6 @@
                 android:backgroundTint="@color/medium_black_white"
                 android:layout_gravity="center_horizontal"/>
 
-
     </LinearLayout>
 
     <LinearLayout

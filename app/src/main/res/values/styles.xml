@@ -66,6 +66,11 @@
         <item name="android:drawableTint">@color/grey_medium_black</item>
         <item name="android:textColorHint">@color/grey_medium_black</item>
     </style>
+    <style name="SecondaryTextView.BlackWhite.TabLayoutTxt">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
 
 <!--    Style for secondary text in audioplayer activity-->
 
