@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/llPlaceHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="106dp">
+
+    <ImageView
+        android:id="@+id/ivPlaceHolder"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerCrop"
+        android:src="@drawable/not_found"
+        tools:src="@drawable/not_found"/>
+
+    <TextView
+        android:id="@+id/tvPlaceholderMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/SecondaryTextView.MediumBlackWhite"
+        android:fontFamily="@font/ys_display_medium"
+        android:textSize="19sp"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="24dp"
+        android:text="@string/empty_mediateka"
+        tools:text="@string/empty_mediateka"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

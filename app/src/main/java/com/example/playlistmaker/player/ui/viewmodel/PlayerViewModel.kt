@@ -7,9 +7,6 @@ import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.models.PlayerState
 
 class PlayerViewModel(private val mediaPlayerInteractor: PlayerInteractor) : ViewModel() {
-    companion object {
-        private const val REFRESH_TIMER_MILLIS = 300L
-    }
 
     private val handler = Handler(Looper.getMainLooper())
     private val timer = setTimer()
@@ -82,5 +79,9 @@ class PlayerViewModel(private val mediaPlayerInteractor: PlayerInteractor) : Vie
                 )
             }
         }
+    }
+
+    companion object {
+        private const val REFRESH_TIMER_MILLIS = 300L
     }
 }

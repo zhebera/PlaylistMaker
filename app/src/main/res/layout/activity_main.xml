@@ -19,20 +19,20 @@
             android:layout_marginTop="14dp"/>
 
     <Button
-            android:id="@+id/btn_search"
+            android:id="@+id/btnSearch"
             style="@style/MainActivityButtons"
             android:text="@string/main_activity_button_search"
             app:icon="@drawable/search"/>
 
     <Button
-            android:id="@+id/btn_library"
+            android:id="@+id/btnLibrary"
             style="@style/MainActivityButtons"
             android:layout_marginVertical="@dimen/left_padding_standart"
             android:text="@string/main_activity_button_library"
             app:icon="@drawable/library"/>
 
     <Button
-            android:id="@+id/btn_settings"
+            android:id="@+id/btnSettings"
             style="@style/MainActivityButtons"
             android:layout_marginBottom="28dp"
             android:text="@string/main_activity_button_settings"

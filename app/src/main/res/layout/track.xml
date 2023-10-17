@@ -9,7 +9,7 @@
     <ImageView
             android:layout_width="@dimen/size_image_song"
             android:layout_height="@dimen/size_image_song"
-            android:id="@+id/trackImg"
+            android:id="@+id/ivTrack"
             android:layout_weight="0"
             android:layout_marginVertical="8dp"
             android:layout_marginStart="@dimen/secondary_image_padding"/>
@@ -23,7 +23,7 @@
 
         <TextView
                 style="@style/SecondaryTextView.BlackWhite"
-                android:id="@+id/trackName"
+                android:id="@+id/tvTrackName"
                 tools:text="Name of song"
                 android:ellipsize="end"
                 android:maxLines ="1"
@@ -37,7 +37,7 @@
 
             <TextView
                     style="@style/SecondaryTextView.GreyWhite.Track"
-                    android:id="@+id/artistName"
+                    android:id="@+id/tvArtistName"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines ="1"
@@ -52,7 +52,7 @@
             <TextView
                     style="@style/SecondaryTextView.GreyWhite.Track"
                     android:layout_weight="0"
-                    android:id="@+id/trackTimeTxt"
+                    android:id="@+id/tvTrackTimeTxt"
                     tools:text="Time"/>
         </LinearLayout>
 

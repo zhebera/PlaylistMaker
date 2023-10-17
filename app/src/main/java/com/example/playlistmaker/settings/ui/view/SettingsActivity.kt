@@ -68,10 +68,10 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun initializeView() {
-        btnMainActivity = binding.btnMainActivity
-        btnShareApplication = binding.btnShareApplication
-        btnSupportConnect = binding.btnSupportConnect
-        btnUserAgreement = binding.btnUserAgreement
+        btnMainActivity = binding.ivMainActivityBtn
+        btnShareApplication = binding.flBtnShareApplication
+        btnSupportConnect = binding.flBtnSupportConnect
+        btnUserAgreement = binding.flBtnUserAgreement
         themeSwitch = binding.themeSwitch
     }
 }

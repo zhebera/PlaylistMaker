@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -23,11 +24,6 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class AudioplayerActivity : AppCompatActivity() {
-
-    companion object {
-        private const val SAVED_AUDIOPLAYER_STATE = "saved_audioplayer_state"
-        private const val PREPARED_TRACK = "prepared_track"
-    }
 
     private lateinit var binding: ActivityAudioplayerBinding
     private lateinit var track: Track
@@ -56,15 +52,15 @@ class AudioplayerActivity : AppCompatActivity() {
             preparedTrack = savedInstanceState.getBoolean(PREPARED_TRACK)
         }
 
-        viewModel.playerState.observe(this) {
+        viewModel.playerState.observe(this){
             renderState(it)
         }
 
-        viewModel.timing.observe(this) {
+        viewModel.timing.observe(this){
             renderTimer(it)
         }
 
-        viewModel.finishedPlay.observe(this) {
+        viewModel.finishedPlay.observe(this){
             renderFinishPlay(it)
         }
 
@@ -76,7 +72,7 @@ class AudioplayerActivity : AppCompatActivity() {
             finish()
         }
 
-        if (!preparedTrack)
+        if(!preparedTrack)
             viewModel.preparePlayer(track.previewUrl)
 
         playButton.setOnClickListener {
@@ -85,17 +81,17 @@ class AudioplayerActivity : AppCompatActivity() {
     }
 
     private fun initializeView() {
-        btnBack = binding.btnBack
-        placeholder = binding.placeholderPlayer
-        trackName = binding.trackName
-        artistName = binding.artistName
-        trackTime = binding.trackTime
-        collectionName = binding.collectionName
-        releaseDate = binding.releaseDate
-        primaryGenreName = binding.primaryGenreName
-        country = binding.country
-        timerTxt = binding.timerTxt
-        playButton = binding.playButtonIb
+        btnBack = binding.ivBtnBack
+        placeholder = binding.ivPlaceholderPlayer
+        trackName = binding.tvTrackName
+        artistName = binding.tvArtistName
+        trackTime = binding.tvTrackTime
+        collectionName = binding.tvCollectionName
+        releaseDate = binding.tvReleaseDate
+        primaryGenreName = binding.tvPrimaryGenreName
+        country = binding.tvCountry
+        timerTxt = binding.tvTimer
+        playButton = binding.ibPlayButton
 
         Glide.with(this)
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
@@ -116,7 +112,6 @@ class AudioplayerActivity : AppCompatActivity() {
         primaryGenreName.text = track.primaryGenreName
         country.text = track.country
     }
-
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(SAVED_AUDIOPLAYER_STATE, createJsonFromTrack(track))
         outState.putBoolean(PREPARED_TRACK, true)
@@ -129,20 +124,20 @@ class AudioplayerActivity : AppCompatActivity() {
         onPlayerPauseView()
     }
 
-    private fun renderState(state: PlayerState) {
-        when (state) {
+    private fun renderState(state: PlayerState){
+        when(state){
             PlayerState.STATE_PLAYING -> onPlayerStartView()
             PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> onPlayerPauseView()
             else -> Unit
         }
     }
 
-    private fun renderTimer(timer: Int) {
+    private fun renderTimer(timer: Int){
         timerTxt.text = SimpleDateFormat(("mm:ss"), Locale.getDefault()).format(timer)
     }
 
-    private fun renderFinishPlay(finished: Boolean) {
-        if (finished) {
+    private fun renderFinishPlay(finished: Boolean){
+        if(finished){
             viewModel.finishPlay()
             playButton.setImageDrawable(getDrawable(R.drawable.play))
             timerTxt.text = getString(R.string.player_zero_timing)
@@ -155,5 +150,10 @@ class AudioplayerActivity : AppCompatActivity() {
 
     private fun onPlayerStartView() {
         playButton.setImageDrawable(getDrawable(R.drawable.pause))
+    }
+
+    companion object {
+        private const val SAVED_AUDIOPLAYER_STATE = "saved_audioplayer_state"
+        private const val PREPARED_TRACK = "prepared_track"
     }
 }
