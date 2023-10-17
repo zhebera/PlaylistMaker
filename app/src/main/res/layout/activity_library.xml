@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/btn_main_activity"
+            android:id="@+id/ivMainActivityBtn"
             style="@style/PrimaryImage.HeadArrowBack" />
 
         <TextView

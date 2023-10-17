@@ -14,7 +14,7 @@
 
                 <ImageView
                         style="@style/PrimaryImage.HeadArrowBack"
-                        android:id="@+id/btn_main_activity"/>
+                        android:id="@+id/ivMainActivityBtn"/>
 
                 <TextView
                         style="@style/PrimaryTextView.MediumBlackWhite.Head"
@@ -35,7 +35,7 @@
 
         <FrameLayout
                 style="@style/FrameLayoutMaket"
-                android:id="@+id/btn_share_application">
+                android:id="@+id/flBtnShareApplication">
 
                 <TextView
                         style="@style/SecondaryTextView.BlackWhite.SettingsActivityText"
@@ -49,8 +49,7 @@
 
         <FrameLayout
                 style="@style/FrameLayoutMaket"
-                android:id="@+id/btn_support_connect">
-
+                android:id="@+id/flBtnSupportConnect">
 
                 <TextView
                         style="@style/SecondaryTextView.BlackWhite.SettingsActivityText"
@@ -63,7 +62,7 @@
 
         <FrameLayout
                 style="@style/FrameLayoutMaket"
-                android:id="@+id/btn_user_agreement">
+                android:id="@+id/flBtnUserAgreement">
 
                 <TextView
                         style="@style/SecondaryTextView.BlackWhite.SettingsActivityText"

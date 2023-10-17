@@ -16,7 +16,7 @@ class LibraryActivity : AppCompatActivity() {
         binding = ActivityLibraryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnMainActivity.setOnClickListener {
+        binding.ivMainActivityBtn.setOnClickListener {
             finish()
         }
 

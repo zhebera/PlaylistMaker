@@ -25,11 +25,6 @@ import java.util.*
 
 class AudioplayerActivity : AppCompatActivity() {
 
-    companion object {
-        private const val SAVED_AUDIOPLAYER_STATE = "saved_audioplayer_state"
-        private const val PREPARED_TRACK = "prepared_track"
-    }
-
     private lateinit var binding: ActivityAudioplayerBinding
     private lateinit var track: Track
     private lateinit var playButton: ImageButton
@@ -86,17 +81,17 @@ class AudioplayerActivity : AppCompatActivity() {
     }
 
     private fun initializeView() {
-        btnBack = binding.btnBack
-        placeholder = binding.placeholderPlayer
-        trackName = binding.trackName
-        artistName = binding.artistName
-        trackTime = binding.trackTime
-        collectionName = binding.collectionName
-        releaseDate = binding.releaseDate
-        primaryGenreName = binding.primaryGenreName
-        country = binding.country
-        timerTxt = binding.timerTxt
-        playButton = binding.playButtonIb
+        btnBack = binding.ivBtnBack
+        placeholder = binding.ivPlaceholderPlayer
+        trackName = binding.tvTrackName
+        artistName = binding.tvArtistName
+        trackTime = binding.tvTrackTime
+        collectionName = binding.tvCollectionName
+        releaseDate = binding.tvReleaseDate
+        primaryGenreName = binding.tvPrimaryGenreName
+        country = binding.tvCountry
+        timerTxt = binding.tvTimer
+        playButton = binding.ibPlayButton
 
         Glide.with(this)
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
@@ -155,5 +150,10 @@ class AudioplayerActivity : AppCompatActivity() {
 
     private fun onPlayerStartView() {
         playButton.setImageDrawable(getDrawable(R.drawable.pause))
+    }
+
+    companion object {
+        private const val SAVED_AUDIOPLAYER_STATE = "saved_audioplayer_state"
+        private const val PREPARED_TRACK = "prepared_track"
     }
 }

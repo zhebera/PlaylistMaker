@@ -24,4 +24,10 @@
     <string name="new_playlist">Новый плейлист</string>
     <string name="playlists">Плейлисты</string>
     <string name="selected_tracks">Избранные треки</string>
+    <string name="starting_time">00:30</string>
+    <string name="duration">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="Genre">Жанр</string>
+    <string name="country">Страна</string>
 </resources>

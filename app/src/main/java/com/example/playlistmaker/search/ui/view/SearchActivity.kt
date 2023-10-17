@@ -28,9 +28,6 @@ import com.example.playlistmaker.utils.createJsonFromTrack
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-    }
 
     private lateinit var searchEditTxt: EditText
     private lateinit var btnPlaceHolderUpdate: Button
@@ -66,26 +63,26 @@ class SearchActivity : AppCompatActivity() {
     private var savedSearchEditText: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (savedInstanceState != null) {
             savedSearchEditText = savedInstanceState.getString("SAVED_SEARCH_EDIT_TXT")
         }
 
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        placeHolder = binding.placeHolder
-        placeHolderImage = binding.placeHolderImage
-        placeHolderMessage = binding.placeHolderMessage
-        btnPlaceHolderUpdate = binding.placeHolderUpdateButton
-        searchEditTxt = binding.inputEditText
+        placeHolder = binding.llPlaceHolder
+        placeHolderImage = binding.ivPlaceHolder
+        placeHolderMessage = binding.tvPlaceholderMessage
+        btnPlaceHolderUpdate = binding.btnPlaceholderUpdate
+        searchEditTxt = binding.etInput
         progressBar = binding.progressBar
-        trackRecyclerView = binding.trackRecyclerView
-        val btnMainActivity = binding.btnMainActivity
-        val btnClearEditTxt = binding.clearIcon
-        val searchHistory = binding.searchHistory
-        val searchHistoryRecyclerView = binding.searchHistoryRecyclerView
-        val btnClearSearchHistory = binding.searchHistoryClearButton
+        trackRecyclerView = binding.rvTrack
+        val btnMainActivity = binding.ivMainActivityBtn
+        val btnClearEditTxt = binding.ivClearIcon
+        val searchHistory = binding.llSearchHistory
+        val searchHistoryRecyclerView = binding.rvSearchHistory
+        val btnClearSearchHistory = binding.btnSearchHistoryClear
+        searchEditTxt.setText(savedSearchEditText)
 
         btnMainActivity.setOnClickListener {
             finish()
@@ -122,7 +119,6 @@ class SearchActivity : AppCompatActivity() {
                     else
                         View.GONE
 
-                if (!savedSearchEditText.isNullOrEmpty())
                     viewModel?.searchDebounce(
                         changedText = s?.toString() ?: ""
                     )
@@ -135,8 +131,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
         searchEditTxt.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE && !savedSearchEditText.isNullOrEmpty()) {
-                viewModel.searchDebounce(savedSearchEditText!!)
+            if (actionId == EditorInfo.IME_ACTION_DONE && !searchEditTxt.text.toString().isNullOrEmpty()/*!savedSearchEditText.isNullOrEmpty()*/) {
+                viewModel.searchDebounce(searchEditTxt.text.toString())
                 true
             }
             false
@@ -169,7 +165,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         btnPlaceHolderUpdate.setOnClickListener {
-            viewModel.searchDebounce(savedSearchEditText!!)
+            viewModel.searchDebounce(searchEditTxt.text.toString()/*savedSearchEditText!!*/)
         }
     }
 
@@ -279,6 +275,15 @@ class SearchActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         textWatcher.let { searchEditTxt.removeTextChangedListener(it) }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("SAVED_SEARCH_EDIT_TXT", savedSearchEditText)
+    }
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
 

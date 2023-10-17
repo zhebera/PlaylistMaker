@@ -9,11 +9,6 @@ import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 
 class PlaylistFragment: Fragment() {
 
-    companion object{
-
-        fun newInstance() = PlaylistFragment()
-    }
-
     private lateinit var binding: FragmentPlaylistBinding
 
     override fun onCreateView(
@@ -23,5 +18,9 @@ class PlaylistFragment: Fragment() {
     ): View? {
         binding = FragmentPlaylistBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    companion object{
+        fun newInstance() = PlaylistFragment()
     }
 }

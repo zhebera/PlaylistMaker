@@ -17,7 +17,7 @@
 
         <ImageView
                 style="@style/PrimaryImage.HeadArrowBack"
-                android:id="@+id/btn_main_activity"/>
+                android:id="@+id/ivMainActivityBtn"/>
 
         <TextView
                 style="@style/PrimaryTextView.MediumBlackWhite.Head"
@@ -32,7 +32,7 @@
 
         <EditText
                 style="@style/SecondaryTextView.MediumBlackMediumBlack.EditText"
-                android:id="@+id/inputEditText"
+                android:id="@+id/etInput"
                 android:inputType="text"
                 android:drawableStart="@drawable/search"
                 android:paddingStart="@dimen/secondary_image_padding"
@@ -45,7 +45,7 @@
                 android:singleLine="true"/>
 
         <ImageView
-                android:id="@+id/clearIcon"
+                android:id="@+id/ivClearIcon"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_gravity="end|center_vertical"
@@ -67,10 +67,10 @@
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/trackRecyclerView"/>
+            android:id="@+id/rvTrack"/>
 
     <LinearLayout
-            android:id="@+id/searchHistory"
+            android:id="@+id/llSearchHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -78,7 +78,7 @@
             android:layout_marginTop="24dp">
 
         <TextView
-                android:id="@+id/searchHistoryTxt"
+                android:id="@+id/tvSearchHistory"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:text="@string/you_searched"
@@ -91,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:id="@+id/searchHistoryRecyclerView"
+                android:id="@+id/rvSearchHistory"
                 tools:itemCount="10"
                 tools:listitem="@layout/track"/>
 
@@ -99,7 +99,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:id="@+id/searchHistoryClearButton"
+                android:id="@+id/btnSearchHistoryClear"
                 android:layout_weight="0"
                 android:text="@string/clear_history"
                 android:textColor="@color/white_medium_black"
@@ -115,7 +115,7 @@
     </LinearLayout>
 
     <LinearLayout
-            android:id="@+id/placeHolder"
+            android:id="@+id/llPlaceHolder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -123,7 +123,7 @@
             android:paddingTop="110dp">
 
         <ImageView
-                android:id="@+id/placeHolderImage"
+                android:id="@+id/ivPlaceHolder"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center_horizontal"
@@ -131,7 +131,7 @@
                 tools:src="@drawable/failed_connection"/>
 
         <TextView
-                android:id="@+id/placeHolderMessage"
+                android:id="@+id/tvPlaceholderMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/SecondaryTextView.MediumBlackWhite"
@@ -146,7 +146,7 @@
         <Button
                 android:layout_width="110dp"
                 android:layout_height="50dp"
-                android:id="@+id/placeHolderUpdateButton"
+                android:id="@+id/btnPlaceholderUpdate"
                 android:visibility="gone"
                 android:layout_weight="0"
                 android:text="@string/update"

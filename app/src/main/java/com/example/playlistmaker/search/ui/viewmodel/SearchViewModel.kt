@@ -12,12 +12,6 @@ import com.example.playlistmaker.search.domain.models.SearchState
 
 class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewModel() {
 
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private val SEARCH_REQUEST_TOKEN = Any()
-
-    }
-
     private val handler = Handler(Looper.getMainLooper())
 
     private val _historyState = MutableLiveData(searchInteractor.getSavedHistory())
@@ -25,17 +19,6 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
 
     private val _searchState = MutableLiveData<SearchState>()
 
-    /*private val mediatorSearchState = MediatorLiveData<SearchState>().also{ liveData ->
-        liveData.addSource(_searchState){searchState ->
-            when(searchState){
-                is SearchState.Content -> SearchState.Content(searchState.data.sortedByDescending { it.inFavourite })
-                is SearchState.Empty -> searchState
-                is SearchState.Error -> searchState
-                is SearchState.Loading -> searchState
-            }
-
-        }
-    }*/
     val searchState: LiveData<SearchState> = _searchState
 
     private val _toastState = MutableLiveData<String>()
@@ -119,4 +102,8 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         changeHistory()
     }
 
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private val SEARCH_REQUEST_TOKEN = Any()
+    }
 }

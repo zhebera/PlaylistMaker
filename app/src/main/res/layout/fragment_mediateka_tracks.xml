@@ -6,14 +6,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:id="@+id/placeHolder"
+        android:id="@+id/llPlaceHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="106dp">
 
     <ImageView
-        android:id="@+id/placeHolderImage"
+        android:id="@+id/ivPlaceHolder"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_gravity="center_horizontal"
@@ -22,7 +22,7 @@
         tools:src="@drawable/not_found"/>
 
     <TextView
-        android:id="@+id/placeHolderMessage"
+        android:id="@+id/tvPlaceholderMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/SecondaryTextView.MediumBlackWhite"
