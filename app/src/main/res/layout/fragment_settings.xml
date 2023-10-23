@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white_medium_black"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:context="com.example.playlistmaker.settings.ui.view.SettingsFragment">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingTop="@dimen/primary_left_padding">
-
-                <ImageView
-                        style="@style/PrimaryImage.HeadArrowBack"
-                        android:id="@+id/ivMainActivityBtn"/>
 
                 <TextView
                         style="@style/PrimaryTextView.MediumBlackWhite.Head"

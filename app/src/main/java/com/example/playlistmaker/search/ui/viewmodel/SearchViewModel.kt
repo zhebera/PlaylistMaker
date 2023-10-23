@@ -28,7 +28,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     private var latestSearchTrack: String? = null
 
     private fun searchRequest(newSearchTrack: String) {
-        if (!newSearchTrack.isNullOrEmpty()) {
+        if (newSearchTrack.isNotEmpty()) {
             renderState(
                 SearchState.Loading
             )
@@ -46,7 +46,6 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
                 when {
                     errorMessage != null -> {
                         renderState(SearchState.Error)
-                        //_toastState.postValue(errorMessage)
                     }
 
                     listTrack?.isEmpty() == true -> {
@@ -90,6 +89,10 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
             return
 
         latestSearchTrack = changedText
+    }
+
+    fun finishSearch(){
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 
     fun addNewTrackToHistory(track: Track) {
