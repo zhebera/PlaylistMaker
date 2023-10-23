@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white_medium_black"
-        android:orientation="vertical"
-        tools:context="com.example.playlistmaker.settings.ui.view.SettingsFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white_medium_black"
+    android:orientation="vertical"
+    tools:context="com.example.playlistmaker.settings.ui.view.SettingsFragment">
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -28,7 +28,9 @@
                         android:id="@+id/themeSwitch"
                         style="@style/SecondaryTextView.BlackWhite.SettingsActivityText"
                         android:text="@string/settings_activity_theme_switch"
-                        android:layout_marginEnd="8dp" />
+                        android:layout_marginEnd="8dp"
+                        app:trackTint="@color/switch_track_selector"
+                        app:thumbTint="@color/switch_thumb_selector"/>
         </FrameLayout>
 
         <FrameLayout

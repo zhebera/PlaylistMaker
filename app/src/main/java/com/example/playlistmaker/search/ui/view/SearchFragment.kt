@@ -14,9 +14,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -45,7 +43,9 @@ class SearchFragment: Fragment() {
     private val handler = Handler(Looper.getMainLooper())
     private val viewModel by viewModel<SearchViewModel>()
 
-    private lateinit var binding: FragmentSearchBinding
+    private var _binding: FragmentSearchBinding? = null
+    private val binding: FragmentSearchBinding
+        get() = _binding!!
 
     private val playlistAdapter = SearchAdapter(
         object : SearchAdapter.SearchClickListener {
@@ -67,7 +67,7 @@ class SearchFragment: Fragment() {
     private var savedSearchEditText: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -205,9 +205,11 @@ class SearchFragment: Fragment() {
         placeHolder.visibility = View.GONE
         progressBar.visibility = View.GONE
 
-        playlistAdapter.tracks.clear()
-        playlistAdapter.tracks.addAll(listTrack)
-        playlistAdapter.notifyDataSetChanged()
+        with(playlistAdapter) {
+            tracks.clear()
+            tracks.addAll(listTrack)
+            notifyDataSetChanged()
+        }
     }
 
     private fun showHistory(historyList: List<Track>, show: Boolean) {
@@ -216,9 +218,11 @@ class SearchFragment: Fragment() {
             placeHolder.visibility = View.GONE
             progressBar.visibility = View.GONE
 
-            searchHistoryAdapter.tracks.clear()
-            searchHistoryAdapter.tracks.addAll(historyList)
-            searchHistoryAdapter.notifyDataSetChanged()
+            with(searchHistoryAdapter) {
+                tracks.clear()
+                tracks.addAll(historyList)
+                notifyDataSetChanged()
+            }
         }
     }
 

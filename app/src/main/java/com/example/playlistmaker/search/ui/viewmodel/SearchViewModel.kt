@@ -92,6 +92,8 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     }
 
     fun finishSearch(){
+        listTrack.clear()
+        renderState(SearchState.Content(listTrack))
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 

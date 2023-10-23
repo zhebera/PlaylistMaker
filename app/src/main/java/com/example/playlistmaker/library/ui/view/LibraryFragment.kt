@@ -12,11 +12,13 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class LibraryFragment: Fragment() {
 
-    private lateinit var binding: FragmentLibraryBinding
+    private var _binding: FragmentLibraryBinding? = null
+    private val binding: FragmentLibraryBinding
+        get() = _binding!!
     private lateinit var tabLayoutMediator: TabLayoutMediator
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentLibraryBinding.inflate(inflater, container, false)
+        _binding = FragmentLibraryBinding.inflate(inflater, container, false)
         return binding.root
     }
 

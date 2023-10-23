@@ -17,7 +17,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment: Fragment() {
 
-    private lateinit var binding: FragmentSettingsBinding
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding: FragmentSettingsBinding
+        get() = _binding!!
+
     private lateinit var btnShareApplication: FrameLayout
     private lateinit var btnSupportConnect: FrameLayout
     private lateinit var btnUserAgreement: FrameLayout
@@ -25,7 +28,7 @@ class SettingsFragment: Fragment() {
     private val viewModel by viewModel<SettingsViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
