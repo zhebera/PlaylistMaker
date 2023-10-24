@@ -29,7 +29,7 @@ import com.example.playlistmaker.utils.KEY_TRACK_ID
 import com.example.playlistmaker.utils.createJsonFromTrack
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment: Fragment() {
+class SearchFragment : Fragment() {
     private lateinit var searchEditTxt: EditText
     private lateinit var btnPlaceHolderUpdate: Button
     private lateinit var placeHolder: LinearLayout
@@ -37,7 +37,7 @@ class SearchFragment: Fragment() {
     private lateinit var placeHolderMessage: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var trackRecyclerView: RecyclerView
-    private lateinit var btnClearEditTxt: ImageView
+    private lateinit var btnClearInput: ImageView
     private var textWatcher: TextWatcher? = null
     private var isClicked = true
     private val handler = Handler(Looper.getMainLooper())
@@ -47,22 +47,12 @@ class SearchFragment: Fragment() {
     private val binding: FragmentSearchBinding
         get() = _binding!!
 
-    private val playlistAdapter = SearchAdapter(
-        object : SearchAdapter.SearchClickListener {
-            override fun onTrackClick(track: Track) {
-                viewModel.addNewTrackToHistory(track)
-                startActivity(track)
-            }
-        }
-    )
+    private val playlistAdapter = SearchAdapter { track ->
+        viewModel.addNewTrackToHistory(track)
+        startActivity(track)
+    }
 
-    private val searchHistoryAdapter = SearchAdapter(
-        object : SearchAdapter.SearchClickListener {
-            override fun onTrackClick(track: Track) {
-                startActivity(track)
-            }
-        }
-    )
+    private val searchHistoryAdapter = SearchAdapter { track -> startActivity(track) }
 
     private var savedSearchEditText: String? = null
 
@@ -81,7 +71,7 @@ class SearchFragment: Fragment() {
         searchEditTxt = binding.etInput
         progressBar = binding.progressBar
         trackRecyclerView = binding.rvTrack
-        btnClearEditTxt = binding.ivClearIcon
+        btnClearInput = binding.ivClearIcon
         val searchHistory = binding.llSearchHistory
         val searchHistoryRecyclerView = binding.rvSearchHistory
         val btnClearSearchHistory = binding.btnSearchHistoryClear
@@ -102,14 +92,15 @@ class SearchFragment: Fragment() {
         trackRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         trackRecyclerView.adapter = playlistAdapter
 
-        searchHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        searchHistoryRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         searchHistoryRecyclerView.adapter = searchHistoryAdapter
 
         textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                btnClearEditTxt.visibility = clearButtonVisibility(s)
+                btnClearInput.visibility = clearButtonVisibility(s)
                 savedSearchEditText = searchEditTxt.text.toString()
 
                 searchHistory.visibility =
@@ -118,7 +109,7 @@ class SearchFragment: Fragment() {
                     else
                         View.GONE
 
-                if(!s.isNullOrEmpty())
+                if (!s.isNullOrEmpty())
                     viewModel.searchDebounce(
                         changedText = s.toString()
                     )
@@ -134,8 +125,9 @@ class SearchFragment: Fragment() {
             if (actionId == EditorInfo.IME_ACTION_DONE && !searchEditTxt.text.toString().isNullOrEmpty()) {
                 viewModel.searchDebounce(searchEditTxt.text.toString())
                 true
-            }
+            }else{
             false
+            }
         }
 
         searchEditTxt.setOnFocusChangeListener { view, hasFocus ->
@@ -155,7 +147,7 @@ class SearchFragment: Fragment() {
             searchHistory.visibility = View.GONE
         }
 
-        btnClearEditTxt.setOnClickListener {
+        btnClearInput.setOnClickListener {
             clearAll()
         }
 
@@ -271,7 +263,7 @@ class SearchFragment: Fragment() {
         }
     }
 
-    private fun clearAll(){
+    private fun clearAll() {
         searchEditTxt.text.clear()
         showContent(listOf())
         val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager

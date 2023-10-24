@@ -25,7 +25,7 @@ class LibraryFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.viewPager.adapter = FragmentLibraryAdapter(childFragmentManager, lifecycle)
+        binding.viewPager.adapter = FragmentLibraryAdapter(this)
 
         tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager){ tab, position ->
             tab.text = when(position){

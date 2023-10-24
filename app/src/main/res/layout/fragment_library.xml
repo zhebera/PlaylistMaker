@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingTop="@dimen/primary_left_padding"
+        android:background="@color/white_medium_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -28,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:background="@color/white_black"
+        android:background="@color/white_medium_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
@@ -40,6 +41,7 @@
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@color/white_medium_black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tabLayout"/>
 
