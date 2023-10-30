@@ -19,4 +19,8 @@
     <color name="medium_black_medium_black">#1A1B22</color>
     <color name="grey_medium_black">#AEAFB4</color>
     <color name="audioplayer_icon">#401A1B22</color>
+    <color name="bottom_navigation_color_true">#3772E7</color>
+    <color name="bottom_navigation_color_false">#1A1B22</color>
+    <color name="light_grey">#E6E8EB</color>
+
 </resources>
