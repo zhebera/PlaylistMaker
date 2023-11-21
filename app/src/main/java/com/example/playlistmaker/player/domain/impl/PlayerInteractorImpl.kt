@@ -3,18 +3,15 @@ package com.example.playlistmaker.player.domain.impl
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.player.domain.models.PlayerState
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : PlayerInteractor {
 
-    private var playerState = PlayerState.STATE_DEFAULT
-    private var playerFinish: Boolean = false
+    private var playerState: PlayerState = PlayerState.Default()
 
     override fun getPlayerState(): PlayerState {
         return playerState
-    }
-
-    override fun getPlayerFinish(): Boolean {
-        return playerFinish
     }
 
     override fun preparePlayer(url: String) {
@@ -23,40 +20,30 @@ class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : Pla
             prepareAsync()
             getCurrentPosition()
             setOnPreparedListener {
-                playerState = PlayerState.STATE_PREPARED
+                playerState = PlayerState.Prepared()
             }
             setOnCompletionListener {
-                playerState = PlayerState.STATE_PREPARED
-                playerFinish = true
+                playerState = PlayerState.Prepared()
             }
-        }
-    }
-
-    override fun playControl() {
-        when (playerState) {
-            PlayerState.STATE_PLAYING -> pausePlayer()
-            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> startPlayer()
-            else -> Unit
         }
     }
 
     override fun startPlayer() {
         playerRepository.start()
-        playerFinish = false
-        playerState = PlayerState.STATE_PLAYING
+        playerState = PlayerState.Playing(getCurrentPosition())
     }
 
     override fun pausePlayer() {
         playerRepository.pause()
-        playerFinish = false
-        playerState = PlayerState.STATE_PAUSED
+        playerState = PlayerState.Paused(getCurrentPosition())
     }
 
     override fun release() {
         playerRepository.release()
+        playerState = PlayerState.Default()
     }
 
-    override fun getCurrentPosition(): Int {
-        return playerRepository.getCurrentPosition()
+    override fun getCurrentPosition(): String {
+        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(playerRepository.getCurrentPosition()) ?: "00:00"
     }
 }

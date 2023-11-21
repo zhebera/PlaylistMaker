@@ -1,84 +1,78 @@
 package com.example.playlistmaker.player.ui.viewmodel
 
-import android.os.Handler
-import android.os.Looper
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.models.PlayerState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class PlayerViewModel(private val mediaPlayerInteractor: PlayerInteractor) : ViewModel() {
-
-    private val handler = Handler(Looper.getMainLooper())
-    private val timer = setTimer()
-    private val trackFinish = getTrackStatusFinishing()
+class PlayerViewModel(private val mediaPlayerInteractor: PlayerInteractor): ViewModel() {
 
     private val _playerState = MutableLiveData<PlayerState>()
     val playerState: LiveData<PlayerState> = _playerState
 
-    private val _timing = MutableLiveData<Int>()
-    val timing: LiveData<Int> = _timing
-
-    private val _finishedPlay = MutableLiveData<Boolean>()
-    val finishedPlay: LiveData<Boolean> = _finishedPlay
+    private var timerJob: Job? = null
 
     private fun renderState(state: PlayerState) {
         _playerState.postValue(state)
     }
 
-    fun preparePlayer(trackUrl: String) {
-        mediaPlayerInteractor.preparePlayer(trackUrl)
+    fun preparePlayer(url: String){
+        mediaPlayerInteractor.preparePlayer(url)
+        _playerState.postValue(mediaPlayerInteractor.getPlayerState())
     }
 
-    fun pausePlayer() {
-        handler.removeCallbacks(timer)
-        handler.removeCallbacks(trackFinish)
+    fun playControl(){
+        when(mediaPlayerInteractor.getPlayerState()){
+            is PlayerState.Playing -> pausePlayer()
+            is PlayerState.Prepared, is PlayerState.Paused-> startPlayer()
+            else -> Unit
+        }
+    }
+
+    fun startPlayer() {
+        mediaPlayerInteractor.startPlayer()
+        startTimer()
+        renderState(PlayerState.Playing(getCurrentPosition()))
+    }
+
+    fun pausePlayer(){
         mediaPlayerInteractor.pausePlayer()
-        renderState(mediaPlayerInteractor.getPlayerState())
+        timerJob?.cancel()
+        renderState(PlayerState.Paused(getCurrentPosition()))
     }
 
-    fun playControl() {
-        mediaPlayerInteractor.playControl()
-        handler.post(timer)
-        handler.post(trackFinish)
-        renderState(mediaPlayerInteractor.getPlayerState())
+    fun getCurrentPosition(): String {
+        return mediaPlayerInteractor.getCurrentPosition()
     }
 
-    fun finishPlay() {
-        if (_finishedPlay.value == true) {
-            handler.removeCallbacks(timer)
-            handler.removeCallbacks(trackFinish)
+    private fun releasePlayer(){
+        mediaPlayerInteractor.release()
+        timerJob?.cancel()
+        _playerState.postValue(PlayerState.Default())
+    }
+
+    private fun startTimer(){
+        viewModelScope.launch {
+            timerJob = viewModelScope.launch {
+                while(mediaPlayerInteractor.getPlayerState() is PlayerState.Playing){
+                    delay(REFRESH_TIMER_MILLIS)
+                    _playerState.postValue(PlayerState.Playing(getCurrentPosition())
+                    )
+                }
+                if(mediaPlayerInteractor.getPlayerState() is PlayerState.Prepared)
+                    _playerState.postValue(PlayerState.Prepared())
+            }
         }
     }
 
     override fun onCleared() {
         super.onCleared()
-        mediaPlayerInteractor.release()
-    }
-
-    private fun setTimer(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                _timing.postValue(mediaPlayerInteractor.getCurrentPosition())
-
-                handler?.postDelayed(
-                    this,
-                    REFRESH_TIMER_MILLIS
-                )
-            }
-        }
-    }
-
-    private fun getTrackStatusFinishing(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                _finishedPlay.postValue(mediaPlayerInteractor.getPlayerFinish())
-
-                handler?.postDelayed(
-                    this,
-                    REFRESH_TIMER_MILLIS
-                )
-            }
-        }
+        releasePlayer()
     }
 
     companion object {

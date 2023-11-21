@@ -4,18 +4,9 @@ import com.example.playlistmaker.player.domain.models.PlayerState
 
 interface PlayerInteractor {
     fun preparePlayer(url: String)
-
-    fun playControl()
-
     fun startPlayer()
-
     fun pausePlayer()
-
     fun release()
-
-    fun getCurrentPosition(): Int
-
+    fun getCurrentPosition(): String
     fun getPlayerState(): PlayerState
-
-    fun getPlayerFinish(): Boolean
 }

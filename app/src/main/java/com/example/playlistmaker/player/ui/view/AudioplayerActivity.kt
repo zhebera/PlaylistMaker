@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -54,14 +53,6 @@ class AudioplayerActivity : AppCompatActivity() {
 
         viewModel.playerState.observe(this){
             renderState(it)
-        }
-
-        viewModel.timing.observe(this){
-            renderTimer(it)
-        }
-
-        viewModel.finishedPlay.observe(this){
-            renderFinishPlay(it)
         }
 
         track = createTrackFromJson(intent.getStringExtra(KEY_TRACK_ID))
@@ -121,34 +112,23 @@ class AudioplayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.pausePlayer()
-        onPlayerPauseView()
     }
 
     private fun renderState(state: PlayerState){
         when(state){
-            PlayerState.STATE_PLAYING -> onPlayerStartView()
-            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> onPlayerPauseView()
+            is PlayerState.Playing -> onPlayerStartView(state.progress)
+            is PlayerState.Prepared, is PlayerState.Paused -> onPlayerPauseView(state.progress)
             else -> Unit
         }
     }
 
-    private fun renderTimer(timer: Int){
-        timerTxt.text = SimpleDateFormat(("mm:ss"), Locale.getDefault()).format(timer)
-    }
-
-    private fun renderFinishPlay(finished: Boolean){
-        if(finished){
-            viewModel.finishPlay()
-            playButton.setImageDrawable(getDrawable(R.drawable.play))
-            timerTxt.text = getString(R.string.player_zero_timing)
-        }
-    }
-
-    private fun onPlayerPauseView() {
+    private fun onPlayerPauseView(timer: String) {
+        timerTxt.text = timer
         playButton.setImageDrawable(getDrawable(R.drawable.play))
     }
 
-    private fun onPlayerStartView() {
+    private fun onPlayerStartView(timer: String) {
+        timerTxt.text = timer
         playButton.setImageDrawable(getDrawable(R.drawable.pause))
     }
 
