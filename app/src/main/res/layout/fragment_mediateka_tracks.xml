@@ -5,7 +5,13 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvLibrary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <LinearLayout
+        android:visibility="visible"
         android:id="@+id/llPlaceHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

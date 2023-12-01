@@ -9,4 +9,5 @@ interface PlayerInteractor {
     fun release()
     fun getCurrentPosition(): String
     fun getPlayerState(): PlayerState
+    fun checkFavourite(): Boolean
 }

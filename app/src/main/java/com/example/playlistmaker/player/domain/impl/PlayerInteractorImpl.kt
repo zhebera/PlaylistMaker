@@ -14,6 +14,10 @@ class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : Pla
         return playerState
     }
 
+    override fun checkFavourite(): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun preparePlayer(url: String) {
         with(playerRepository) {
             setDataSource(url)

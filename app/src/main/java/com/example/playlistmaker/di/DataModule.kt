@@ -2,6 +2,8 @@ package com.example.playlistmaker.di
 
 import android.content.Context.MODE_PRIVATE
 import android.media.MediaPlayer
+import androidx.room.Room
+import com.example.playlistmaker.data.db.TrackDatabase
 import com.example.playlistmaker.search.data.localstorage.LocalStorage
 import com.example.playlistmaker.search.data.network.ITunesApi
 import com.example.playlistmaker.search.data.network.NetworkClient
@@ -10,6 +12,7 @@ import com.example.playlistmaker.settings.data.localstorage.LocalStorageTheme
 import com.example.playlistmaker.utils.BASE_URL
 import com.example.playlistmaker.utils.DARK_THEME_ENABLED
 import com.example.playlistmaker.utils.SEARCH_HISTORY_PLAYLIST
+import com.example.playlistmaker.utils.converters.TrackDbConverter
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -51,4 +54,10 @@ val dataModule = module {
     single<LocalStorageTheme> {
         LocalStorageTheme(get(named(DARK_THEME_ENABLED)))
     }
+
+    single<TrackDatabase>{
+        Room.databaseBuilder(androidContext(), TrackDatabase::class.java, "database.db")
+            .build()
+    }
+
 }

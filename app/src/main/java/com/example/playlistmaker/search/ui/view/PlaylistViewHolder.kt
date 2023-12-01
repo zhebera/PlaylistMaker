@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class PlaylistViewHolder(parent: ViewGroup,
-                         private val clickListener: SearchAdapter.SearchClickListener
+                         private val clickListener: PlaylistAdapter.SearchClickListener
 ): RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context)
     .inflate(R.layout.track, parent, false)) {
