@@ -84,18 +84,18 @@ class PlayerViewModel(
 
     fun changeFavourite(track: Track){
         viewModelScope.launch {
-            val favorite = _isFavorite.value!!
+            val favorite = _isFavorite.value ?: false
             if(favorite)
-                mediatekaInteractor.deleteTrackFromTable(track)
+                mediatekaInteractor.removeTrack(track)
             else
-                mediatekaInteractor.insertTrackToTable(track)
+                mediatekaInteractor.addTrack(track)
             renderFavorite(!favorite)
         }
     }
 
     fun checkFavorite(trackId: String){
         viewModelScope.launch {
-            mediatekaInteractor.checkTrackInTable(trackId).collect{
+            mediatekaInteractor.checkTrack(trackId).collect{
                  renderFavorite(it)
             }
         }

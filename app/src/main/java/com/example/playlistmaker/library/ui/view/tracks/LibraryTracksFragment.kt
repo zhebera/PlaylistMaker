@@ -27,9 +27,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryTracksFragment: Fragment() {
 
-    private lateinit var _binding: FragmentMediatekaTracksBinding
+    private var _binding: FragmentMediatekaTracksBinding? = null
     private val binding: FragmentMediatekaTracksBinding
-        get() = _binding
+        get() = _binding!!
 
     private var libraryRecyclerView: RecyclerView? = null
     private var placeHolderLinearLayout: LinearLayout? = null
@@ -65,16 +65,19 @@ class LibraryTracksFragment: Fragment() {
         libraryRecyclerView?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         libraryRecyclerView?.adapter = adapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.libraryTracks.collect{ state ->
-                renderState(state)
-            }
+        viewModel.libraryTracks.observe(viewLifecycleOwner){state ->
+            renderState(state)
         }
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.getData()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun initializeView(){
@@ -102,7 +105,7 @@ class LibraryTracksFragment: Fragment() {
         placeHolderLinearLayout?.visibility = View.GONE
 
         adapter?.tracks?.clear()
-        adapter?.tracks?.addAll(tracks.reversed())
+        adapter?.tracks?.addAll(tracks)
         adapter?.notifyDataSetChanged()
     }
 

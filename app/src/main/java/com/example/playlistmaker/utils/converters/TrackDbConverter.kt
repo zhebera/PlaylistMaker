@@ -36,18 +36,7 @@ class TrackDbConverter {
 
     fun map(tracksEntity: List<TrackEntity>): List<Track>{
         return tracksEntity.map {trackEntity ->
-            Track(
-                trackEntity.trackId,
-                trackEntity.trackName,
-                trackEntity.artistName,
-                trackEntity.trackTimeMillis,
-                trackEntity.artworkUrl100,
-                trackEntity.collectionName,
-                trackEntity.releaseDate,
-                trackEntity.primaryGenreName,
-                trackEntity.country,
-                trackEntity.previewUrl
-            )
+            map(trackEntity)
         }
     }
 }

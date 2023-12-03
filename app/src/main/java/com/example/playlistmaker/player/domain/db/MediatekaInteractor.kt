@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface MediatekaInteractor {
 
-    fun checkTrackInTable(trackId: String): Flow<Boolean>
-    suspend fun insertTrackToTable(track: Track)
-    suspend fun deleteTrackFromTable(track: Track)
+    fun checkTrack(trackId: String): Flow<Boolean>
+    suspend fun addTrack(track: Track)
+    suspend fun removeTrack(track: Track)
 }

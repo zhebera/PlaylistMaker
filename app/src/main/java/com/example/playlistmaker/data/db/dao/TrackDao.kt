@@ -7,13 +7,13 @@ import com.example.playlistmaker.data.db.entity.TrackEntity
 interface TrackDao {
 
     @Delete
-    suspend fun deleteTrackFromTable(trackEntity: TrackEntity)
+    suspend fun deleteTrack(trackEntity: TrackEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTrackToTable(trackEntity: TrackEntity)
+    suspend fun insertTrack(trackEntity: TrackEntity)
 
     @Query("SELECT * FROM tracks_table")
-    suspend fun getAllTracksFromTable(): List<TrackEntity>
+    suspend fun getAllTracks(): List<TrackEntity>
 
     @Query("SELECT * FROM tracks_table WHERE trackId = :trackId")
     suspend fun getTrackById(trackId: String): TrackEntity?

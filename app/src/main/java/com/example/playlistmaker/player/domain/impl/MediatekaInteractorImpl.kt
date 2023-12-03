@@ -8,15 +8,15 @@ import kotlinx.coroutines.flow.Flow
 class MediatekaInteractorImpl(
     private val mediatekaRepository: MediatekaRepository
 ): MediatekaInteractor {
-    override fun checkTrackInTable(trackId: String): Flow<Boolean> {
-        return mediatekaRepository.checkTrackInTable(trackId)
+    override fun checkTrack(trackId: String): Flow<Boolean> {
+        return mediatekaRepository.checkTrack(trackId)
     }
 
-    override suspend fun insertTrackToTable(track: Track) {
-        mediatekaRepository.insertTrackToTable(track)
+    override suspend fun addTrack(track: Track) {
+        mediatekaRepository.addTrack(track)
     }
 
-    override suspend fun deleteTrackFromTable(track: Track) {
-        mediatekaRepository.deleteTrackFromTable(track)
+    override suspend fun removeTrack(track: Track) {
+        mediatekaRepository.removeTrack(track)
     }
 }
