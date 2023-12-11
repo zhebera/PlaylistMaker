@@ -1,26 +1,26 @@
-package com.example.playlistmaker.library.ui.view
+package com.example.playlistmaker.library.ui.view.playlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.playlistmaker.databinding.FragmentMediatekaTracksBinding
+import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 
-class TracksFragment: Fragment() {
+class PlaylistFragment: Fragment() {
 
-    private lateinit var binding: FragmentMediatekaTracksBinding
+    private lateinit var binding: FragmentPlaylistBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMediatekaTracksBinding.inflate(inflater, container, false)
+        binding = FragmentPlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     companion object{
-        fun newInstance() = TracksFragment()
+        fun newInstance() = PlaylistFragment()
     }
 }

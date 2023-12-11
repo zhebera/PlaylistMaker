@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.models.Track
 
-class SearchAdapter(private val clickListener: SearchClickListener): RecyclerView.Adapter<PlaylistViewHolder>() {
+class PlaylistAdapter(private val clickListener: SearchClickListener): RecyclerView.Adapter<PlaylistViewHolder>() {
 
     var tracks = ArrayList<Track>()
 

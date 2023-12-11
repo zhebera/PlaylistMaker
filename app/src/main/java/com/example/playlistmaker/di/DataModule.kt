@@ -2,6 +2,8 @@ package com.example.playlistmaker.di
 
 import android.content.Context.MODE_PRIVATE
 import android.media.MediaPlayer
+import androidx.room.Room
+import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.search.data.localstorage.LocalStorage
 import com.example.playlistmaker.search.data.network.ITunesApi
 import com.example.playlistmaker.search.data.network.NetworkClient
@@ -51,4 +53,10 @@ val dataModule = module {
     single<LocalStorageTheme> {
         LocalStorageTheme(get(named(DARK_THEME_ENABLED)))
     }
+
+    single<AppDatabase>{
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .build()
+    }
+
 }

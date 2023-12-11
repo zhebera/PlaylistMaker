@@ -37,6 +37,7 @@ class AudioplayerActivity : AppCompatActivity() {
     private lateinit var releaseDate: TextView
     private lateinit var primaryGenreName: TextView
     private lateinit var country: TextView
+    private lateinit var favouriteButton: ImageView
     private val viewModel by viewModel<PlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +56,10 @@ class AudioplayerActivity : AppCompatActivity() {
             renderState(it)
         }
 
+        viewModel.isFavorite.observe(this){
+            renderFavorite(it)
+        }
+
         track = createTrackFromJson(intent.getStringExtra(KEY_TRACK_ID))
 
         initializeView()
@@ -69,6 +74,17 @@ class AudioplayerActivity : AppCompatActivity() {
         playButton.setOnClickListener {
             viewModel.playControl()
         }
+
+        favouriteButton.setOnClickListener {
+            viewModel.changeFavourite(track)
+        }
+    }
+
+    private fun renderFavorite(favorite: Boolean) {
+        if(favorite)
+            favouriteButton.setImageDrawable(getDrawable(R.drawable.like))
+        else
+            favouriteButton.setImageDrawable(getDrawable(R.drawable.no_like))
     }
 
     private fun initializeView() {
@@ -83,6 +99,7 @@ class AudioplayerActivity : AppCompatActivity() {
         country = binding.tvCountry
         timerTxt = binding.tvTimer
         playButton = binding.ibPlayButton
+        favouriteButton = binding.ibFavourite
 
         Glide.with(this)
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
@@ -102,7 +119,9 @@ class AudioplayerActivity : AppCompatActivity() {
         ).year.toString()
         primaryGenreName.text = track.primaryGenreName
         country.text = track.country
+        viewModel.checkFavorite(track.trackId)
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(SAVED_AUDIOPLAYER_STATE, createJsonFromTrack(track))
         outState.putBoolean(PREPARED_TRACK, true)

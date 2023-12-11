@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -24,6 +25,7 @@ import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.player.ui.view.AudioplayerActivity
 import com.example.playlistmaker.search.domain.models.SearchState
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
+import com.example.playlistmaker.utils.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.utils.KEY_TRACK_ID
 import com.example.playlistmaker.utils.createJsonFromTrack
 import com.example.playlistmaker.utils.debounce
@@ -46,8 +48,8 @@ class SearchFragment : Fragment() {
     private val binding: FragmentSearchBinding
         get() = _binding!!
 
-    private var playlistAdapter: SearchAdapter? = null
-    private var searchHistoryAdapter: SearchAdapter? = null
+    private var playlistAdapter: PlaylistAdapter? = null
+    private var searchHistoryAdapter: PlaylistAdapter? = null
 
     private var savedSearchEditText: String? = null
 
@@ -65,12 +67,12 @@ class SearchFragment : Fragment() {
             startActivity(audioplayerIntent)
         }
 
-        playlistAdapter = SearchAdapter { track ->
+        playlistAdapter = PlaylistAdapter { track ->
             viewModel.addNewTrackToHistory(track)
             onTrackClickDebounce(track)
         }
 
-        searchHistoryAdapter = SearchAdapter { track ->
+        searchHistoryAdapter = PlaylistAdapter { track ->
             onTrackClickDebounce(track)
         }
 
@@ -272,9 +274,5 @@ class SearchFragment : Fragment() {
         clearAll()
         viewModel.finishSearch()
         textWatcher.let { searchEditTxt.removeTextChangedListener(it) }
-    }
-
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

@@ -16,16 +16,16 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     val historyState: LiveData<List<Track>> = _historyState
 
     private val _searchState = MutableLiveData<SearchState>()
-
     val searchState: LiveData<SearchState> = _searchState
 
     private val _toastState = MutableLiveData<String>()
     val toastState: LiveData<String> = _toastState
 
-    private val trackSearchDebounce = debounce<String>(SEARCH_DEBOUNCE_DELAY,
+    private val trackSearchDebounce = debounce<String>(
+        SEARCH_DEBOUNCE_DELAY,
         viewModelScope,
-        true){ changedtext ->
-        searchRequest(changedtext)
+        true){ changedText ->
+        searchRequest(changedText)
     }
 
     private val listTrack = ArrayList<Track>()
