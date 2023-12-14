@@ -19,13 +19,11 @@ class PlaylistRetrofit(private val playlistRetrofit: ITunesApi, private val cont
             return Response().apply { resultCode = 400 }
         }
 
-        return withContext(Dispatchers.IO){
-            try{
-                val response = playlistRetrofit.search(dto.searchTrack)
-                response.apply { resultCode = 200 }
-            }catch(e: Throwable){
-                Response().apply { resultCode = 500 }
-            }
+        try {
+            val response = playlistRetrofit.search(dto.searchTrack)
+            return response.apply { resultCode = 200 }
+        } catch (e: Throwable) {
+            return Response().apply { resultCode = 500 }
         }
     }
 

@@ -142,7 +142,7 @@
         <Button
                 android:layout_width="110dp"
                 android:layout_height="50dp"
-                android:id="@+id/btnPlaceholderUpdate"
+                android:id="@+id/btnPlaceholderCreate"
                 android:visibility="gone"
                 android:layout_weight="0"
                 android:text="@string/update"

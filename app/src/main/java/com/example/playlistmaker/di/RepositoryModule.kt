@@ -11,6 +11,7 @@ import com.example.playlistmaker.search.data.impl.SearchRepositoryImpl
 import com.example.playlistmaker.search.domain.api.SearchRepository
 import com.example.playlistmaker.settings.data.impl.SettingsRepositoryImpl
 import com.example.playlistmaker.settings.domain.api.SettingsRepository
+import com.example.playlistmaker.utils.converters.PlaylistDbConverter
 import com.example.playlistmaker.utils.converters.TrackDbConverter
 import org.koin.dsl.module
 
@@ -18,6 +19,10 @@ val repositoryModule = module {
 
     factory<TrackDbConverter>{
         TrackDbConverter()
+    }
+
+    factory<PlaylistDbConverter>{
+        PlaylistDbConverter()
     }
 
     single<SearchRepository> {
@@ -37,6 +42,6 @@ val repositoryModule = module {
     }
 
     single<LibraryRepository>{
-        LibraryRepositoryImpl(get(), get())
+        LibraryRepositoryImpl(get(), get(), get())
     }
 }

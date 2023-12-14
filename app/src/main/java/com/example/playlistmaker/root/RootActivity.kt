@@ -1,9 +1,12 @@
 package com.example.playlistmaker.root
 
 import android.os.Bundle
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityRootBinding
 
@@ -20,5 +23,6 @@ class RootActivity: AppCompatActivity() {
         val navController = navHostFragment.navController
 
         binding.bottomNavigationView.setupWithNavController(navController)
+
     }
 }

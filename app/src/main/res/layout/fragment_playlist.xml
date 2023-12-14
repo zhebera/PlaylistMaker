@@ -16,7 +16,7 @@
     <Button
         android:layout_width="160dp"
         android:layout_height="50dp"
-        android:id="@+id/btnPlaceholderUpdate"
+        android:id="@+id/btnPlaceholderCreate"
         android:text="@string/new_playlist"
         android:textColor="@color/white_medium_black"
         android:textSize="14sp"

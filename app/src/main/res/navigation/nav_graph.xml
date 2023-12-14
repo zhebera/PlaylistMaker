@@ -7,8 +7,14 @@
     <fragment android:id="@+id/searchFragment" android:name="com.example.playlistmaker.search.ui.view.SearchFragment"
               android:label="fragment_search" tools:layout="@layout/fragment_search"/>
     <fragment android:id="@+id/libraryFragment" android:name="com.example.playlistmaker.library.ui.view.LibraryFragment"
-              android:label="fragment_library" tools:layout="@layout/fragment_library"/>
+              android:label="fragment_library" tools:layout="@layout/fragment_library">
+        <action android:id="@+id/action_libraryFragment_to_playlistCreateFragment"
+                app:destination="@id/playlistCreateFragment"/>
+    </fragment>
     <fragment android:id="@+id/settingsFragment"
               android:name="com.example.playlistmaker.settings.ui.view.SettingsFragment"
               android:label="fragment_settings" tools:layout="@layout/fragment_settings"/>
+    <fragment android:id="@+id/playlistCreateFragment"
+              android:name="com.example.playlistmaker.library.ui.view.playlist.PlaylistCreateFragment"
+              android:label="fragment_playlist_creator" tools:layout="@layout/fragment_playlist_creator"/>
 </navigation>

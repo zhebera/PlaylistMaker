@@ -29,6 +29,7 @@ import com.example.playlistmaker.utils.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.utils.KEY_TRACK_ID
 import com.example.playlistmaker.utils.createJsonFromTrack
 import com.example.playlistmaker.utils.debounce
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -79,7 +80,7 @@ class SearchFragment : Fragment() {
         placeHolder = binding.llPlaceHolder
         placeHolderImage = binding.ivPlaceHolder
         placeHolderMessage = binding.tvPlaceholderMessage
-        btnPlaceHolderUpdate = binding.btnPlaceholderUpdate
+        btnPlaceHolderUpdate = binding.btnPlaceholderCreate
         searchEditTxt = binding.etInput
         progressBar = binding.progressBar
         trackRecyclerView = binding.rvTrack
@@ -89,17 +90,18 @@ class SearchFragment : Fragment() {
         val btnClearSearchHistory = binding.btnSearchHistoryClear
         searchEditTxt.setText(savedSearchEditText)
 
-        viewModel.searchState.observe(viewLifecycleOwner) {
-            renderState(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchState.observe(viewLifecycleOwner){
+                renderState(it)
+            }
         }
 
-        viewModel.toastState.observe(viewLifecycleOwner) {
-            showToast(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.historyState.observe(viewLifecycleOwner) {
+                showHistory(it, false)
+            }
         }
 
-        viewModel.historyState.observe(viewLifecycleOwner) {
-            showHistory(it, false)
-        }
 
         trackRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         trackRecyclerView.adapter = playlistAdapter
@@ -176,10 +178,6 @@ class SearchFragment : Fragment() {
             is SearchState.Error -> showError()
             is SearchState.Empty -> showEmpty()
         }
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun showLoading() {
