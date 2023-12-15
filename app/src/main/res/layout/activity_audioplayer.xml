@@ -230,13 +230,13 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/standard_bottom_sheet"
+                android:id="@+id/bottom_sheet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
+                android:background="@drawable/bottom_sheet_background"
                 android:paddingHorizontal="16dp"
                 app:behavior_hideable="true"
-                app:behavior_peekHeight="240dp"
+                app:behavior_peekHeight="500dp"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <View
@@ -244,6 +244,7 @@
                 android:layout_width="40dp"
                 android:layout_height="4dp"
                 android:layout_gravity="center"
+                android:background="@color/light_grey"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -261,6 +262,7 @@
                 android:gravity="center"
                 android:text="Добавить в плейлист"
                 style="@style/PrimaryTextView.BlackWhite"
+                android:textColor="@color/medium_black_white"
                 android:textSize="19sp"/>
 
         <Button

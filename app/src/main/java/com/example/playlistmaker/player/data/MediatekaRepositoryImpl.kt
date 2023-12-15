@@ -1,16 +1,20 @@
 package com.example.playlistmaker.player.data
 
 import com.example.playlistmaker.data.db.AppDatabase
+import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.player.domain.db.MediatekaRepository
+import com.example.playlistmaker.utils.converters.PlaylistDbConverter
 import com.example.playlistmaker.utils.converters.TrackDbConverter
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 class MediatekaRepositoryImpl(
     private val appDatabase: AppDatabase,
-    private val trackDbConverter: TrackDbConverter
+    private val trackDbConverter: TrackDbConverter,
+    private val playlistDbConverter: PlaylistDbConverter
 ): MediatekaRepository {
 
     override fun checkTrack(trackId: String) = flow {
@@ -28,5 +32,10 @@ class MediatekaRepositoryImpl(
         withContext(Dispatchers.IO){
             appDatabase.trackDao().deleteTrack(trackDbConverter.map(track))
         }
+    }
+
+    override fun getAllPlaylist(): Flow<List<Playlist>> = flow {
+        val playlists = appDatabase.playlistDao().getAllPlaylist()
+        emit(playlistDbConverter.map(playlists))
     }
 }

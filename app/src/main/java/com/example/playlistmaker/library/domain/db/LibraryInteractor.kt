@@ -1,6 +1,6 @@
 package com.example.playlistmaker.library.domain.db
 
-import com.example.playlistmaker.data.db.entity.PlaylistEntity
+import android.graphics.drawable.Drawable
 import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.models.Track
 import kotlinx.coroutines.flow.Flow

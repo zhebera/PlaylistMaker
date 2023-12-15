@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.db.MediatekaInteractor
 import com.example.playlistmaker.player.domain.models.PlayerState
+import com.example.playlistmaker.models.PlaylistState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -22,6 +24,9 @@ class PlayerViewModel(
 
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> = _isFavorite
+
+    private val _playlistState = MutableLiveData<PlaylistState>()
+    val playlistState: LiveData<PlaylistState> = _playlistState
 
     private var timerJob: Job? = null
 
@@ -73,7 +78,8 @@ class PlayerViewModel(
             timerJob = viewModelScope.launch {
                 while(mediaPlayerInteractor.getPlayerState() is PlayerState.Playing){
                     delay(REFRESH_TIMER_MILLIS)
-                    _playerState.postValue(PlayerState.Playing(getCurrentPosition())
+                    _playerState.postValue(
+                        PlayerState.Playing(getCurrentPosition())
                     )
                 }
                 if(mediaPlayerInteractor.getPlayerState() is PlayerState.Prepared)
@@ -99,6 +105,21 @@ class PlayerViewModel(
                  renderFavorite(it)
             }
         }
+    }
+
+    fun getAllPlaylist(){
+        viewModelScope.launch {
+            mediatekaInteractor.getAllPlaylist().collect{playlists ->
+                renderState(playlists)
+            }
+        }
+    }
+
+    private fun renderState(playlists: List<Playlist>){
+        if(playlists.isNullOrEmpty())
+            _playlistState.postValue(PlaylistState.Empty)
+        else
+            _playlistState.postValue(PlaylistState.Content(playlists))
     }
 
     override fun onCleared() {

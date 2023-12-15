@@ -6,16 +6,20 @@ import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.utils.createJsonFromTrack
-import com.example.playlistmaker.utils.createTrackFromJson
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
-import com.example.playlistmaker.utils.KEY_TRACK_ID
+import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.player.domain.models.PlayerState
+import com.example.playlistmaker.models.PlaylistState
 import com.example.playlistmaker.player.ui.viewmodel.PlayerViewModel
-import com.example.playlistmaker.utils.dpToPx
+import com.example.playlistmaker.utils.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -38,12 +42,26 @@ class AudioplayerActivity : AppCompatActivity() {
     private lateinit var primaryGenreName: TextView
     private lateinit var country: TextView
     private lateinit var favouriteButton: ImageView
+    private lateinit var addPlaylistBtn: ImageView
+    private lateinit var bottomSheet: ConstraintLayout
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private var playlistRecyclerView: RecyclerView? = null
+    private var playlistAdapter: PlaylistAdapter? = null
+    private lateinit var onPlaylstClickDebounce: (Playlist) -> Unit
     private val viewModel by viewModel<PlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAudioplayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        onPlaylstClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false){playlist ->
+            TODO()
+        }
+
+        playlistAdapter = PlaylistAdapter{playlist ->
+            onPlaylstClickDebounce(playlist)
+        }
 
         var preparedTrack = false
 
@@ -60,9 +78,16 @@ class AudioplayerActivity : AppCompatActivity() {
             renderFavorite(it)
         }
 
+        viewModel.playlistState.observe(this){
+            renderPlaylistState(it)
+        }
+
         track = createTrackFromJson(intent.getStringExtra(KEY_TRACK_ID))
 
         initializeView()
+
+        playlistRecyclerView?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        playlistRecyclerView?.adapter = playlistAdapter
 
         btnBack.setOnClickListener {
             finish()
@@ -77,6 +102,10 @@ class AudioplayerActivity : AppCompatActivity() {
 
         favouriteButton.setOnClickListener {
             viewModel.changeFavourite(track)
+        }
+
+        addPlaylistBtn.setOnClickListener {
+            addTrackToPlaylist()
         }
     }
 
@@ -100,6 +129,12 @@ class AudioplayerActivity : AppCompatActivity() {
         timerTxt = binding.tvTimer
         playButton = binding.ibPlayButton
         favouriteButton = binding.ibFavourite
+        bottomSheet = binding.bottomSheet
+        addPlaylistBtn = binding.ibAddPlaylistBtn
+        playlistRecyclerView = binding.rvPlaylist
+
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         Glide.with(this)
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
@@ -149,6 +184,24 @@ class AudioplayerActivity : AppCompatActivity() {
     private fun onPlayerStartView(timer: String) {
         timerTxt.text = timer
         playButton.setImageDrawable(getDrawable(R.drawable.pause))
+    }
+
+    private fun addTrackToPlaylist(){
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    private fun renderPlaylistState(playlistState: PlaylistState){
+        when(playlistState){
+            is PlaylistState.Content -> showPlaylists(playlistState.data)
+            is PlaylistState.Empty -> Unit
+        }
+    }
+
+    private fun showPlaylists(listPlaylist: List<Playlist>){
+
+        playlistAdapter?.playlists?.clear()
+        playlistAdapter?.playlists?.addAll(listPlaylist)
+        playlistAdapter?.notifyDataSetChanged()
     }
 
     companion object {

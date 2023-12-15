@@ -102,7 +102,6 @@ class SearchFragment : Fragment() {
             }
         }
 
-
         trackRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         trackRecyclerView.adapter = playlistAdapter
 

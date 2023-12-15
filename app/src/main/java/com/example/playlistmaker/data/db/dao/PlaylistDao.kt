@@ -2,6 +2,7 @@ package com.example.playlistmaker.data.db.dao
 
 import androidx.room.*
 import com.example.playlistmaker.data.db.entity.PlaylistEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PlaylistDao {

@@ -24,7 +24,7 @@ class LibraryTracksViewModel(
         }
     }
 
-    private suspend fun renderState(tracks: List<Track>) {
+    private fun renderState(tracks: List<Track>) {
             if(tracks.isNullOrEmpty())
                 _libraryTracks.postValue(LibraryTrackState.Empty)
             else

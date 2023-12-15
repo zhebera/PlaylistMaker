@@ -38,7 +38,7 @@ val repositoryModule = module {
     }
 
     single<MediatekaRepository>{
-        MediatekaRepositoryImpl(get(), get())
+        MediatekaRepositoryImpl(get(), get(), get())
     }
 
     single<LibraryRepository>{

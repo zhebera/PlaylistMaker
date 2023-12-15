@@ -1,5 +1,6 @@
 package com.example.playlistmaker.player.domain.impl
 
+import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.player.domain.db.MediatekaInteractor
 import com.example.playlistmaker.player.domain.db.MediatekaRepository
@@ -18,5 +19,9 @@ class MediatekaInteractorImpl(
 
     override suspend fun removeTrack(track: Track) {
         mediatekaRepository.removeTrack(track)
+    }
+
+    override suspend fun getAllPlaylist(): Flow<List<Playlist>> {
+        return mediatekaRepository.getAllPlaylist()
     }
 }
