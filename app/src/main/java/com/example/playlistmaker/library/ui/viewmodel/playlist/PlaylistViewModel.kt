@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.library.domain.db.LibraryInteractor
-import com.example.playlistmaker.library.domain.models.Playlist
+import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.models.PlaylistState
 import kotlinx.coroutines.launch
 

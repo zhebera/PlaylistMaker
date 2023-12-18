@@ -16,13 +16,14 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistCreatorBinding
-import com.example.playlistmaker.library.domain.models.Playlist
+import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.library.ui.viewmodel.playlist.PlaylistCreateViewModel
 import com.example.playlistmaker.utils.PLAYLIST_STORAGE_NAME
 import com.example.playlistmaker.utils.converters.getNameForImage
@@ -149,7 +150,8 @@ class PlaylistCreateFragment : Fragment() {
                     Playlist(
                         binding.etPlaylistName.text.toString(),
                         binding.etPlaylistOverview.text.toString(),
-                        ""
+                        getNameForImage(binding.etPlaylistName.text.toString()),
+                        null
                     )
                 )
             }
@@ -165,7 +167,7 @@ class PlaylistCreateFragment : Fragment() {
                 filePath.mkdirs()
             }
 
-            val file = File(filePath, getNameForImage(playlistName = binding.etPlaylistName.text.toString()))
+            val file = File(filePath, "${getNameForImage(playlistName = binding.etPlaylistName.text.toString())}.jpg")
             val outputStream = FileOutputStream(file)
 
             if (uriImage != null) {
@@ -175,9 +177,8 @@ class PlaylistCreateFragment : Fragment() {
                     .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
 
             }else{
-                BitmapFactory
-                    .decodeResource(requireContext().resources, R.drawable.music_note)
-                    .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+                val inputStream = requireContext().getDrawable(R.drawable.music_note)?.toBitmapOrNull()
+                inputStream?.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
             }
         }
     }

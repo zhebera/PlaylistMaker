@@ -1,7 +1,7 @@
 package com.example.playlistmaker.utils.converters
 
 import com.example.playlistmaker.data.db.entity.PlaylistEntity
-import com.example.playlistmaker.library.domain.models.Playlist
+import com.example.playlistmaker.models.Playlist
 
 class PlaylistDbConverter {
 
@@ -9,15 +9,17 @@ class PlaylistDbConverter {
         return PlaylistEntity(
             name = playlist.name,
             overview = playlist.overview,
-            image = playlist.image
+            imageName = playlist.imageName,
+            tracks = playlist.tracks
         )
     }
 
-    fun map(playlistEntity: PlaylistEntity): Playlist{
+    fun map(playlistEntity: PlaylistEntity): Playlist {
         return Playlist(
             playlistEntity.name,
             playlistEntity.overview,
-            playlistEntity.image
+            playlistEntity.imageName,
+            playlistEntity.tracks
         )
     }
 

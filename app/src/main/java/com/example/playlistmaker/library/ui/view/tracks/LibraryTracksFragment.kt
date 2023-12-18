@@ -1,6 +1,5 @@
 package com.example.playlistmaker.library.ui.view.tracks
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,21 +7,22 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMediatekaTracksBinding
 import com.example.playlistmaker.library.domain.models.LibraryTrackState
 import com.example.playlistmaker.library.ui.viewmodel.tracks.LibraryTracksViewModel
 import com.example.playlistmaker.models.Track
-import com.example.playlistmaker.player.ui.view.AudioplayerActivity
 import com.example.playlistmaker.search.ui.view.PlaylistAdapter
 import com.example.playlistmaker.utils.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.utils.KEY_TRACK_ID
 import com.example.playlistmaker.utils.createJsonFromTrack
 import com.example.playlistmaker.utils.debounce
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryTracksFragment: Fragment() {
@@ -53,9 +53,8 @@ class LibraryTracksFragment: Fragment() {
         initializeView()
 
         onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
-            val audioplayerIntent = Intent(requireContext(), AudioplayerActivity::class.java)
-            audioplayerIntent.putExtra(KEY_TRACK_ID, createJsonFromTrack(track))
-            startActivity(audioplayerIntent)
+            val bundle = bundleOf(KEY_TRACK_ID to createJsonFromTrack(track))
+            findNavController().navigate(R.id.action_libraryFragment_to_audioplayerFragment, bundle)
         }
 
         adapter = PlaylistAdapter{track ->

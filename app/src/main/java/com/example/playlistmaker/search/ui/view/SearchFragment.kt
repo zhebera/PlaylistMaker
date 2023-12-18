@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.ui.view
 
 import android.content.Context.INPUT_METHOD_SERVICE
-import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
@@ -12,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -22,7 +22,6 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.models.Track
-import com.example.playlistmaker.player.ui.view.AudioplayerActivity
 import com.example.playlistmaker.search.domain.models.SearchState
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.utils.CLICK_DEBOUNCE_DELAY
@@ -63,9 +62,8 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
-            val audioplayerIntent = Intent(requireContext(), AudioplayerActivity::class.java)
-            audioplayerIntent.putExtra(KEY_TRACK_ID, createJsonFromTrack(track))
-            startActivity(audioplayerIntent)
+            val bundle = bundleOf(KEY_TRACK_ID to createJsonFromTrack(track))
+            findNavController().navigate(R.id.action_searchFragment_to_audioplayerFragment, bundle)
         }
 
         playlistAdapter = PlaylistAdapter { track ->
@@ -80,7 +78,7 @@ class SearchFragment : Fragment() {
         placeHolder = binding.llPlaceHolder
         placeHolderImage = binding.ivPlaceHolder
         placeHolderMessage = binding.tvPlaceholderMessage
-        btnPlaceHolderUpdate = binding.btnPlaceholderCreate
+        btnPlaceHolderUpdate = binding.btnPlaylistCreate
         searchEditTxt = binding.etInput
         progressBar = binding.progressBar
         trackRecyclerView = binding.rvTrack

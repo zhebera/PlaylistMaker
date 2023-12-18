@@ -1,6 +1,7 @@
 package com.example.playlistmaker.root
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -24,5 +25,17 @@ class RootActivity: AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
+        navController.addOnDestinationChangedListener{_, destination, _ ->
+            when(destination.id){
+                R.id.audioplayerFragment -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                    binding.horizontalGuideline.visibility = View.GONE
+                }
+                else -> {
+                    binding.bottomNavigationView.visibility = View.VISIBLE
+                    binding.horizontalGuideline.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 }

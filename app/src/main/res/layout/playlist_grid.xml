@@ -5,7 +5,7 @@
               android:layout_height="196dp">
 
     <ImageView
-            android:id="@+id/ivPlaylistImage"
+            android:id="@+id/ivPlaylist"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.8"
@@ -21,7 +21,7 @@
             tools:text="Имя плейлиста"/>
 
     <TextView
-            android:id="@+id/tvPlaylistCountSongs"
+            android:id="@+id/tvCountSongs"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.1"

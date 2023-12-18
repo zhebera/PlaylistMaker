@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".player.ui.view.AudioplayerActivity">
+        tools:context=".player.ui.view.AudioplayerFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -229,6 +229,13 @@
                 tools:text="Великобритания"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+    <View android:id="@+id/overlay"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="#99000000"
+          android:visibility="gone"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/bottom_sheet"
                 android:layout_width="match_parent"
@@ -272,7 +279,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvAddPlaylist"
                 android:layout_marginTop="16dp"
-                android:id="@+id/btnPlaceholderCreate"
+                android:id="@+id/btnPlaylistCreate"
                 android:text="@string/new_playlist"
                 android:textColor="@color/white_medium_black"
                 android:textSize="14sp"
@@ -288,10 +295,11 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPlaylist"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnPlaylistCreate"
                 android:layout_marginTop="24dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

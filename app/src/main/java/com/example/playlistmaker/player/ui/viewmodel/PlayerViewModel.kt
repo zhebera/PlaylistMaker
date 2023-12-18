@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.library.domain.models.Playlist
+import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.db.MediatekaInteractor
@@ -120,6 +120,12 @@ class PlayerViewModel(
             _playlistState.postValue(PlaylistState.Empty)
         else
             _playlistState.postValue(PlaylistState.Content(playlists))
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist, trackId: String){
+        viewModelScope.launch {
+            mediatekaInteractor.addTrackToPlaylist(playlist, trackId)
+        }
     }
 
     override fun onCleared() {

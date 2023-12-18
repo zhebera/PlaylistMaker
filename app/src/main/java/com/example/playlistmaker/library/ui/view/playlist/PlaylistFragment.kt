@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
-import com.example.playlistmaker.library.domain.models.Playlist
+import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.library.ui.viewmodel.playlist.PlaylistViewModel
 import com.example.playlistmaker.models.PlaylistState
 import com.example.playlistmaker.player.ui.view.PlaylistAdapter
@@ -24,7 +24,7 @@ class PlaylistFragment: Fragment() {
     private val binding: FragmentPlaylistBinding
         get() = _binding!!
     private var playlistAdapter: PlaylistAdapter? = null
-    private lateinit var onPlaylstClickDebounce: (Playlist) -> Unit
+    private lateinit var onPlaylistClickDebounce: (Playlist) -> Unit
     private val viewModel by viewModel<PlaylistViewModel>()
 
     override fun onCreateView(
@@ -39,12 +39,12 @@ class PlaylistFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        onPlaylstClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false){ playlist ->
-            TODO()
+        onPlaylistClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false){ playlist ->
+
         }
 
-        playlistAdapter = PlaylistAdapter{playlist ->
-            onPlaylstClickDebounce(playlist)
+        playlistAdapter = PlaylistAdapter(R.layout.playlist_grid){playlist ->
+            onPlaylistClickDebounce(playlist)
         }
 
         binding.rvPlaylists.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -54,7 +54,7 @@ class PlaylistFragment: Fragment() {
             renderPlaylistState(it)
         }
 
-        binding.btnPlaceholderCreate.setOnClickListener {
+        binding.btnPlaylistCreate.setOnClickListener {
             findNavController().navigate(R.id.action_libraryFragment_to_playlistCreateFragment)
         }
     }
@@ -62,15 +62,27 @@ class PlaylistFragment: Fragment() {
     private fun renderPlaylistState(playlistState: PlaylistState){
         when(playlistState){
             is PlaylistState.Content -> showPlaylists(playlistState.data)
-            is PlaylistState.Empty -> Unit
+            is PlaylistState.Empty -> showEmpty()
         }
     }
 
     private fun showPlaylists(listPlaylist: List<Playlist>){
+        binding.flPlaceholder.visibility = View.GONE
+        binding.rvPlaylists.visibility = View.VISIBLE
 
         playlistAdapter?.playlists?.clear()
         playlistAdapter?.playlists?.addAll(listPlaylist)
         playlistAdapter?.notifyDataSetChanged()
+    }
+
+    private fun showEmpty(){
+        binding.flPlaceholder.visibility = View.VISIBLE
+        binding.rvPlaylists.visibility = View.GONE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPlaylists()
     }
 
     override fun onDestroyView() {

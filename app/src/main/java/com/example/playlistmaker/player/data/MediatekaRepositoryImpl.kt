@@ -1,7 +1,7 @@
 package com.example.playlistmaker.player.data
 
 import com.example.playlistmaker.data.db.AppDatabase
-import com.example.playlistmaker.library.domain.models.Playlist
+import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.player.domain.db.MediatekaRepository
 import com.example.playlistmaker.utils.converters.PlaylistDbConverter
@@ -24,7 +24,7 @@ class MediatekaRepositoryImpl(
 
     override suspend fun addTrack(track: Track) {
         withContext(Dispatchers.IO){
-            appDatabase.trackDao().insertTrack(trackDbConverter.map(track))
+            appDatabase.trackDao().addTrack(trackDbConverter.map(track))
         }
     }
 
@@ -35,7 +35,20 @@ class MediatekaRepositoryImpl(
     }
 
     override fun getAllPlaylist(): Flow<List<Playlist>> = flow {
-        val playlists = appDatabase.playlistDao().getAllPlaylist()
+        val playlists = appDatabase.playlistDao().getAllPlaylist().reversed()
         emit(playlistDbConverter.map(playlists))
+    }
+
+    override suspend fun addTrackToPlaylist(playlist: Playlist, trackId: String) {
+        withContext(Dispatchers.IO){
+            val listTracksId = ArrayList<String>()
+            if(!playlist.tracks.isNullOrEmpty())
+                listTracksId.addAll(playlist.tracks)
+            listTracksId.add(0, trackId)
+            appDatabase.playlistDao().updatePlaylistTracksId(
+                playlistDbConverter.map(playlist).id,
+                listTracksId
+            )
+        }
     }
 }

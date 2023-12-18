@@ -1,34 +1,41 @@
 package com.example.playlistmaker.player.ui.view
 
-import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.models.Track
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
-import com.example.playlistmaker.library.domain.models.Playlist
+import com.example.playlistmaker.databinding.FragmentAudioplayerBinding
+import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.player.domain.models.PlayerState
 import com.example.playlistmaker.models.PlaylistState
 import com.example.playlistmaker.player.ui.viewmodel.PlayerViewModel
 import com.example.playlistmaker.utils.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class AudioplayerActivity : AppCompatActivity() {
+class AudioplayerFragment: Fragment() {
 
-    private lateinit var binding: ActivityAudioplayerBinding
+    private var _binding: FragmentAudioplayerBinding? = null
+    private val binding: FragmentAudioplayerBinding
+        get() = _binding!!
     private lateinit var track: Track
     private lateinit var playButton: ImageButton
     private lateinit var timerTxt: TextView
@@ -50,16 +57,19 @@ class AudioplayerActivity : AppCompatActivity() {
     private lateinit var onPlaylstClickDebounce: (Playlist) -> Unit
     private val viewModel by viewModel<PlayerViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityAudioplayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentAudioplayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         onPlaylstClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false){playlist ->
-            TODO()
+            viewModel.addTrackToPlaylist(playlist, track.trackId)
         }
 
-        playlistAdapter = PlaylistAdapter{playlist ->
+        playlistAdapter = PlaylistAdapter(R.layout.playlist){playlist ->
             onPlaylstClickDebounce(playlist)
         }
 
@@ -70,27 +80,27 @@ class AudioplayerActivity : AppCompatActivity() {
             preparedTrack = savedInstanceState.getBoolean(PREPARED_TRACK)
         }
 
-        viewModel.playerState.observe(this){
+        viewModel.playerState.observe(viewLifecycleOwner){
             renderState(it)
         }
 
-        viewModel.isFavorite.observe(this){
+        viewModel.isFavorite.observe(viewLifecycleOwner){
             renderFavorite(it)
         }
 
-        viewModel.playlistState.observe(this){
+        viewModel.playlistState.observe(viewLifecycleOwner){
             renderPlaylistState(it)
         }
 
-        track = createTrackFromJson(intent.getStringExtra(KEY_TRACK_ID))
+        track = createTrackFromJson(requireArguments().getString(KEY_TRACK_ID))
 
         initializeView()
 
-        playlistRecyclerView?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        playlistRecyclerView?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         playlistRecyclerView?.adapter = playlistAdapter
 
         btnBack.setOnClickListener {
-            finish()
+            findNavController().popBackStack()
         }
 
         if(!preparedTrack)
@@ -105,15 +115,37 @@ class AudioplayerActivity : AppCompatActivity() {
         }
 
         addPlaylistBtn.setOnClickListener {
+            viewModel.getAllPlaylist()
             addTrackToPlaylist()
         }
+
+        binding.btnPlaylistCreate.setOnClickListener {
+            findNavController().navigate(R.id.action_audioplayerFragment_to_playlistCreateFragment)
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.visibility = View.GONE
+                    }
+                    else -> {
+                        binding.overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+
+        })
     }
 
     private fun renderFavorite(favorite: Boolean) {
         if(favorite)
-            favouriteButton.setImageDrawable(getDrawable(R.drawable.like))
+            favouriteButton.setImageDrawable(requireContext().getDrawable(R.drawable.like))
         else
-            favouriteButton.setImageDrawable(getDrawable(R.drawable.no_like))
+            favouriteButton.setImageDrawable(requireContext().getDrawable(R.drawable.no_like))
     }
 
     private fun initializeView() {
@@ -140,7 +172,7 @@ class AudioplayerActivity : AppCompatActivity() {
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.music_note)
             .centerCrop()
-            .transform(RoundedCorners(dpToPx(8.0F, this)))
+            .transform(RoundedCorners(dpToPx(8.0F, requireContext())))
             .into(placeholder)
 
         trackName.text = track.trackName
@@ -178,12 +210,12 @@ class AudioplayerActivity : AppCompatActivity() {
 
     private fun onPlayerPauseView(timer: String) {
         timerTxt.text = timer
-        playButton.setImageDrawable(getDrawable(R.drawable.play))
+        playButton.setImageDrawable(requireContext().getDrawable(R.drawable.play))
     }
 
     private fun onPlayerStartView(timer: String) {
         timerTxt.text = timer
-        playButton.setImageDrawable(getDrawable(R.drawable.pause))
+        playButton.setImageDrawable(requireContext().getDrawable(R.drawable.pause))
     }
 
     private fun addTrackToPlaylist(){
@@ -198,7 +230,6 @@ class AudioplayerActivity : AppCompatActivity() {
     }
 
     private fun showPlaylists(listPlaylist: List<Playlist>){
-
         playlistAdapter?.playlists?.clear()
         playlistAdapter?.playlists?.addAll(listPlaylist)
         playlistAdapter?.notifyDataSetChanged()
