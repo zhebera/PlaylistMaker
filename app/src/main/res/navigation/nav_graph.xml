@@ -24,7 +24,7 @@
               android:label="fragment_playlist_creator" tools:layout="@layout/fragment_playlist_creator"/>
     <fragment android:id="@+id/audioplayerFragment"
               android:name="com.example.playlistmaker.player.ui.view.AudioplayerFragment"
-              android:label="AudioplayerFragment">
+              android:label="AudioplayerFragment" tools:layout="@layout/fragment_audioplayer">
         <action android:id="@+id/action_audioplayerFragment_to_playlistCreateFragment"
                 app:destination="@id/playlistCreateFragment"/>
     </fragment>

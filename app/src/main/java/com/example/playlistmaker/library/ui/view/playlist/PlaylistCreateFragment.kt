@@ -11,8 +11,10 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
@@ -41,13 +43,13 @@ class PlaylistCreateFragment : Fragment() {
 
     private var textWatcherName: TextWatcher? = null
     private var uriImage: Uri? = null
+    private var playlistImgName: String? = null
     private val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
         uriImage = uri
         if (uri != null) {
             Glide.with(requireContext())
                 .load(uri)
                 .into(binding.ivNewImage)
-        } else {
         }
     }
     private val viewModel by viewModel<PlaylistCreateViewModel>()
@@ -62,8 +64,8 @@ class PlaylistCreateFragment : Fragment() {
 
         binding.ivBtnBack.setOnClickListener {
             if (binding.ivNewImage.drawable != null
-                && !binding.etPlaylistName.text.isNullOrEmpty()
-                && !binding.etPlaylistOverview.text.isNullOrEmpty()
+                || !binding.etPlaylistName.text.isNullOrEmpty()
+                || !binding.etPlaylistOverview.text.isNullOrEmpty()
             ) {
                 showDialog()
             } else {
@@ -79,6 +81,9 @@ class PlaylistCreateFragment : Fragment() {
             if (it.isEnabled) {
                 saveImageToStorage()
                 addPlaylist()
+                Toast.makeText(requireContext(),
+                    "Плейлист ${binding.etPlaylistName.text.toString()} создан",
+                    Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             } else {
 
@@ -113,8 +118,8 @@ class PlaylistCreateFragment : Fragment() {
             override fun handleOnBackPressed() {
                 if (isEnabled) {
                     if (binding.ivNewImage.drawable != null
-                        && !binding.etPlaylistName.text.isNullOrEmpty()
-                        && !binding.etPlaylistOverview.text.isNullOrEmpty()
+                        || !binding.etPlaylistName.text.isNullOrEmpty()
+                        || !binding.etPlaylistOverview.text.isNullOrEmpty()
                     ) {
                         showDialog()
                     } else {
@@ -148,9 +153,10 @@ class PlaylistCreateFragment : Fragment() {
             if (!binding.etPlaylistName.text.isNullOrEmpty()) {
                 viewModel.addPlaylist(
                     Playlist(
+                        0,
                         binding.etPlaylistName.text.toString(),
                         binding.etPlaylistOverview.text.toString(),
-                        getNameForImage(binding.etPlaylistName.text.toString()),
+                        playlistImgName,
                         null
                     )
                 )
@@ -158,7 +164,7 @@ class PlaylistCreateFragment : Fragment() {
         }
     }
 
-    private fun saveImageToStorage() {
+    private fun saveImageToStorage(){
         viewLifecycleOwner.lifecycleScope.launch {
             val filePath =
                 File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), PLAYLIST_STORAGE_NAME)
@@ -167,7 +173,9 @@ class PlaylistCreateFragment : Fragment() {
                 filePath.mkdirs()
             }
 
-            val file = File(filePath, "${getNameForImage(playlistName = binding.etPlaylistName.text.toString())}.jpg")
+            playlistImgName = "${getNameForImage(playlistName = binding.etPlaylistName.text.toString())}.jpg"
+
+            val file = File(filePath, playlistImgName)
             val outputStream = FileOutputStream(file)
 
             if (uriImage != null) {
@@ -176,9 +184,6 @@ class PlaylistCreateFragment : Fragment() {
                     .decodeStream(inputStream)
                     .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
 
-            }else{
-                val inputStream = requireContext().getDrawable(R.drawable.music_note)?.toBitmapOrNull()
-                inputStream?.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
             }
         }
     }

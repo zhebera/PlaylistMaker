@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -54,7 +55,8 @@ class AudioplayerFragment: Fragment() {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var playlistRecyclerView: RecyclerView? = null
     private var playlistAdapter: PlaylistAdapter? = null
-    private lateinit var onPlaylstClickDebounce: (Playlist) -> Unit
+    private lateinit var onPlaylistClickDebounce: (Playlist) -> Unit
+    private var preparedTrack = false
     private val viewModel by viewModel<PlayerViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -65,15 +67,14 @@ class AudioplayerFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        onPlaylstClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false){playlist ->
+        onPlaylistClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false){ playlist ->
             viewModel.addTrackToPlaylist(playlist, track.trackId)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         playlistAdapter = PlaylistAdapter(R.layout.playlist){playlist ->
-            onPlaylstClickDebounce(playlist)
+            onPlaylistClickDebounce(playlist)
         }
-
-        var preparedTrack = false
 
         if (savedInstanceState != null) {
             track = createTrackFromJson(savedInstanceState.getString(SAVED_AUDIOPLAYER_STATE))
@@ -90,6 +91,10 @@ class AudioplayerFragment: Fragment() {
 
         viewModel.playlistState.observe(viewLifecycleOwner){
             renderPlaylistState(it)
+        }
+
+        viewModel.showToast.observe(viewLifecycleOwner){
+            showToast(it)
         }
 
         track = createTrackFromJson(requireArguments().getString(KEY_TRACK_ID))
@@ -120,6 +125,7 @@ class AudioplayerFragment: Fragment() {
         }
 
         binding.btnPlaylistCreate.setOnClickListener {
+            preparedTrack = true
             findNavController().navigate(R.id.action_audioplayerFragment_to_playlistCreateFragment)
         }
 
@@ -233,6 +239,10 @@ class AudioplayerFragment: Fragment() {
         playlistAdapter?.playlists?.clear()
         playlistAdapter?.playlists?.addAll(listPlaylist)
         playlistAdapter?.notifyDataSetChanged()
+    }
+
+    private fun showToast(message: String?){
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
     companion object {

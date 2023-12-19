@@ -1,5 +1,6 @@
 package com.example.playlistmaker.player.ui.view
 
+import android.net.Uri
 import android.os.Environment
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.utils.PLAYLIST_STORAGE_NAME
 import com.example.playlistmaker.utils.converters.getNameForImage
+import com.example.playlistmaker.utils.converters.rightEnding
 import com.example.playlistmaker.utils.dpToPx
 import java.io.File
 
@@ -31,13 +33,18 @@ class PlaylistViewHolder(
         playlistName.text = playlist.name
         val count =
             if(playlist.tracks.isNullOrEmpty())
-                "0"
+                0
             else
-                playlist.tracks.size.toString()
-        countSongs.text = "$count треков"
+                playlist.tracks.size
+        countSongs.text = rightEnding(count)
+        showImage(playlist.imageName)
 
+        itemView.setOnClickListener { clickListener.onClick(playlist) }
+    }
+
+    private fun showImage(name: String?){
         val filePath = File(itemView.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), PLAYLIST_STORAGE_NAME)
-        val file = File(filePath, "${getNameForImage(playlist.name)}.jpg")
+        val file = File(filePath, name)
         val uri = file.toUri()
         Glide.with(itemView.context)
             .load(uri)
@@ -45,7 +52,5 @@ class PlaylistViewHolder(
             .centerCrop()
             .transform(RoundedCorners(dpToPx(2.0F,itemView.context)))
             .into(imagePlaylist)
-
-        itemView.setOnClickListener { clickListener.onClick(playlist) }
     }
 }

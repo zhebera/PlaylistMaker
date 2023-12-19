@@ -52,6 +52,7 @@ class SearchFragment : Fragment() {
     private var searchHistoryAdapter: PlaylistAdapter? = null
 
     private var savedSearchEditText: String? = null
+    private var goPlayerFragment = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
@@ -61,7 +62,7 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
+        onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, true) { track ->
             val bundle = bundleOf(KEY_TRACK_ID to createJsonFromTrack(track))
             findNavController().navigate(R.id.action_searchFragment_to_audioplayerFragment, bundle)
         }
@@ -69,6 +70,7 @@ class SearchFragment : Fragment() {
         playlistAdapter = PlaylistAdapter { track ->
             viewModel.addNewTrackToHistory(track)
             onTrackClickDebounce(track)
+            goPlayerFragment = true
         }
 
         searchHistoryAdapter = PlaylistAdapter { track ->

@@ -28,6 +28,9 @@ class PlayerViewModel(
     private val _playlistState = MutableLiveData<PlaylistState>()
     val playlistState: LiveData<PlaylistState> = _playlistState
 
+    private val _showToast = SingleLiveEvent<String?>()
+    val showToast: LiveData<String?> = _showToast
+
     private var timerJob: Job? = null
 
     private fun renderState(state: PlayerState) {
@@ -67,7 +70,7 @@ class PlayerViewModel(
         return mediaPlayerInteractor.getCurrentPosition()
     }
 
-    private fun releasePlayer(){
+    fun releasePlayer(){
         mediaPlayerInteractor.release()
         timerJob?.cancel()
         _playerState.postValue(PlayerState.Default())
@@ -124,7 +127,13 @@ class PlayerViewModel(
 
     fun addTrackToPlaylist(playlist: Playlist, trackId: String){
         viewModelScope.launch {
-            mediatekaInteractor.addTrackToPlaylist(playlist, trackId)
+            if(playlist.tracks?.contains(trackId) == true)
+                _showToast.setValue("Трек уже добавлен в плейлист ${playlist.name}")
+            else{
+                mediatekaInteractor.addTrackToPlaylist(playlist, trackId)
+                _showToast.setValue("Добавлено в плейлист ${playlist.name}")
+            }
+
         }
     }
 

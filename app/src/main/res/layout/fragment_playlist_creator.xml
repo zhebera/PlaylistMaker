@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/ivBtnBack"
             android:gravity="center_vertical"/>
-    
+
     <ImageView
             android:id="@+id/ivNewImage"
             android:layout_width="312dp"
@@ -44,6 +44,7 @@
             android:layout_height="55dp"
             android:layout_marginTop="33dp"
             android:hint="@string/playlist_name"
+            app:counterTextColor="@color/black"
             app:layout_constraintTop_toBottomOf="@+id/ivNewImage"
             style="@style/PlaylistEditText">
 
@@ -52,6 +53,7 @@
                 android:inputType="text"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
+                android:textCursorDrawable="@drawable/cursor_color"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -70,6 +72,8 @@
                 android:inputType="text"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:windowSoftInputMode="stateHidden"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
     </com.google.android.material.textfield.TextInputLayout>

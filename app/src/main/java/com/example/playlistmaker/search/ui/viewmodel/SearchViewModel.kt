@@ -75,7 +75,6 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         _historyState.postValue(searchInteractor.getSavedHistory())
     }
 
-
     fun searchDebounce(changedText: String) {
 
         if (latestSearchTrack == changedText)
