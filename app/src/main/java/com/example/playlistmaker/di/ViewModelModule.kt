@@ -23,15 +23,15 @@ val viewModelModule = module {
         SettingsViewModel(get())
     }
 
-    viewModel{
+    viewModel {
         PlaylistViewModel(get())
     }
 
-    viewModel{
+    viewModel {
         LibraryTracksViewModel(get())
     }
 
-    viewModel{
+    viewModel {
         PlaylistCreateViewModel(get())
     }
 }

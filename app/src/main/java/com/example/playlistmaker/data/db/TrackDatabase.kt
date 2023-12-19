@@ -11,7 +11,7 @@ import com.example.playlistmaker.utils.converters.PlaylistTracksConverter
 
 @Database(entities = [TrackEntity::class, PlaylistEntity::class], version = 1)
 @TypeConverters(PlaylistTracksConverter::class)
-abstract class AppDatabase: RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
 
     abstract fun trackDao(): TrackDao
     abstract fun playlistDao(): PlaylistDao

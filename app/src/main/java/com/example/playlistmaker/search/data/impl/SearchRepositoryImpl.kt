@@ -3,9 +3,9 @@ package com.example.playlistmaker.search.data.impl
 import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.search.data.dto.TrackRequest
 import com.example.playlistmaker.search.data.dto.TrackResponse
+import com.example.playlistmaker.search.data.localstorage.LocalStorage
 import com.example.playlistmaker.search.data.mapper.MapFromResponseToListTrack
 import com.example.playlistmaker.search.data.network.NetworkClient
-import com.example.playlistmaker.search.data.localstorage.LocalStorage
 import com.example.playlistmaker.search.domain.api.SearchRepository
 import com.example.playlistmaker.utils.Resource
 import kotlinx.coroutines.flow.Flow
@@ -23,10 +23,12 @@ class SearchRepositoryImpl(private val networkClient: NetworkClient, private val
             }
 
             200, 201 -> {
-                emit(Resource.Success(
-                    data =
-                    MapFromResponseToListTrack.map(response as TrackResponse)
-                ))
+                emit(
+                    Resource.Success(
+                        data =
+                        MapFromResponseToListTrack.map(response as TrackResponse)
+                    )
+                )
             }
 
             else -> {

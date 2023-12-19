@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class LibraryInteractorImpl(
     private val libraryRepository: LibraryRepository
-): LibraryInteractor {
+) : LibraryInteractor {
     override fun getAllTracks(): Flow<List<Track>> {
         return libraryRepository.getAllTracks()
     }

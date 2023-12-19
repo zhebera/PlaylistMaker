@@ -11,22 +11,19 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
-import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistCreatorBinding
-import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.library.ui.viewmodel.playlist.PlaylistCreateViewModel
+import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.utils.PLAYLIST_STORAGE_NAME
 import com.example.playlistmaker.utils.converters.getNameForImage
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -81,9 +78,11 @@ class PlaylistCreateFragment : Fragment() {
             if (it.isEnabled) {
                 saveImageToStorage()
                 addPlaylist()
-                Toast.makeText(requireContext(),
+                Toast.makeText(
+                    requireContext(),
                     "Плейлист ${binding.etPlaylistName.text.toString()} создан",
-                    Toast.LENGTH_SHORT).show()
+                    Toast.LENGTH_SHORT
+                ).show()
                 findNavController().popBackStack()
             } else {
 
@@ -164,7 +163,7 @@ class PlaylistCreateFragment : Fragment() {
         }
     }
 
-    private fun saveImageToStorage(){
+    private fun saveImageToStorage() {
         viewLifecycleOwner.lifecycleScope.launch {
             val filePath =
                 File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), PLAYLIST_STORAGE_NAME)

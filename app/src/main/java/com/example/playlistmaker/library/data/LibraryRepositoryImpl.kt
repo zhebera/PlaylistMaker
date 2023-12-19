@@ -13,7 +13,7 @@ class LibraryRepositoryImpl(
     private val appDatabase: AppDatabase,
     private val trackDbConverter: TrackDbConverter,
     private val playlistDbConverter: PlaylistDbConverter
-): LibraryRepository {
+) : LibraryRepository {
 
     override fun getAllTracks(): Flow<List<Track>> = flow {
         val tracks = appDatabase.trackDao().getAllTracks().reversed()

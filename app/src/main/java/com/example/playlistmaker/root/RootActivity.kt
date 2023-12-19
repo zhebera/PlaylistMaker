@@ -2,16 +2,13 @@ package com.example.playlistmaker.root
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityRootBinding
 
-class RootActivity: AppCompatActivity() {
+class RootActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRootBinding
 
@@ -25,12 +22,13 @@ class RootActivity: AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener{_, destination, _ ->
-            when(destination.id){
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
                 R.id.audioplayerFragment, R.id.playlistCreateFragment -> {
                     binding.bottomNavigationView.visibility = View.GONE
                     binding.horizontalGuideline.visibility = View.GONE
                 }
+
                 else -> {
                     binding.bottomNavigationView.visibility = View.VISIBLE
                     binding.horizontalGuideline.visibility = View.VISIBLE

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class MediatekaInteractorImpl(
     private val mediatekaRepository: MediatekaRepository
-): MediatekaInteractor {
+) : MediatekaInteractor {
     override fun checkTrack(trackId: String): Flow<Boolean> {
         return mediatekaRepository.checkTrack(trackId)
     }

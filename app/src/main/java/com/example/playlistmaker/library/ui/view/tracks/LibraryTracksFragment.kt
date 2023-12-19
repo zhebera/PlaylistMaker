@@ -18,14 +18,14 @@ import com.example.playlistmaker.databinding.FragmentMediatekaTracksBinding
 import com.example.playlistmaker.library.domain.models.LibraryTrackState
 import com.example.playlistmaker.library.ui.viewmodel.tracks.LibraryTracksViewModel
 import com.example.playlistmaker.models.Track
-import com.example.playlistmaker.search.ui.view.PlaylistAdapter
+import com.example.playlistmaker.search.ui.view.PlaylistSearchAdapter
 import com.example.playlistmaker.utils.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.utils.KEY_TRACK_ID
 import com.example.playlistmaker.utils.createJsonFromTrack
 import com.example.playlistmaker.utils.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LibraryTracksFragment: Fragment() {
+class LibraryTracksFragment : Fragment() {
 
     private var _binding: FragmentMediatekaTracksBinding? = null
     private val binding: FragmentMediatekaTracksBinding
@@ -35,7 +35,7 @@ class LibraryTracksFragment: Fragment() {
     private var placeHolderLinearLayout: LinearLayout? = null
     private var placeHolderImageView: ImageView? = null
     private var placeholderTextView: TextView? = null
-    private var adapter: PlaylistAdapter? = null
+    private var adapter: PlaylistSearchAdapter? = null
     private val viewModel by viewModel<LibraryTracksViewModel>()
     private lateinit var onTrackClickDebounce: (Track) -> Unit
 
@@ -57,14 +57,14 @@ class LibraryTracksFragment: Fragment() {
             findNavController().navigate(R.id.action_libraryFragment_to_audioplayerFragment, bundle)
         }
 
-        adapter = PlaylistAdapter{track ->
+        adapter = PlaylistSearchAdapter { track ->
             onTrackClickDebounce(track)
         }
 
         libraryRecyclerView?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         libraryRecyclerView?.adapter = adapter
 
-        viewModel.libraryTracks.observe(viewLifecycleOwner){state ->
+        viewModel.libraryTracks.observe(viewLifecycleOwner) { state ->
             renderState(state)
         }
     }
@@ -79,7 +79,7 @@ class LibraryTracksFragment: Fragment() {
         _binding = null
     }
 
-    private fun initializeView(){
+    private fun initializeView() {
         libraryRecyclerView = binding.rvLibrary
         placeHolderLinearLayout = binding.llPlaceHolder
         placeHolderImageView = binding.ivPlaceHolder
@@ -99,7 +99,7 @@ class LibraryTracksFragment: Fragment() {
         placeHolderLinearLayout?.visibility = View.VISIBLE
     }
 
-    private fun showContent(tracks: List<Track>){
+    private fun showContent(tracks: List<Track>) {
         libraryRecyclerView?.visibility = View.VISIBLE
         placeHolderLinearLayout?.visibility = View.GONE
 
@@ -108,7 +108,7 @@ class LibraryTracksFragment: Fragment() {
         adapter?.notifyDataSetChanged()
     }
 
-    companion object{
+    companion object {
         fun newInstance() = LibraryTracksFragment()
     }
 }

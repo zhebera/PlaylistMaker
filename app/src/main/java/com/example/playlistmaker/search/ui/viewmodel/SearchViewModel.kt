@@ -24,7 +24,8 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     private val trackSearchDebounce = debounce<String>(
         SEARCH_DEBOUNCE_DELAY,
         viewModelScope,
-        true){ changedText ->
+        true
+    ) { changedText ->
         searchRequest(changedText)
     }
 
@@ -85,7 +86,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         latestSearchTrack = changedText
     }
 
-    fun finishSearch(){
+    fun finishSearch() {
         listTrack.clear()
         renderState(SearchState.Content(listTrack))
     }

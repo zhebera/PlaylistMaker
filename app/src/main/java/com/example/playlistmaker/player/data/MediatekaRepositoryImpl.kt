@@ -15,7 +15,7 @@ class MediatekaRepositoryImpl(
     private val appDatabase: AppDatabase,
     private val trackDbConverter: TrackDbConverter,
     private val playlistDbConverter: PlaylistDbConverter
-): MediatekaRepository {
+) : MediatekaRepository {
 
     override fun checkTrack(trackId: String) = flow {
         val answer = appDatabase.trackDao().getTrackById(trackId) != null
@@ -23,13 +23,13 @@ class MediatekaRepositoryImpl(
     }
 
     override suspend fun addTrack(track: Track) {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             appDatabase.trackDao().addTrack(trackDbConverter.map(track))
         }
     }
 
     override suspend fun removeTrack(track: Track) {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             appDatabase.trackDao().deleteTrack(trackDbConverter.map(track))
         }
     }
@@ -40,9 +40,9 @@ class MediatekaRepositoryImpl(
     }
 
     override suspend fun addTrackToPlaylist(playlist: Playlist, trackId: String) {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             val listTracksId = ArrayList<String>()
-            if(!playlist.tracks.isNullOrEmpty())
+            if (!playlist.tracks.isNullOrEmpty())
                 listTracksId.addAll(playlist.tracks)
             listTracksId.add(0, trackId)
             appDatabase.playlistDao().updatePlaylistTracksId(

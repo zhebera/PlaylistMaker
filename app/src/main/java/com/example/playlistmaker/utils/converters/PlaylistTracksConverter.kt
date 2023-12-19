@@ -7,7 +7,7 @@ object PlaylistTracksConverter {
 
     @TypeConverter
     fun fromTracksId(listTracks: List<String>?): String? =
-        if(listTracks.isNullOrEmpty())
+        if (listTracks.isNullOrEmpty())
             null
         else
             listTracks.stream().collect(Collectors.joining(","))

@@ -5,7 +5,7 @@ import com.example.playlistmaker.search.data.dto.TrackResponse
 
 object MapFromResponseToListTrack {
 
-    fun map(response: TrackResponse): List<Track>{
+    fun map(response: TrackResponse): List<Track> {
         return response.results.map {
             Track(
                 it.trackId,

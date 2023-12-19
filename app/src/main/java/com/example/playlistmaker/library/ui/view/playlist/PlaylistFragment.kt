@@ -10,15 +10,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
-import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.library.ui.viewmodel.playlist.PlaylistViewModel
+import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.models.PlaylistState
-import com.example.playlistmaker.player.ui.view.PlaylistAdapter
 import com.example.playlistmaker.utils.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.utils.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlaylistFragment: Fragment() {
+class PlaylistFragment : Fragment() {
 
     private var _binding: FragmentPlaylistBinding? = null
     private val binding: FragmentPlaylistBinding
@@ -39,18 +38,18 @@ class PlaylistFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        onPlaylistClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false){ playlist ->
+        onPlaylistClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false) { playlist ->
 
         }
 
-        playlistAdapter = PlaylistAdapter(R.layout.playlist_grid){playlist ->
+        playlistAdapter = PlaylistAdapter(R.layout.playlist_grid) { playlist ->
             onPlaylistClickDebounce(playlist)
         }
 
         binding.rvPlaylists.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvPlaylists.adapter = playlistAdapter
 
-        viewModel.libraryPlaylist.observe(viewLifecycleOwner){
+        viewModel.libraryPlaylist.observe(viewLifecycleOwner) {
             renderPlaylistState(it)
         }
 
@@ -59,14 +58,14 @@ class PlaylistFragment: Fragment() {
         }
     }
 
-    private fun renderPlaylistState(playlistState: PlaylistState){
-        when(playlistState){
+    private fun renderPlaylistState(playlistState: PlaylistState) {
+        when (playlistState) {
             is PlaylistState.Content -> showPlaylists(playlistState.data)
             is PlaylistState.Empty -> showEmpty()
         }
     }
 
-    private fun showPlaylists(listPlaylist: List<Playlist>){
+    private fun showPlaylists(listPlaylist: List<Playlist>) {
         binding.flPlaceholder.visibility = View.GONE
         binding.rvPlaylists.visibility = View.VISIBLE
 
@@ -75,7 +74,7 @@ class PlaylistFragment: Fragment() {
         playlistAdapter?.notifyDataSetChanged()
     }
 
-    private fun showEmpty(){
+    private fun showEmpty() {
         binding.flPlaceholder.visibility = View.VISIBLE
         binding.rvPlaylists.visibility = View.GONE
     }
@@ -90,7 +89,7 @@ class PlaylistFragment: Fragment() {
         _binding = null
     }
 
-    companion object{
+    companion object {
         fun newInstance() = PlaylistFragment()
     }
 }

@@ -5,7 +5,7 @@ import com.example.playlistmaker.models.Playlist
 
 class PlaylistDbConverter {
 
-    fun map(playlist: Playlist): PlaylistEntity{
+    fun map(playlist: Playlist): PlaylistEntity {
         return PlaylistEntity(
             id = playlist.id,
             name = playlist.name,
@@ -25,7 +25,7 @@ class PlaylistDbConverter {
         )
     }
 
-    fun map(playlistEnity: List<PlaylistEntity>): List<Playlist>{
+    fun map(playlistEnity: List<PlaylistEntity>): List<Playlist> {
         return playlistEnity.map { playlistEnity ->
             map(playlistEnity)
         }

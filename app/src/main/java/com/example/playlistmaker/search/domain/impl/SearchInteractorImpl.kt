@@ -10,11 +10,12 @@ import kotlinx.coroutines.flow.map
 class SearchInteractorImpl(private val searchRepository: SearchRepository) : SearchInteractor {
 
     override fun searchTrack(searchingNameTrack: String): Flow<Pair<List<Track>?, String?>> {
-        return searchRepository.searchTrack(searchingNameTrack).map {result ->
-            when(result){
+        return searchRepository.searchTrack(searchingNameTrack).map { result ->
+            when (result) {
                 is Resource.Success -> {
                     Pair(result.data, null)
                 }
+
                 is Resource.Failure -> {
                     Pair(null, result.message)
                 }

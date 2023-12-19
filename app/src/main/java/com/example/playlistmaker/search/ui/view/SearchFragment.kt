@@ -48,11 +48,10 @@ class SearchFragment : Fragment() {
     private val binding: FragmentSearchBinding
         get() = _binding!!
 
-    private var playlistAdapter: PlaylistAdapter? = null
-    private var searchHistoryAdapter: PlaylistAdapter? = null
+    private var playlistAdapter: PlaylistSearchAdapter? = null
+    private var searchHistoryAdapter: PlaylistSearchAdapter? = null
 
     private var savedSearchEditText: String? = null
-    private var goPlayerFragment = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
@@ -67,13 +66,12 @@ class SearchFragment : Fragment() {
             findNavController().navigate(R.id.action_searchFragment_to_audioplayerFragment, bundle)
         }
 
-        playlistAdapter = PlaylistAdapter { track ->
+        playlistAdapter = PlaylistSearchAdapter { track ->
             viewModel.addNewTrackToHistory(track)
             onTrackClickDebounce(track)
-            goPlayerFragment = true
         }
 
-        searchHistoryAdapter = PlaylistAdapter { track ->
+        searchHistoryAdapter = PlaylistSearchAdapter { track ->
             onTrackClickDebounce(track)
         }
 
@@ -91,7 +89,7 @@ class SearchFragment : Fragment() {
         searchEditTxt.setText(savedSearchEditText)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.searchState.observe(viewLifecycleOwner){
+            viewModel.searchState.observe(viewLifecycleOwner) {
                 renderState(it)
             }
         }

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui.view
+package com.example.playlistmaker.library.ui.view.playlist
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

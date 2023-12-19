@@ -2,7 +2,6 @@ package com.example.playlistmaker.di
 
 import com.example.playlistmaker.library.data.LibraryRepositoryImpl
 import com.example.playlistmaker.library.domain.db.LibraryRepository
-import com.example.playlistmaker.library.domain.impl.LibraryInteractorImpl
 import com.example.playlistmaker.player.data.MediatekaRepositoryImpl
 import com.example.playlistmaker.player.data.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.api.PlayerRepository
@@ -17,11 +16,11 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
 
-    factory<TrackDbConverter>{
+    factory<TrackDbConverter> {
         TrackDbConverter()
     }
 
-    factory<PlaylistDbConverter>{
+    factory<PlaylistDbConverter> {
         PlaylistDbConverter()
     }
 
@@ -37,11 +36,11 @@ val repositoryModule = module {
         SettingsRepositoryImpl(get())
     }
 
-    single<MediatekaRepository>{
+    single<MediatekaRepository> {
         MediatekaRepositoryImpl(get(), get(), get())
     }
 
-    single<LibraryRepository>{
+    single<LibraryRepository> {
         LibraryRepositoryImpl(get(), get(), get())
     }
 }
