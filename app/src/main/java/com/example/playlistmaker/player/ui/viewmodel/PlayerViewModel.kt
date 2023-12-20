@@ -54,7 +54,7 @@ class PlayerViewModel(
         }
     }
 
-    fun startPlayer() {
+    private fun startPlayer() {
         mediaPlayerInteractor.startPlayer()
         startTimer()
         renderState(PlayerState.Playing(getCurrentPosition()))
@@ -66,11 +66,11 @@ class PlayerViewModel(
         renderState(PlayerState.Paused(getCurrentPosition()))
     }
 
-    fun getCurrentPosition(): String {
+    private fun getCurrentPosition(): String {
         return mediaPlayerInteractor.getCurrentPosition()
     }
 
-    fun releasePlayer() {
+    private fun releasePlayer() {
         mediaPlayerInteractor.release()
         timerJob?.cancel()
         _playerState.postValue(PlayerState.Default())

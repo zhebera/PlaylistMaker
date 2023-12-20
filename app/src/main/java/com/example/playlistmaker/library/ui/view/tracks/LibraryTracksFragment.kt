@@ -57,16 +57,12 @@ class LibraryTracksFragment : Fragment() {
             findNavController().navigate(R.id.action_libraryFragment_to_audioplayerFragment, bundle)
         }
 
-        adapter = PlaylistSearchAdapter { track ->
-            onTrackClickDebounce(track)
-        }
+        adapter = PlaylistSearchAdapter(onTrackClickDebounce)
 
         libraryRecyclerView?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         libraryRecyclerView?.adapter = adapter
 
-        viewModel.libraryTracks.observe(viewLifecycleOwner) { state ->
-            renderState(state)
-        }
+        viewModel.libraryTracks.observe(viewLifecycleOwner, ::renderState)
     }
 
     override fun onResume() {
@@ -90,7 +86,6 @@ class LibraryTracksFragment : Fragment() {
         when (state) {
             is LibraryTrackState.Content -> showContent(state.data)
             is LibraryTrackState.Empty -> showEmpty()
-            else -> Unit
         }
     }
 

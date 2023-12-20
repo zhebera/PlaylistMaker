@@ -10,42 +10,45 @@
     <ImageView
             android:id="@+id/ivBtnBack"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHeight_percent="0.07"
             android:src="@drawable/arrow_back"
             app:tint="@color/medium_black_white"
             android:layout_marginStart="20dp"/>
 
     <TextView
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="0dp"
             style="@style/PrimaryTextView.MediumBlackWhite.Head"
             android:text="@string/new_playlist"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHeight_percent="0.07"
             app:layout_constraintStart_toEndOf="@id/ivBtnBack"
             android:gravity="center_vertical"/>
 
     <ImageView
             android:id="@+id/ivNewImage"
-            android:layout_width="312dp"
-            android:layout_height="312dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.4"
             android:scaleType="centerCrop"
             android:layout_marginTop="28dp"
             android:layout_marginHorizontal="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivBtnBack"
             android:background="@drawable/new_playlist_list"/>
 
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPlaylistName"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="0dp"
             android:layout_marginTop="33dp"
             android:hint="@string/playlist_name"
             app:counterTextColor="@color/black"
             app:layout_constraintTop_toBottomOf="@+id/ivNewImage"
+            app:layout_constraintBottom_toTopOf="@id/tilPlaylistOverview"
+            app:layout_constraintHeight_percent="0.07"
             style="@style/PlaylistEditText">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -61,8 +64,9 @@
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPlaylistOverview"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="0dp"
             android:layout_marginTop="16dp"
+            app:layout_constraintHeight_percent="0.07"
             android:hint="@string/playlist_overview"
             app:layout_constraintTop_toBottomOf="@+id/tilPlaylistName"
             style="@style/PlaylistEditText">
@@ -81,7 +85,7 @@
     <TextView
             android:id="@+id/tvCreate"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="0dp"
             android:background="@drawable/button_playlist_selector"
             android:layout_gravity="center"
             android:gravity="center"
@@ -92,8 +96,7 @@
             android:textSize="16sp"
             android:clickable="true"
             android:enabled="false"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.055"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginHorizontal="17dp"
             android:layout_marginBottom="32dp"/>

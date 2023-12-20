@@ -31,11 +31,7 @@ class PlaylistViewHolder(
 
     fun bind(playlist: Playlist) {
         playlistName.text = playlist.name
-        val count =
-            if (playlist.tracks.isNullOrEmpty())
-                0
-            else
-                playlist.tracks.size
+        val count = playlist.tracks.size
         countSongs.text = rightEnding(count)
         showImage(playlist.imageName)
 

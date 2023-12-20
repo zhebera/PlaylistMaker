@@ -17,11 +17,11 @@ class PlaylistRetrofit(private val playlistRetrofit: ITunesApi, private val cont
             return Response().apply { resultCode = 400 }
         }
 
-        try {
+        return try {
             val response = playlistRetrofit.search(dto.searchTrack)
-            return response.apply { resultCode = 200 }
+            response.apply { resultCode = 200 }
         } catch (e: Throwable) {
-            return Response().apply { resultCode = 500 }
+            Response().apply { resultCode = 500 }
         }
     }
 

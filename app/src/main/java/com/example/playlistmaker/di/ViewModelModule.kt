@@ -6,6 +6,7 @@ import com.example.playlistmaker.library.ui.viewmodel.tracks.LibraryTracksViewMo
 import com.example.playlistmaker.player.ui.viewmodel.PlayerViewModel
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.settings.ui.viewmodel.SettingsViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -32,6 +33,6 @@ val viewModelModule = module {
     }
 
     viewModel {
-        PlaylistCreateViewModel(get())
+        PlaylistCreateViewModel(androidContext(), get())
     }
 }

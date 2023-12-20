@@ -16,9 +16,7 @@ class PlaylistViewModel(private val libraryInteractor: LibraryInteractor) : View
 
     fun getPlaylists() {
         viewModelScope.launch {
-            libraryInteractor.getAllPlaylist().collect { playlists ->
-                renderState(playlists)
-            }
+            libraryInteractor.getAllPlaylist().collect(::renderState)
         }
     }
 

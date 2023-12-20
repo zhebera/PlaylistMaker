@@ -42,7 +42,7 @@ class MediatekaRepositoryImpl(
     override suspend fun addTrackToPlaylist(playlist: Playlist, trackId: String) {
         withContext(Dispatchers.IO) {
             val listTracksId = ArrayList<String>()
-            if (!playlist.tracks.isNullOrEmpty())
+            if (playlist.tracks.isNotEmpty())
                 listTracksId.addAll(playlist.tracks)
             listTracksId.add(0, trackId)
             appDatabase.playlistDao().updatePlaylistTracksId(

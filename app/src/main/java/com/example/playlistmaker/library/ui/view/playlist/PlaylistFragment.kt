@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -42,9 +43,7 @@ class PlaylistFragment : Fragment() {
 
         }
 
-        playlistAdapter = PlaylistAdapter(R.layout.playlist_grid) { playlist ->
-            onPlaylistClickDebounce(playlist)
-        }
+        playlistAdapter = PlaylistAdapter(R.layout.playlist_grid, onPlaylistClickDebounce)
 
         binding.rvPlaylists.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvPlaylists.adapter = playlistAdapter
@@ -66,17 +65,23 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun showPlaylists(listPlaylist: List<Playlist>) {
-        binding.flPlaceholder.visibility = View.GONE
-        binding.rvPlaylists.visibility = View.VISIBLE
+        binding.apply {
+            flPlaceholder.isVisible = false
+            rvPlaylists.isVisible = true
+        }
 
-        playlistAdapter?.playlists?.clear()
-        playlistAdapter?.playlists?.addAll(listPlaylist)
-        playlistAdapter?.notifyDataSetChanged()
+        playlistAdapter?.apply {
+            playlists?.clear()
+            playlists?.addAll(listPlaylist)
+            notifyDataSetChanged()
+        }
     }
 
     private fun showEmpty() {
-        binding.flPlaceholder.visibility = View.VISIBLE
-        binding.rvPlaylists.visibility = View.GONE
+        binding.apply {
+            flPlaceholder.isVisible = true
+            rvPlaylists.isVisible = false
+        }
     }
 
     override fun onResume() {

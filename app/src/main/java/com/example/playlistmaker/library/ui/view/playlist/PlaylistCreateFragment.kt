@@ -1,13 +1,7 @@
 package com.example.playlistmaker.library.ui.view.playlist
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +11,8 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,13 +20,9 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.databinding.FragmentPlaylistCreatorBinding
 import com.example.playlistmaker.library.ui.viewmodel.playlist.PlaylistCreateViewModel
 import com.example.playlistmaker.models.Playlist
-import com.example.playlistmaker.utils.PLAYLIST_STORAGE_NAME
-import com.example.playlistmaker.utils.converters.getNameForImage
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
-import java.io.FileOutputStream
 
 class PlaylistCreateFragment : Fragment() {
 
@@ -38,20 +30,14 @@ class PlaylistCreateFragment : Fragment() {
     private val binding: FragmentPlaylistCreatorBinding
         get() = _binding!!
 
-    private var textWatcherName: TextWatcher? = null
-    private var uriImage: Uri? = null
-    private var playlistImgName: String? = null
     private val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
-        uriImage = uri
-        if (uri != null) {
-            Glide.with(requireContext())
-                .load(uri)
-                .into(binding.ivNewImage)
-        }
+        Glide.with(requireContext())
+            .load(uri)
+            .into(binding.ivNewImage)
     }
     private val viewModel by viewModel<PlaylistCreateViewModel>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPlaylistCreatorBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -76,33 +62,26 @@ class PlaylistCreateFragment : Fragment() {
 
         binding.tvCreate.setOnClickListener {
             if (it.isEnabled) {
-                saveImageToStorage()
                 addPlaylist()
+                if (binding.ivNewImage.drawable != null)
+                    viewModel.saveImageToStorage(
+                        "${getNameForImage(playlistName = binding.etPlaylistName.text.toString())}.jpg",
+                        binding.ivNewImage.drawable.toBitmap()
+                    )
                 Toast.makeText(
                     requireContext(),
                     "Плейлист ${binding.etPlaylistName.text.toString()} создан",
                     Toast.LENGTH_SHORT
                 ).show()
                 findNavController().popBackStack()
-            } else {
-
             }
         }
 
-        textWatcherName = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.tvCreate.isEnabled =
-                    s?.isNotEmpty() == true
+        binding.etPlaylistName.addTextChangedListener(
+            onTextChanged = { text, _, _, _ ->
+                binding.tvCreate.isEnabled = !text.isNullOrEmpty()
             }
-
-            override fun afterTextChanged(s: Editable?) {}
-        }
-
-        textWatcherName.let {
-            binding.etPlaylistName.addTextChangedListener(it)
-        }
+        )
 
         binding.etPlaylistName.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -155,34 +134,10 @@ class PlaylistCreateFragment : Fragment() {
                         0,
                         binding.etPlaylistName.text.toString(),
                         binding.etPlaylistOverview.text.toString(),
-                        playlistImgName,
-                        null
+                        "${getNameForImage(playlistName = binding.etPlaylistName.text.toString())}.jpg",
+                        listOf()
                     )
                 )
-            }
-        }
-    }
-
-    private fun saveImageToStorage() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val filePath =
-                File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), PLAYLIST_STORAGE_NAME)
-
-            if (!filePath.exists()) {
-                filePath.mkdirs()
-            }
-
-            playlistImgName = "${getNameForImage(playlistName = binding.etPlaylistName.text.toString())}.jpg"
-
-            val file = File(filePath, playlistImgName)
-            val outputStream = FileOutputStream(file)
-
-            if (uriImage != null) {
-                val inputStream = requireContext().contentResolver.openInputStream(uriImage!!)
-                BitmapFactory
-                    .decodeStream(inputStream)
-                    .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-
             }
         }
     }
@@ -190,6 +145,8 @@ class PlaylistCreateFragment : Fragment() {
     private fun loadImage() {
         pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
+
+    private fun getNameForImage(playlistName: String) = "${playlistName}_${System.currentTimeMillis()}"
 
     override fun onDestroyView() {
         super.onDestroyView()

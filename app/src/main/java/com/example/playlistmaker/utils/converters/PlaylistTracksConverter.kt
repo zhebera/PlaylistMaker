@@ -6,12 +6,12 @@ import java.util.stream.Collectors
 object PlaylistTracksConverter {
 
     @TypeConverter
-    fun fromTracksId(listTracks: List<String>?): String? =
-        if (listTracks.isNullOrEmpty())
-            null
-        else
-            listTracks.stream().collect(Collectors.joining(","))
+    fun fromTracksId(listTracks: List<String>): String =
+        listTracks.stream().collect(Collectors.joining(","))
 
     @TypeConverter
-    fun toTracksId(data: String?): List<String>? = data?.split(",")
+    fun toTracksId(data: String?): List<String>? =
+        if (data?.isEmpty() == true)
+            listOf()
+        else data?.split(",")
 }

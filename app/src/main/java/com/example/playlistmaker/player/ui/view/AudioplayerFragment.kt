@@ -82,20 +82,11 @@ class AudioplayerFragment : Fragment() {
             preparedTrack = savedInstanceState.getBoolean(PREPARED_TRACK)
         }
 
-        viewModel.playerState.observe(viewLifecycleOwner) {
-            renderState(it)
-        }
-
-        viewModel.isFavorite.observe(viewLifecycleOwner) {
-            renderFavorite(it)
-        }
-
-        viewModel.playlistState.observe(viewLifecycleOwner) {
-            renderPlaylistState(it)
-        }
-
-        viewModel.showToast.observe(viewLifecycleOwner) {
-            showToast(it)
+        viewModel.apply {
+            playerState.observe(viewLifecycleOwner, ::renderState)
+            isFavorite.observe(viewLifecycleOwner, ::renderFavorite)
+            playlistState.observe(viewLifecycleOwner, ::renderPlaylistState)
+            showToast.observe(viewLifecycleOwner, ::showToast)
         }
 
         track = createTrackFromJson(requireArguments().getString(KEY_TRACK_ID))
