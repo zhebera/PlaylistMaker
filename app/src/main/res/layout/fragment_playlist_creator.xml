@@ -30,25 +30,37 @@
 
     <ImageView
             android:id="@+id/ivNewImage"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintHeight_percent="0.4"
             android:scaleType="centerCrop"
             android:layout_marginTop="28dp"
+            android:layout_marginBottom="33dp"
             android:layout_marginHorizontal="24dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivBtnBack"
             android:background="@drawable/new_playlist_list"/>
 
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5325" />
+
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPlaylistName"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="33dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:hint="@string/playlist_name"
             app:counterTextColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@+id/ivNewImage"
-            app:layout_constraintBottom_toTopOf="@id/tilPlaylistOverview"
+            app:layout_constraintTop_toBottomOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.07"
+            app:layout_constraintBottom_toTopOf="@id/tilPlaylistOverview"
             style="@style/PlaylistEditText">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -63,12 +75,14 @@
 
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPlaylistOverview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintHeight_percent="0.07"
             android:hint="@string/playlist_overview"
             app:layout_constraintTop_toBottomOf="@+id/tilPlaylistName"
+            app:layout_constraintHeight_percent="0.07"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             style="@style/PlaylistEditText">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -79,12 +93,12 @@
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:windowSoftInputMode="stateHidden"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
             android:id="@+id/tvCreate"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/button_playlist_selector"
             android:layout_gravity="center"
@@ -96,8 +110,10 @@
             android:textSize="16sp"
             android:clickable="true"
             android:enabled="false"
-            app:layout_constraintHeight_percent="0.055"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.055"
             android:layout_marginHorizontal="17dp"
             android:layout_marginBottom="32dp"/>
 

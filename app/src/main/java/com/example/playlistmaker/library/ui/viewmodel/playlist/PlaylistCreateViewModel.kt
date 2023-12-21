@@ -13,9 +13,13 @@ import java.io.File
 import java.io.FileOutputStream
 
 class PlaylistCreateViewModel(
-    private val context: Context,
+    context: Context,
     private val libraryInteractor: LibraryInteractor
 ) : ViewModel() {
+
+    private val filePath by lazy {
+        File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), PLAYLIST_STORAGE_NAME)
+    }
 
     suspend fun addPlaylist(playlist: Playlist) {
         libraryInteractor.addPlaylist(playlist)
@@ -23,8 +27,6 @@ class PlaylistCreateViewModel(
 
     fun saveImageToStorage(playlistImgName: String, image: Bitmap) {
         viewModelScope.launch {
-            val filePath =
-                File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), PLAYLIST_STORAGE_NAME)
 
             if (!filePath.exists()) {
                 filePath.mkdirs()

@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistCreatorBinding
 import com.example.playlistmaker.library.ui.viewmodel.playlist.PlaylistCreateViewModel
 import com.example.playlistmaker.models.Playlist
@@ -33,6 +34,7 @@ class PlaylistCreateFragment : Fragment() {
     private val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
         Glide.with(requireContext())
             .load(uri)
+            .error(requireContext().getDrawable(R.drawable.music_note))
             .into(binding.ivNewImage)
     }
     private val viewModel by viewModel<PlaylistCreateViewModel>()
@@ -62,10 +64,11 @@ class PlaylistCreateFragment : Fragment() {
 
         binding.tvCreate.setOnClickListener {
             if (it.isEnabled) {
-                addPlaylist()
+                val imageName = "${getNameForImage(playlistName = binding.etPlaylistName.text.toString())}.jpg"
+                addPlaylist(imageName)
                 if (binding.ivNewImage.drawable != null)
                     viewModel.saveImageToStorage(
-                        "${getNameForImage(playlistName = binding.etPlaylistName.text.toString())}.jpg",
+                        imageName,
                         binding.ivNewImage.drawable.toBitmap()
                     )
                 Toast.makeText(
@@ -126,7 +129,7 @@ class PlaylistCreateFragment : Fragment() {
         dialog.show()
     }
 
-    private fun addPlaylist() {
+    private fun addPlaylist(imageName: String) {
         viewLifecycleOwner.lifecycleScope.launch {
             if (!binding.etPlaylistName.text.isNullOrEmpty()) {
                 viewModel.addPlaylist(
@@ -134,7 +137,7 @@ class PlaylistCreateFragment : Fragment() {
                         0,
                         binding.etPlaylistName.text.toString(),
                         binding.etPlaylistOverview.text.toString(),
-                        "${getNameForImage(playlistName = binding.etPlaylistName.text.toString())}.jpg",
+                        imageName,
                         listOf()
                     )
                 )
