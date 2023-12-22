@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.ui.view
 
 import android.content.Context.INPUT_METHOD_SERVICE
-import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
@@ -12,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -22,13 +22,13 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.models.Track
-import com.example.playlistmaker.player.ui.view.AudioplayerActivity
 import com.example.playlistmaker.search.domain.models.SearchState
 import com.example.playlistmaker.search.ui.viewmodel.SearchViewModel
 import com.example.playlistmaker.utils.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.utils.KEY_TRACK_ID
 import com.example.playlistmaker.utils.createJsonFromTrack
 import com.example.playlistmaker.utils.debounce
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -48,8 +48,8 @@ class SearchFragment : Fragment() {
     private val binding: FragmentSearchBinding
         get() = _binding!!
 
-    private var playlistAdapter: PlaylistAdapter? = null
-    private var searchHistoryAdapter: PlaylistAdapter? = null
+    private var playlistAdapter: PlaylistSearchAdapter? = null
+    private var searchHistoryAdapter: PlaylistSearchAdapter? = null
 
     private var savedSearchEditText: String? = null
 
@@ -61,25 +61,24 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
-            val audioplayerIntent = Intent(requireContext(), AudioplayerActivity::class.java)
-            audioplayerIntent.putExtra(KEY_TRACK_ID, createJsonFromTrack(track))
-            startActivity(audioplayerIntent)
+        onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, true) { track ->
+            val bundle = bundleOf(KEY_TRACK_ID to createJsonFromTrack(track))
+            findNavController().navigate(R.id.action_searchFragment_to_audioplayerFragment, bundle)
         }
 
-        playlistAdapter = PlaylistAdapter { track ->
+        playlistAdapter = PlaylistSearchAdapter { track ->
             viewModel.addNewTrackToHistory(track)
             onTrackClickDebounce(track)
         }
 
-        searchHistoryAdapter = PlaylistAdapter { track ->
+        searchHistoryAdapter = PlaylistSearchAdapter { track ->
             onTrackClickDebounce(track)
         }
 
         placeHolder = binding.llPlaceHolder
         placeHolderImage = binding.ivPlaceHolder
         placeHolderMessage = binding.tvPlaceholderMessage
-        btnPlaceHolderUpdate = binding.btnPlaceholderUpdate
+        btnPlaceHolderUpdate = binding.btnPlaylistCreate
         searchEditTxt = binding.etInput
         progressBar = binding.progressBar
         trackRecyclerView = binding.rvTrack
@@ -89,16 +88,16 @@ class SearchFragment : Fragment() {
         val btnClearSearchHistory = binding.btnSearchHistoryClear
         searchEditTxt.setText(savedSearchEditText)
 
-        viewModel.searchState.observe(viewLifecycleOwner) {
-            renderState(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchState.observe(viewLifecycleOwner) {
+                renderState(it)
+            }
         }
 
-        viewModel.toastState.observe(viewLifecycleOwner) {
-            showToast(it)
-        }
-
-        viewModel.historyState.observe(viewLifecycleOwner) {
-            showHistory(it, false)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.historyState.observe(viewLifecycleOwner) {
+                showHistory(it, false)
+            }
         }
 
         trackRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -176,10 +175,6 @@ class SearchFragment : Fragment() {
             is SearchState.Error -> showError()
             is SearchState.Empty -> showEmpty()
         }
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun showLoading() {

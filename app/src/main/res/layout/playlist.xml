@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_height="61dp">
+
+    <ImageView
+            android:layout_width="@dimen/size_image_song"
+            android:layout_height="@dimen/size_image_song"
+            android:id="@+id/ivPlaylist"
+            android:layout_weight="0"
+            android:layout_marginVertical="8dp"
+            android:layout_marginStart="@dimen/secondary_image_padding"/>
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="10dp">
+
+        <TextView
+                style="@style/SecondaryTextView.BlackWhite"
+                android:id="@+id/tvPlaylistName"
+                tools:text="Name of playlist"
+                android:ellipsize="end"
+                android:maxLines ="1"
+                android:layout_marginTop="14dp"/>
+
+        <TextView
+                style="@style/SecondaryTextView.GreyWhite.Track"
+                android:id="@+id/tvCountSongs"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines ="1"
+                tools:text="Count of songs"
+                android:layout_marginBottom="5dp"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -149,5 +149,14 @@
         <item name="android:layout_marginVertical">@dimen/settings_activity_img_margin_vertical</item>
         <item name="android:layout_marginEnd">@dimen/settings_activity_vertical_padding</item>
     </style>
-
+    <style name="PlaylistEditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="android:layout_marginHorizontal">16dp</item>
+        <item name="android:textColorHint">@color/medium_black_white</item>
+        <item name="boxStrokeColor">@drawable/edit_text_playlist_selector</item>
+        <item name="hintTextColor">@drawable/edit_text_playlist_selector</item>
+    </style>
 </resources>

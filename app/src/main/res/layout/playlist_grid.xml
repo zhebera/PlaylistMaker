@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="160dp"
+              android:layout_height="196dp">
+
+    <ImageView
+            android:id="@+id/ivPlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.8"
+            tools:src="@drawable/music_note"/>
+
+    <TextView
+            android:id="@+id/tvPlaylistName"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            style="@style/SecondaryTextView.MediumBlackWhite"
+            android:textSize="12sp"
+            tools:text="Имя плейлиста"/>
+
+    <TextView
+            android:id="@+id/tvCountSongs"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            style="@style/SecondaryTextView.MediumBlackWhite"
+            android:textSize="12sp"
+            tools:text="Количество песен"/>
+</LinearLayout>

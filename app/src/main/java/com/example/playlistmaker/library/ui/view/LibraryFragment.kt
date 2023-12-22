@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentLibraryBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
-class LibraryFragment: Fragment() {
+class LibraryFragment : Fragment() {
 
     private var _binding: FragmentLibraryBinding? = null
     private val binding: FragmentLibraryBinding
@@ -27,8 +26,8 @@ class LibraryFragment: Fragment() {
 
         binding.viewPager.adapter = FragmentLibraryAdapter(this)
 
-        tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager){ tab, position ->
-            tab.text = when(position){
+        tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = when (position) {
                 0 -> resources.getString(R.string.selected_tracks)
                 1 -> resources.getString(R.string.playlists)
                 else -> ""

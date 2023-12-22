@@ -26,11 +26,11 @@ val interactorModule = module {
         SettingsInteractorImpl(get())
     }
 
-    single<MediatekaInteractor>{
+    single<MediatekaInteractor> {
         MediatekaInteractorImpl(get())
     }
 
-    single<LibraryInteractor>{
+    single<LibraryInteractor> {
         LibraryInteractorImpl(get())
     }
 }

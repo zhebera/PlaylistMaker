@@ -54,7 +54,7 @@ val dataModule = module {
         LocalStorageTheme(get(named(DARK_THEME_ENABLED)))
     }
 
-    single<AppDatabase>{
+    single<AppDatabase> {
         Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
             .build()
     }

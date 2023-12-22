@@ -10,3 +10,5 @@ const val DARK_THEME_ENABLED = "dark_theme_enabled"
 const val SHARED_PREFERENCES_THEME_KEY = "shared_preferences_theme_key"
 
 const val CLICK_DEBOUNCE_DELAY = 1000L
+
+const val PLAYLIST_STORAGE_NAME = "playlist_images"

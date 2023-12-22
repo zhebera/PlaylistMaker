@@ -5,8 +5,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.playlistmaker.search.data.dto.Response
 import com.example.playlistmaker.search.data.dto.TrackRequest
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class PlaylistRetrofit(private val playlistRetrofit: ITunesApi, private val context: Context) : NetworkClient {
 
@@ -19,13 +17,11 @@ class PlaylistRetrofit(private val playlistRetrofit: ITunesApi, private val cont
             return Response().apply { resultCode = 400 }
         }
 
-        return withContext(Dispatchers.IO){
-            try{
-                val response = playlistRetrofit.search(dto.searchTrack)
-                response.apply { resultCode = 200 }
-            }catch(e: Throwable){
-                Response().apply { resultCode = 500 }
-            }
+        return try {
+            val response = playlistRetrofit.search(dto.searchTrack)
+            response.apply { resultCode = 200 }
+        } catch (e: Throwable) {
+            Response().apply { resultCode = 500 }
         }
     }
 
