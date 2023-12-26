@@ -9,6 +9,11 @@ import kotlinx.coroutines.flow.Flow
 class LibraryInteractorImpl(
     private val libraryRepository: LibraryRepository
 ) : LibraryInteractor {
+
+    override suspend fun getPlaylist(playlistId: Long): Playlist{
+        return libraryRepository.getPlaylist(playlistId)
+    }
+
     override fun getAllTracks(): Flow<List<Track>> {
         return libraryRepository.getAllTracks()
     }
@@ -19,5 +24,9 @@ class LibraryInteractorImpl(
 
     override suspend fun addPlaylist(playlist: Playlist) {
         libraryRepository.addPlaylist(playlist)
+    }
+
+    override fun getTracksPlaylist(playlistId: Long): Flow<List<Track>> {
+        return libraryRepository.getTracksPlaylist(playlistId)
     }
 }

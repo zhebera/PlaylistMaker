@@ -10,5 +10,5 @@ interface MediatekaRepository {
     suspend fun addTrack(track: Track)
     suspend fun removeTrack(track: Track)
     fun getAllPlaylist(): Flow<List<Playlist>>
-    suspend fun addTrackToPlaylist(playlist: Playlist, trackId: String)
+    suspend fun addTrackToPlaylist(playlist: Playlist, track: Track)
 }

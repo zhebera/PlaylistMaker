@@ -69,7 +69,7 @@ class AudioplayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         onPlaylistClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false) { playlist ->
-            viewModel.addTrackToPlaylist(playlist, track.trackId)
+            viewModel.addTrackToPlaylist(playlist, track)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 

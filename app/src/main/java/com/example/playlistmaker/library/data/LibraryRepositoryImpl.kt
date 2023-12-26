@@ -15,6 +15,11 @@ class LibraryRepositoryImpl(
     private val playlistDbConverter: PlaylistDbConverter
 ) : LibraryRepository {
 
+    override suspend fun getPlaylist(playlistId: Long): Playlist{
+        val playlist = appDatabase.playlistDao().getPlaylistById(playlistId)
+        return playlistDbConverter.map(playlist)
+    }
+
     override fun getAllTracks(): Flow<List<Track>> = flow {
         val tracks = appDatabase.trackDao().getAllTracks().reversed()
         emit(trackDbConverter.map(tracks))
@@ -27,5 +32,10 @@ class LibraryRepositoryImpl(
 
     override suspend fun addPlaylist(playlist: Playlist) {
         appDatabase.playlistDao().addPlaylist(playlistDbConverter.map(playlist))
+    }
+
+    override fun getTracksPlaylist(playlistId: Long): Flow<List<Track>> = flow{
+        val tracks = appDatabase.tracksPlaylistDao().getTracks(playlistId)
+        emit(trackDbConverter.map(tracks))
     }
 }

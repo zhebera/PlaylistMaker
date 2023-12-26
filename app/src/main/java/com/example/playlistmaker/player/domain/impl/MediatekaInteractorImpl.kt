@@ -25,7 +25,7 @@ class MediatekaInteractorImpl(
         return mediatekaRepository.getAllPlaylist()
     }
 
-    override suspend fun addTrackToPlaylist(playlist: Playlist, trackId: String) {
-        mediatekaRepository.addTrackToPlaylist(playlist, trackId)
+    override suspend fun addTrackToPlaylist(playlist: Playlist, track: Track) {
+        mediatekaRepository.addTrackToPlaylist(playlist, track)
     }
 }

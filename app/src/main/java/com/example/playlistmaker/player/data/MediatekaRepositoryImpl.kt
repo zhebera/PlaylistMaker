@@ -39,16 +39,19 @@ class MediatekaRepositoryImpl(
         emit(playlistDbConverter.map(playlists))
     }
 
-    override suspend fun addTrackToPlaylist(playlist: Playlist, trackId: String) {
+    override suspend fun addTrackToPlaylist(playlist: Playlist, track: Track) {
         withContext(Dispatchers.IO) {
             val listTracksId = ArrayList<String>()
             if (playlist.tracks.isNotEmpty())
                 listTracksId.addAll(playlist.tracks)
-            listTracksId.add(0, trackId)
+            listTracksId.add(0, track.trackId)
+
             appDatabase.playlistDao().updatePlaylistTracksId(
                 playlistDbConverter.map(playlist).id,
                 listTracksId
             )
+
+            appDatabase.tracksPlaylistDao().addTrack(playlistId = playlist.id, trackDbConverter.map(track))
         }
     }
 }

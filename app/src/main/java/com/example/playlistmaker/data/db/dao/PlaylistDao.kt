@@ -18,4 +18,7 @@ interface PlaylistDao {
     @Query("UPDATE playlist_table SET tracks = :listTracks WHERE id = :playlistId")
     @TypeConverters(PlaylistTracksConverter::class)
     suspend fun updatePlaylistTracksId(playlistId: Long, listTracks: List<String>)
+
+    @Query("SELECT * FROM playlist_table WHERE id = :playlistId")
+    suspend fun getPlaylistById(playlistId: Long): PlaylistEntity
 }

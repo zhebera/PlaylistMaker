@@ -125,15 +125,14 @@ class PlayerViewModel(
             _playlistState.postValue(PlaylistState.Content(playlists))
     }
 
-    fun addTrackToPlaylist(playlist: Playlist, trackId: String) {
+    fun addTrackToPlaylist(playlist: Playlist, track: Track) {
         viewModelScope.launch {
-            if (playlist.tracks?.contains(trackId) == true)
+            if (playlist.tracks?.contains(track.trackId) == true)
                 _showToast.setValue("Трек уже добавлен в плейлист ${playlist.name}")
             else {
-                mediatekaInteractor.addTrackToPlaylist(playlist, trackId)
+                mediatekaInteractor.addTrackToPlaylist(playlist, track)
                 _showToast.setValue("Добавлено в плейлист ${playlist.name}")
             }
-
         }
     }
 
