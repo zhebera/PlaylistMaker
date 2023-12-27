@@ -29,4 +29,12 @@ class LibraryInteractorImpl(
     override fun getTracksPlaylist(playlistId: Long): Flow<List<Track>> {
         return libraryRepository.getTracksPlaylist(playlistId)
     }
+
+    override suspend fun deleteTrackFromPlaylist(playlistId: Long, track: Track) {
+        libraryRepository.deleteTrackFromPlaylist(playlistId, track)
+    }
+
+    override suspend fun deletePlaylist(playlistId: Long) {
+        libraryRepository.deletePlaylist(playlistId)
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.playlistmaker.player.data
 
 import com.example.playlistmaker.data.db.AppDatabase
+import com.example.playlistmaker.data.db.entity.TracksPlaylistEntity
 import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.player.domain.db.MediatekaRepository
@@ -51,7 +52,8 @@ class MediatekaRepositoryImpl(
                 listTracksId
             )
 
-            appDatabase.tracksPlaylistDao().addTrack(playlistId = playlist.id, trackDbConverter.map(track))
+            appDatabase.tracksPlaylistDao().addTrack(
+                TracksPlaylistEntity(playlistId = playlist.id, track = trackDbConverter.map(track)))
         }
     }
 }

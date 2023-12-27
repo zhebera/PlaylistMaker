@@ -33,4 +33,8 @@
     <string name="playlist_name">Название*</string>
     <string name="playlist_overview">Описание</string>
     <string name="create">Создать</string>
+    <string name="no_tracks_for_sharing">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_information">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
 </resources>

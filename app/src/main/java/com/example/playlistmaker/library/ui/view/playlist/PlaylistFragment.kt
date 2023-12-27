@@ -17,6 +17,7 @@ import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.models.PlaylistState
 import com.example.playlistmaker.utils.CLICK_DEBOUNCE_DELAY
 import com.example.playlistmaker.utils.PLAYLIST_ID
+import com.example.playlistmaker.utils.converters.createJsonFromPlaylist
 import com.example.playlistmaker.utils.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -33,7 +34,7 @@ class PlaylistFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentPlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -43,7 +44,7 @@ class PlaylistFragment : Fragment() {
 
         onPlaylistClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false) { playlist ->
             findNavController().navigate(R.id.action_libraryFragment_to_playlistDescriptionFragment,
-                bundleOf(PLAYLIST_ID to playlist.id))
+                bundleOf(PLAYLIST_ID to createJsonFromPlaylist(playlist)))
         }
 
         playlistAdapter = PlaylistAdapter(R.layout.playlist_grid, onPlaylistClickDebounce)
@@ -74,8 +75,8 @@ class PlaylistFragment : Fragment() {
         }
 
         playlistAdapter?.apply {
-            playlists?.clear()
-            playlists?.addAll(listPlaylist)
+            playlists.clear()
+            playlists.addAll(listPlaylist)
             notifyDataSetChanged()
         }
     }

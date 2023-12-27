@@ -6,9 +6,6 @@ import com.example.playlistmaker.utils.converters.PlaylistTracksConverter
 
 @Dao
 interface PlaylistDao {
-    @Delete
-    suspend fun deletePlaylist(playlistEntity: PlaylistEntity)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addPlaylist(playlistEntity: PlaylistEntity)
 
@@ -20,5 +17,8 @@ interface PlaylistDao {
     suspend fun updatePlaylistTracksId(playlistId: Long, listTracks: List<String>)
 
     @Query("SELECT * FROM playlist_table WHERE id = :playlistId")
-    suspend fun getPlaylistById(playlistId: Long): PlaylistEntity
+    fun getPlaylistById(playlistId: Long): PlaylistEntity
+
+    @Query("DELETE FROM playlist_table WHERE id = :playlistId")
+    suspend fun deletePlaylist(playlistId: Long)
 }

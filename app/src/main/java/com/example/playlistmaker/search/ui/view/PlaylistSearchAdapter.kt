@@ -18,7 +18,9 @@ class PlaylistSearchAdapter(private val clickListener: SearchClickListener) :
 
     override fun getItemCount() = tracks.size
 
-    fun interface SearchClickListener {
+    interface SearchClickListener {
         fun onTrackClick(track: Track)
+        fun onTrackLongClick(track: Track)
     }
+
 }

@@ -39,5 +39,9 @@ class PlaylistSearchViewHolder(
             .into(trackImage)
 
         itemView.setOnClickListener { clickListener.onTrackClick(track) }
+
+        itemView.setOnLongClickListener {
+            clickListener.onTrackLongClick(track)
+            true}
     }
 }

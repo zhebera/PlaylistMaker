@@ -12,7 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.utils.PLAYLIST_STORAGE_NAME
-import com.example.playlistmaker.utils.converters.rightEnding
+import com.example.playlistmaker.utils.converters.rightEndingTrack
 import com.example.playlistmaker.utils.dpToPx
 import java.io.File
 
@@ -32,7 +32,7 @@ class PlaylistViewHolder(
     fun bind(playlist: Playlist) {
         playlistName.text = playlist.name
         val count = playlist.tracks.size
-        countSongs.text = rightEnding(count)
+        countSongs.text = rightEndingTrack(count)
         showImage(playlist.imageName)
 
         itemView.setOnClickListener { clickListener.onClick(playlist) }

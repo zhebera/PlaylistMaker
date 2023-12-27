@@ -12,6 +12,7 @@ import com.example.playlistmaker.library.domain.models.LibraryTrackState
 import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.utils.PLAYLIST_STORAGE_NAME
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -29,7 +30,7 @@ class PlaylistDescriptionViewModel(
 
     fun getPlaylist(playlistId: Long): Playlist? {
         var playlist: Playlist? = null
-        viewModelScope.launch {
+        viewModelScope.async {
             playlist = libraryInteractor.getPlaylist(playlistId)
         }
         return playlist
@@ -49,4 +50,17 @@ class PlaylistDescriptionViewModel(
     }
 
     fun getImage(name: String?) = File(filePath, name).toUri()
+
+    fun deleteTrackFromPlaylist(playlistId: Long, track: Track){
+        viewModelScope.launch {
+            libraryInteractor.deleteTrackFromPlaylist(playlistId, track)
+            getTracks(playlistId)
+        }
+    }
+
+    fun deletePlaylist(playlistId: Long){
+        viewModelScope.launch {
+            libraryInteractor.deletePlaylist(playlistId)
+        }
+    }
 }
