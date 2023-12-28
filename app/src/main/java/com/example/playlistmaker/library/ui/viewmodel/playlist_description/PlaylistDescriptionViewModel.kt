@@ -12,7 +12,10 @@ import com.example.playlistmaker.library.domain.models.LibraryTrackState
 import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.utils.PLAYLIST_STORAGE_NAME
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -24,16 +27,21 @@ class PlaylistDescriptionViewModel(
     private val _playlistTracks = MutableLiveData<LibraryTrackState>()
     val playlistTracks: LiveData<LibraryTrackState> = _playlistTracks
 
+    private val _playlist = MutableLiveData<Playlist>()
+    val playlist: LiveData<Playlist> = _playlist
+
     private val filePath by lazy {
         File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), PLAYLIST_STORAGE_NAME)
     }
 
-    fun getPlaylist(playlistId: Long): Playlist? {
-        var playlist: Playlist? = null
-        viewModelScope.async {
-            playlist = libraryInteractor.getPlaylist(playlistId)
+    fun updatePlaylist(playlistId: Long){
+        viewModelScope.launch(Dispatchers.IO) {
+             libraryInteractor.getPlaylist(playlistId).collect(::updatePlaylist)
         }
-        return playlist
+    }
+
+    private fun updatePlaylist(playlist: Playlist){
+        _playlist.postValue(playlist)
     }
 
     fun getTracks(playlistId: Long) {

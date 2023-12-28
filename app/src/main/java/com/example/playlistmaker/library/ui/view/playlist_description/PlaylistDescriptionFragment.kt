@@ -71,13 +71,12 @@ class PlaylistDescriptionFragment : Fragment() {
             }
         })
 
-        initView()
-
         binding.rvTracks.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.rvTracks.adapter = adapter
 
-        viewModel.playlistTracks.observe(viewLifecycleOwner) {
-            renderState(it)
+        viewModel.apply {
+            playlistTracks.observe(viewLifecycleOwner, ::renderState)
+            playlist.observe(viewLifecycleOwner, ::updatePlaylist)
         }
 
         binding.ivBtnBack.setOnClickListener {
@@ -94,6 +93,7 @@ class PlaylistDescriptionFragment : Fragment() {
 
         binding.tvShare.setOnClickListener {
             sharePlaylist()
+            bottomSheetSettingsBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         binding.tvDeletePlaylist.setOnClickListener {
@@ -101,7 +101,8 @@ class PlaylistDescriptionFragment : Fragment() {
         }
 
         binding.tvEditInformation.setOnClickListener {
-            findNavController().navigate(R.id.action_playlistDescriptionFragment_to_playlistEditFragment,
+            findNavController().navigate(
+                R.id.action_playlistDescriptionFragment_to_playlistEditFragment,
                 bundleOf(PLAYLIST_ID to createJsonFromPlaylist(playlist))
             )
         }
@@ -114,17 +115,22 @@ class PlaylistDescriptionFragment : Fragment() {
     }
 
     private fun initView() {
-        binding.tvPlaylistName.text = playlist?.name
-        binding.tvPlaylistOverview.text = playlist?.overview
-        binding.tvCount.text = rightEndingTrack(playlist.tracks.size)
+        binding.tvPlaylistName.text = playlist.name
+        binding.tvPlaylistOverview.text = playlist.overview
+        updateCountSongs()
         updateSumTime()
         Glide.with(requireContext())
-            .load(viewModel.getImage(playlist?.imageName))
+            .load(viewModel.getImage(playlist.imageName))
             .placeholder(R.drawable.music_note)
             .into(binding.ivPlaceholder)
 
         bottomSheetSettingsBehavior = BottomSheetBehavior.from(binding.bottomSheetSettings)
         bottomSheetSettingsBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
+    private fun updatePlaylist(playlistUpdate: Playlist){
+        playlist = playlistUpdate
+        initView()
     }
 
     private fun updateSumTime() {
@@ -135,6 +141,10 @@ class PlaylistDescriptionFragment : Fragment() {
         binding.tvMinutes.text = rightEndingMinutes(
             TimeUnit.MILLISECONDS.toMinutes(sumDuration).toInt()
         )
+    }
+
+    private fun updateCountSongs(){
+        binding.tvCount.text = rightEndingTrack(adapter!!.itemCount)
     }
 
     private fun renderState(state: LibraryTrackState) {
@@ -151,6 +161,7 @@ class PlaylistDescriptionFragment : Fragment() {
             notifyDataSetChanged()
         }
         updateSumTime()
+        updateCountSongs()
     }
 
     private fun showEmpty() {
@@ -159,21 +170,23 @@ class PlaylistDescriptionFragment : Fragment() {
             notifyDataSetChanged()
         }
         updateSumTime()
+        updateCountSongs()
     }
 
     private fun showDialogDeleteTrack(track: Track) {
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Хотите удалить трек?")
-            .setNegativeButton("Нет") { dialog, which ->
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.DialogButtons)
+            .setTitle("Удалить трек")
+            .setMessage("Вы уверены, что хотите удалить трек из плейлиста?")
+            .setNegativeButton("Отмена") { dialog, which ->
             }
-            .setPositiveButton("Да") { dialog, which ->
+            .setPositiveButton("Удалить") { dialog, which ->
                 viewModel.deleteTrackFromPlaylist(playlist.id, track)
             }
         dialog.show()
     }
 
     private fun showDialogDeletePlaylist() {
-        val dialog = MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.DialogButtons)
             .setTitle("Хотите удалить плейлист <<${playlist.name}>>?")
             .setNegativeButton("Нет") { dialog, which ->
             }
@@ -184,16 +197,16 @@ class PlaylistDescriptionFragment : Fragment() {
         dialog.show()
     }
 
-    private fun sharePlaylist(){
+    private fun sharePlaylist() {
         adapter?.apply {
-            if(tracks.isNullOrEmpty())
+            if (tracks.isNullOrEmpty())
                 Toast.makeText(requireContext(), getString(R.string.no_tracks_for_sharing), Toast.LENGTH_SHORT).show()
             else
                 shareTracks()
         }
     }
 
-    private fun shareTracks(){
+    private fun shareTracks() {
         val intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, getPlaylistInfo())
@@ -203,21 +216,26 @@ class PlaylistDescriptionFragment : Fragment() {
         startActivity(shareIntent)
     }
 
-    private fun getPlaylistInfo(): String{
+    private fun getPlaylistInfo(): String {
         return "${playlist.name}\n" +
-        "${playlist.overview}\n" +
-        "${playlist.tracks.size}\n" +
-        getTracksInfo()
+                "${playlist.overview}\n" +
+                "${playlist.tracks.size}\n" +
+                getTracksInfo()
     }
 
-    private fun getTracksInfo(): String{
+    private fun getTracksInfo(): String {
         val tracksInfo = adapter!!.tracks.mapIndexed { index, track ->
-            "${index+1}.${track.artistName} - ${track.trackName}(${SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)})"
+            "${index + 1}.${track.artistName} - ${track.trackName}(${
+                SimpleDateFormat(
+                    "mm:ss",
+                    Locale.getDefault()
+                ).format(track.trackTimeMillis)
+            })"
         }
         return tracksInfo.stream().collect(Collectors.joining("\n"))
     }
 
-    private fun showBottomSheetSettings(){
+    private fun showBottomSheetSettings() {
         bottomSheetSettingsBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         Glide.with(requireContext())
             .load(viewModel.getImage(playlist.imageName))
@@ -230,6 +248,7 @@ class PlaylistDescriptionFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.getTracks(playlist.id)
+        viewModel.updatePlaylist(playlist.id)
     }
 
     override fun onDestroyView() {

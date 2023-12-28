@@ -10,7 +10,7 @@ class LibraryInteractorImpl(
     private val libraryRepository: LibraryRepository
 ) : LibraryInteractor {
 
-    override suspend fun getPlaylist(playlistId: Long): Playlist{
+    override fun getPlaylist(playlistId: Long): Flow<Playlist>{
         return libraryRepository.getPlaylist(playlistId)
     }
 
@@ -36,5 +36,9 @@ class LibraryInteractorImpl(
 
     override suspend fun deletePlaylist(playlistId: Long) {
         libraryRepository.deletePlaylist(playlistId)
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        libraryRepository.updatePlaylist(playlist)
     }
 }
