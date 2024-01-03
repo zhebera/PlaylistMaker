@@ -4,6 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:background="@color/light_grey"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".library.ui.view.playlist_description.PlaylistDescriptionFragment">
@@ -154,7 +155,6 @@
             android:background="@drawable/bottom_sheet_background"
             android:paddingHorizontal="16dp"
             app:behavior_hideable="false"
-            app:behavior_peekHeight="200dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <View

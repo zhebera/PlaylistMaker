@@ -21,6 +21,8 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistCreatorBinding
 import com.example.playlistmaker.library.ui.viewmodel.playlist_create.PlaylistCreateViewModel
 import com.example.playlistmaker.models.Playlist
+import com.example.playlistmaker.utils.converters.bytesEqualTo
+import com.example.playlistmaker.utils.converters.pixelsEqualTo
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -67,7 +69,9 @@ open class PlaylistCreateFragment : Fragment() {
             if (it.isEnabled) {
                 val imageName = "${getNameForImage(playlistName = binding.etPlaylistName.text.toString())}.jpg"
                 addPlaylist(imageName)
-                if (binding.ivNewImage.drawable != null)
+                if (binding.ivNewImage.drawable != null &&
+                    !binding.ivNewImage.drawable.bytesEqualTo(requireContext().getDrawable(R.drawable.music_note)) &&
+                    !binding.ivNewImage.drawable.pixelsEqualTo(requireContext().getDrawable(R.drawable.music_note)))
                     viewModel.saveImageToStorage(
                         imageName,
                         binding.ivNewImage.drawable.toBitmap()

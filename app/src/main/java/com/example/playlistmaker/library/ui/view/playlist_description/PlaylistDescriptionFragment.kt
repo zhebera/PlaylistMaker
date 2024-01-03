@@ -42,6 +42,7 @@ class PlaylistDescriptionFragment : Fragment() {
 
     private lateinit var playlist: Playlist
     private var adapter: PlaylistSearchAdapter? = null
+    private lateinit var bottomSheetTracksBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var bottomSheetSettingsBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var onTrackClickDebounce: (Track) -> Unit
     private val viewModel by viewModel<PlaylistDescriptionViewModel>()
@@ -124,6 +125,10 @@ class PlaylistDescriptionFragment : Fragment() {
             .placeholder(R.drawable.music_note)
             .into(binding.ivPlaceholder)
 
+        bottomSheetTracksBehavior = BottomSheetBehavior.from(binding.bottomSheetTracks)
+        bottomSheetTracksBehavior.peekHeight = binding.container.height/3
+        bottomSheetTracksBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
         bottomSheetSettingsBehavior = BottomSheetBehavior.from(binding.bottomSheetSettings)
         bottomSheetSettingsBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
@@ -187,10 +192,11 @@ class PlaylistDescriptionFragment : Fragment() {
 
     private fun showDialogDeletePlaylist() {
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.DialogButtons)
-            .setTitle("Хотите удалить плейлист <<${playlist.name}>>?")
-            .setNegativeButton("Нет") { dialog, which ->
+            .setTitle("Удалить плейлист")
+            .setMessage("Вы уверены, что хотите удалить этот плейлист?")
+            .setNegativeButton("Отмена") { dialog, which ->
             }
-            .setPositiveButton("Да") { dialog, which ->
+            .setPositiveButton("Удалить") { dialog, which ->
                 viewModel.deletePlaylist(playlist.id)
                 findNavController().popBackStack()
             }

@@ -11,7 +11,9 @@ import com.example.playlistmaker.library.ui.view.playlist_create.PlaylistCreateF
 import com.example.playlistmaker.library.ui.viewmodel.playlist_edit.PlaylistEditViewModel
 import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.utils.PLAYLIST_ID
+import com.example.playlistmaker.utils.converters.bytesEqualTo
 import com.example.playlistmaker.utils.converters.createPlaylistFromJson
+import com.example.playlistmaker.utils.converters.pixelsEqualTo
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistEditFragment: PlaylistCreateFragment() {
@@ -55,7 +57,9 @@ class PlaylistEditFragment: PlaylistCreateFragment() {
 
     private fun updateImage(newImageName: String){
         viewModel.deleteOldImage(playlist.imageName)
-        if (binding.ivNewImage.drawable != null)
+        if (binding.ivNewImage.drawable != null &&
+            !binding.ivNewImage.drawable.bytesEqualTo(requireContext().getDrawable(R.drawable.music_note)) &&
+            !binding.ivNewImage.drawable.pixelsEqualTo(requireContext().getDrawable(R.drawable.music_note)))
             viewModel.saveImageToStorage(
                 newImageName,
                 binding.ivNewImage.drawable.toBitmap()
