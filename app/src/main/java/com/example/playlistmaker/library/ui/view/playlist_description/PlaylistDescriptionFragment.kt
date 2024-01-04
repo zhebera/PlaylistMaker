@@ -41,7 +41,15 @@ class PlaylistDescriptionFragment : Fragment() {
         get() = _binding!!
 
     private lateinit var playlist: Playlist
-    private var adapter: PlaylistSearchAdapter? = null
+    private var adapter: PlaylistSearchAdapter = PlaylistSearchAdapter(object : PlaylistSearchAdapter.SearchClickListener {
+        override fun onTrackClick(track: Track) {
+            onTrackClickDebounce(track)
+        }
+
+        override fun onTrackLongClick(track: Track) {
+            showDialogDeleteTrack(track)
+        }
+    })
     private lateinit var bottomSheetTracksBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var bottomSheetSettingsBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var onTrackClickDebounce: (Track) -> Unit
@@ -61,16 +69,6 @@ class PlaylistDescriptionFragment : Fragment() {
         }
 
         playlist = createPlaylistFromJson(requireArguments().getString(PLAYLIST_ID))
-
-        adapter = PlaylistSearchAdapter(object : PlaylistSearchAdapter.SearchClickListener {
-            override fun onTrackClick(track: Track) {
-                onTrackClickDebounce(track)
-            }
-
-            override fun onTrackLongClick(track: Track) {
-                showDialogDeleteTrack(track)
-            }
-        })
 
         binding.rvTracks.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.rvTracks.adapter = adapter
@@ -139,8 +137,8 @@ class PlaylistDescriptionFragment : Fragment() {
     }
 
     private fun updateSumTime() {
-        val sumDuration = if (adapter?.tracks?.isNullOrEmpty() == false)
-            adapter!!.tracks.sumOf { it.trackTimeMillis }
+        val sumDuration = if (!adapter.tracks.isNullOrEmpty())
+            adapter.tracks.sumOf { it.trackTimeMillis }
         else
             0
         binding.tvMinutes.text = rightEndingMinutes(
@@ -149,7 +147,7 @@ class PlaylistDescriptionFragment : Fragment() {
     }
 
     private fun updateCountSongs(){
-        binding.tvCount.text = rightEndingTrack(adapter!!.itemCount)
+        binding.tvCount.text = rightEndingTrack(adapter.itemCount)
     }
 
     private fun renderState(state: LibraryTrackState) {
@@ -160,7 +158,7 @@ class PlaylistDescriptionFragment : Fragment() {
     }
 
     private fun showData(listTrack: List<Track>) {
-        adapter?.apply {
+        adapter.apply {
             tracks.clear()
             tracks.addAll(listTrack)
             notifyDataSetChanged()
@@ -170,7 +168,7 @@ class PlaylistDescriptionFragment : Fragment() {
     }
 
     private fun showEmpty() {
-        adapter?.apply {
+        adapter.apply {
             tracks.clear()
             notifyDataSetChanged()
         }
@@ -204,7 +202,7 @@ class PlaylistDescriptionFragment : Fragment() {
     }
 
     private fun sharePlaylist() {
-        adapter?.apply {
+        adapter.apply {
             if (tracks.isNullOrEmpty())
                 Toast.makeText(requireContext(), getString(R.string.no_tracks_for_sharing), Toast.LENGTH_SHORT).show()
             else
@@ -230,7 +228,7 @@ class PlaylistDescriptionFragment : Fragment() {
     }
 
     private fun getTracksInfo(): String {
-        val tracksInfo = adapter!!.tracks.mapIndexed { index, track ->
+        val tracksInfo = adapter.tracks.mapIndexed { index, track ->
             "${index + 1}.${track.artistName} - ${track.trackName}(${
                 SimpleDateFormat(
                     "mm:ss",

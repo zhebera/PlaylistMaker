@@ -11,6 +11,7 @@ object TracksPlaylistConverter {
                 "${trackEntity.artistName};" +
                 "${trackEntity.trackTimeMillis};" +
                 "${trackEntity.artworkUrl100};" +
+                "${trackEntity.artworkUrl60};" +
                 "${trackEntity.collectionName};" +
                 "${trackEntity.releaseDate};" +
                 "${trackEntity.primaryGenreName};" +
@@ -30,7 +31,8 @@ object TracksPlaylistConverter {
             trackMassive?.get(6).toString(),
             trackMassive?.get(7).toString(),
             trackMassive?.get(8).toString(),
-            trackMassive?.get(9).toString()
+            trackMassive?.get(9).toString(),
+            trackMassive?.get(10).toString()
         )
     }
 }
