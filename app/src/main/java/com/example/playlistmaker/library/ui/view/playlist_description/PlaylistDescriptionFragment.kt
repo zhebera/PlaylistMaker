@@ -178,11 +178,11 @@ class PlaylistDescriptionFragment : Fragment() {
 
     private fun showDialogDeleteTrack(track: Track) {
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.DialogButtons)
-            .setTitle("Удалить трек")
-            .setMessage("Вы уверены, что хотите удалить трек из плейлиста?")
-            .setNegativeButton("Отмена") { dialog, which ->
+            .setTitle(getString(R.string.delete_track))
+            .setMessage(getString(R.string.delete_track_message))
+            .setNegativeButton(getString(R.string.cancel)) { dialog, which ->
             }
-            .setPositiveButton("Удалить") { dialog, which ->
+            .setPositiveButton(getString(R.string.delete)) { dialog, which ->
                 viewModel.deleteTrackFromPlaylist(playlist.id, track)
             }
         dialog.show()
@@ -190,11 +190,11 @@ class PlaylistDescriptionFragment : Fragment() {
 
     private fun showDialogDeletePlaylist() {
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.DialogButtons)
-            .setTitle("Удалить плейлист")
-            .setMessage("Вы уверены, что хотите удалить этот плейлист?")
-            .setNegativeButton("Отмена") { dialog, which ->
+            .setTitle(getString(R.string.delete_playlist))
+            .setMessage(getString(R.string.delete_playlist_message))
+            .setNegativeButton(getString(R.string.cancel)) { dialog, which ->
             }
-            .setPositiveButton("Удалить") { dialog, which ->
+            .setPositiveButton(getString(R.string.delete)) { dialog, which ->
                 viewModel.deletePlaylist(playlist.id)
                 findNavController().popBackStack()
             }

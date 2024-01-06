@@ -45,7 +45,7 @@ class PlaylistEditFragment: PlaylistCreateFragment() {
     }
 
     private fun initView(){
-        binding.tvCreate.text = "Сохранить"
+        binding.tvCreate.text = getString(R.string.save)
         binding.etPlaylistName.setText(playlist.name)
         binding.etPlaylistOverview.setText(playlist.overview)
         binding.ivNewImage.background = null
