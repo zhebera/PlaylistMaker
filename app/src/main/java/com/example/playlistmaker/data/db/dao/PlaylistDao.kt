@@ -6,11 +6,11 @@ import com.example.playlistmaker.utils.converters.PlaylistTracksConverter
 
 @Dao
 interface PlaylistDao {
-    @Delete
-    suspend fun deletePlaylist(playlistEntity: PlaylistEntity)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addPlaylist(playlistEntity: PlaylistEntity)
+
+    @Update
+    suspend fun updatePlaylist(playlistEntity: PlaylistEntity)
 
     @Query("SELECT * FROM playlist_table")
     suspend fun getAllPlaylist(): List<PlaylistEntity>
@@ -18,4 +18,10 @@ interface PlaylistDao {
     @Query("UPDATE playlist_table SET tracks = :listTracks WHERE id = :playlistId")
     @TypeConverters(PlaylistTracksConverter::class)
     suspend fun updatePlaylistTracksId(playlistId: Long, listTracks: List<String>)
+
+    @Query("SELECT * FROM playlist_table WHERE id = :playlistId")
+    fun getPlaylistById(playlistId: Long): PlaylistEntity
+
+    @Query("DELETE FROM playlist_table WHERE id = :playlistId")
+    suspend fun deletePlaylist(playlistId: Long)
 }

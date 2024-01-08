@@ -1,4 +1,4 @@
-package com.example.playlistmaker.library.ui.viewmodel.playlist
+package com.example.playlistmaker.library.ui.viewmodel.playlist_create
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -12,12 +12,12 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
-class PlaylistCreateViewModel(
+open class PlaylistCreateViewModel(
     context: Context,
     private val libraryInteractor: LibraryInteractor
 ) : ViewModel() {
 
-    private val filePath by lazy {
+    val filePath by lazy {
         File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), PLAYLIST_STORAGE_NAME)
     }
 

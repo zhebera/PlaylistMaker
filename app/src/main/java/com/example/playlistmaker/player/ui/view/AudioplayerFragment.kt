@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -69,7 +70,7 @@ class AudioplayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         onPlaylistClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false) { playlist ->
-            viewModel.addTrackToPlaylist(playlist, track.trackId)
+            viewModel.addTrackToPlaylist(playlist, track)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -137,6 +138,12 @@ class AudioplayerFragment : Fragment() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
             }
 
+        })
+
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
         })
     }
 

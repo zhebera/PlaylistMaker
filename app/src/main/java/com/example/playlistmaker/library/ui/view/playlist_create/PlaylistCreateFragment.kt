@@ -1,4 +1,4 @@
-package com.example.playlistmaker.library.ui.view.playlist
+package com.example.playlistmaker.library.ui.view.playlist_create
 
 import android.content.Context
 import android.os.Bundle
@@ -19,19 +19,22 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistCreatorBinding
-import com.example.playlistmaker.library.ui.viewmodel.playlist.PlaylistCreateViewModel
+import com.example.playlistmaker.library.ui.viewmodel.playlist_create.PlaylistCreateViewModel
 import com.example.playlistmaker.models.Playlist
+import com.example.playlistmaker.utils.converters.bytesEqualTo
+import com.example.playlistmaker.utils.converters.pixelsEqualTo
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlaylistCreateFragment : Fragment() {
+open class PlaylistCreateFragment : Fragment() {
 
     private var _binding: FragmentPlaylistCreatorBinding? = null
-    private val binding: FragmentPlaylistCreatorBinding
+    val binding: FragmentPlaylistCreatorBinding
         get() = _binding!!
 
-    private val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
+    val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
+        binding.ivNewImage.background = null
         Glide.with(requireContext())
             .load(uri)
             .error(requireContext().getDrawable(R.drawable.music_note))
@@ -66,7 +69,9 @@ class PlaylistCreateFragment : Fragment() {
             if (it.isEnabled) {
                 val imageName = "${getNameForImage(playlistName = binding.etPlaylistName.text.toString())}.jpg"
                 addPlaylist(imageName)
-                if (binding.ivNewImage.drawable != null)
+                if (binding.ivNewImage.drawable != null &&
+                    !binding.ivNewImage.drawable.bytesEqualTo(requireContext().getDrawable(R.drawable.music_note)) &&
+                    !binding.ivNewImage.drawable.pixelsEqualTo(requireContext().getDrawable(R.drawable.music_note)))
                     viewModel.saveImageToStorage(
                         imageName,
                         binding.ivNewImage.drawable.toBitmap()
@@ -118,7 +123,7 @@ class PlaylistCreateFragment : Fragment() {
     }
 
     private fun showDialog() {
-        val dialog = MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.DialogButtons)
             .setTitle("Завершить создание плейлиста?")
             .setMessage("Все несохраненные данные будут потеряны")
             .setNegativeButton("Отмена") { dialog, which ->
@@ -145,11 +150,11 @@ class PlaylistCreateFragment : Fragment() {
         }
     }
 
-    private fun loadImage() {
+    fun loadImage() {
         pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
 
-    private fun getNameForImage(playlistName: String) = "${playlistName}_${System.currentTimeMillis()}"
+    fun getNameForImage(playlistName: String) = "${playlistName}_${System.currentTimeMillis()}"
 
     override fun onDestroyView() {
         super.onDestroyView()

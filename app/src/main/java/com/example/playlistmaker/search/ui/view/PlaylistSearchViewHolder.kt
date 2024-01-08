@@ -32,12 +32,16 @@ class PlaylistSearchViewHolder(
         trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
         Glide.with(itemView.context)
-            .load(track.artworkUrl100)
+            .load(track.artworkUrl60)
             .placeholder(R.drawable.music_note)
             .centerCrop()
             .transform(RoundedCorners(dpToPx(2.0F, itemView.context)))
             .into(trackImage)
 
         itemView.setOnClickListener { clickListener.onTrackClick(track) }
+
+        itemView.setOnLongClickListener {
+            clickListener.onTrackLongClick(track)
+            true}
     }
 }

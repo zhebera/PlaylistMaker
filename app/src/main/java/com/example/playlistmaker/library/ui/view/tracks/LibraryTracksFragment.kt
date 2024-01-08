@@ -57,7 +57,13 @@ class LibraryTracksFragment : Fragment() {
             findNavController().navigate(R.id.action_libraryFragment_to_audioplayerFragment, bundle)
         }
 
-        adapter = PlaylistSearchAdapter(onTrackClickDebounce)
+        adapter = PlaylistSearchAdapter(object: PlaylistSearchAdapter.SearchClickListener{
+            override fun onTrackClick(track: Track) {
+                onTrackClickDebounce(track)
+            }
+
+            override fun onTrackLongClick(track: Track) {}
+        })
 
         libraryRecyclerView?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         libraryRecyclerView?.adapter = adapter

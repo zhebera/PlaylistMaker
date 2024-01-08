@@ -1,6 +1,7 @@
 package com.example.playlistmaker.player.data
 
 import com.example.playlistmaker.data.db.AppDatabase
+import com.example.playlistmaker.data.db.entity.TracksPlaylistEntity
 import com.example.playlistmaker.models.Playlist
 import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.player.domain.db.MediatekaRepository
@@ -39,16 +40,20 @@ class MediatekaRepositoryImpl(
         emit(playlistDbConverter.map(playlists))
     }
 
-    override suspend fun addTrackToPlaylist(playlist: Playlist, trackId: String) {
+    override suspend fun addTrackToPlaylist(playlist: Playlist, track: Track) {
         withContext(Dispatchers.IO) {
             val listTracksId = ArrayList<String>()
             if (playlist.tracks.isNotEmpty())
                 listTracksId.addAll(playlist.tracks)
-            listTracksId.add(0, trackId)
+            listTracksId.add(0, track.trackId)
+
             appDatabase.playlistDao().updatePlaylistTracksId(
                 playlistDbConverter.map(playlist).id,
                 listTracksId
             )
+
+            appDatabase.tracksPlaylistDao().addTrack(
+                TracksPlaylistEntity(playlistId = playlist.id, track = trackDbConverter.map(track)))
         }
     }
 }

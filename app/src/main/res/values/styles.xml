@@ -159,4 +159,19 @@
         <item name="boxStrokeColor">@drawable/edit_text_playlist_selector</item>
         <item name="hintTextColor">@drawable/edit_text_playlist_selector</item>
     </style>
+
+    <!-- Style for MaterialDialog color -->
+    <style name="DialogButtons" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/switch_color_on</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/switch_color_on</item>
+    </style>
+
 </resources>

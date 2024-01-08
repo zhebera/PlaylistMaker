@@ -66,14 +66,22 @@ class SearchFragment : Fragment() {
             findNavController().navigate(R.id.action_searchFragment_to_audioplayerFragment, bundle)
         }
 
-        playlistAdapter = PlaylistSearchAdapter { track ->
-            viewModel.addNewTrackToHistory(track)
-            onTrackClickDebounce(track)
-        }
+        playlistAdapter = PlaylistSearchAdapter(object: PlaylistSearchAdapter.SearchClickListener{
+            override fun onTrackClick(track: Track) {
+                viewModel.addNewTrackToHistory(track)
+                onTrackClickDebounce(track)
+            }
 
-        searchHistoryAdapter = PlaylistSearchAdapter { track ->
-            onTrackClickDebounce(track)
-        }
+            override fun onTrackLongClick(track: Track) {}
+        })
+
+        searchHistoryAdapter = PlaylistSearchAdapter(object: PlaylistSearchAdapter.SearchClickListener{
+            override fun onTrackClick(track: Track) {
+                onTrackClickDebounce(track)
+            }
+
+            override fun onTrackLongClick(track: Track) {}
+        })
 
         placeHolder = binding.llPlaceHolder
         placeHolderImage = binding.ivPlaceHolder
