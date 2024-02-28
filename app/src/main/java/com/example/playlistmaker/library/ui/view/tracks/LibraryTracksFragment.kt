@@ -4,15 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMediatekaTracksBinding
 import com.example.playlistmaker.library.domain.models.LibraryTrackState
@@ -31,10 +28,6 @@ class LibraryTracksFragment : Fragment() {
     private val binding: FragmentMediatekaTracksBinding
         get() = _binding!!
 
-    private var libraryRecyclerView: RecyclerView? = null
-    private var placeHolderLinearLayout: LinearLayout? = null
-    private var placeHolderImageView: ImageView? = null
-    private var placeholderTextView: TextView? = null
     private var adapter: PlaylistSearchAdapter? = null
     private val viewModel by viewModel<LibraryTracksViewModel>()
     private lateinit var onTrackClickDebounce: (Track) -> Unit
@@ -43,14 +36,13 @@ class LibraryTracksFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMediatekaTracksBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeView()
 
         onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
             val bundle = bundleOf(KEY_TRACK_ID to createJsonFromTrack(track))
@@ -62,11 +54,11 @@ class LibraryTracksFragment : Fragment() {
                 onTrackClickDebounce(track)
             }
 
-            override fun onTrackLongClick(track: Track) {}
+            override fun onTrackLongClick(track: Track) = Unit
         })
 
-        libraryRecyclerView?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        libraryRecyclerView?.adapter = adapter
+        binding.rvLibrary.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.rvLibrary.adapter = adapter
 
         viewModel.libraryTracks.observe(viewLifecycleOwner, ::renderState)
     }
@@ -81,13 +73,6 @@ class LibraryTracksFragment : Fragment() {
         _binding = null
     }
 
-    private fun initializeView() {
-        libraryRecyclerView = binding.rvLibrary
-        placeHolderLinearLayout = binding.llPlaceHolder
-        placeHolderImageView = binding.ivPlaceHolder
-        placeholderTextView = binding.tvPlaceholderMessage
-    }
-
     private fun renderState(state: LibraryTrackState) {
         when (state) {
             is LibraryTrackState.Content -> showContent(state.data)
@@ -96,13 +81,13 @@ class LibraryTracksFragment : Fragment() {
     }
 
     private fun showEmpty() {
-        libraryRecyclerView?.visibility = View.GONE
-        placeHolderLinearLayout?.visibility = View.VISIBLE
+        binding.rvLibrary.isVisible = false
+        binding.llPlaceHolder.isVisible = true
     }
 
     private fun showContent(tracks: List<Track>) {
-        libraryRecyclerView?.visibility = View.VISIBLE
-        placeHolderLinearLayout?.visibility = View.GONE
+        binding.rvLibrary.isVisible = true
+        binding.llPlaceHolder.isVisible = false
 
         adapter?.tracks?.clear()
         adapter?.tracks?.addAll(tracks)

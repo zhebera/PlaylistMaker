@@ -18,9 +18,6 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     private val _searchState = MutableLiveData<SearchState>()
     val searchState: LiveData<SearchState> = _searchState
 
-    private val _toastState = MutableLiveData<String>()
-    val toastState: LiveData<String> = _toastState
-
     private val trackSearchDebounce = debounce<String>(
         SEARCH_DEBOUNCE_DELAY,
         viewModelScope,
@@ -57,7 +54,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
                 renderState(SearchState.Error)
             }
 
-            listTrack?.isEmpty() == true -> {
+            listTrack.isEmpty() -> {
                 renderState(SearchState.Empty)
             }
 

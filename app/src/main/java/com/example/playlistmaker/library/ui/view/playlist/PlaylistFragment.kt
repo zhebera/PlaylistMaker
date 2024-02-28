@@ -52,9 +52,7 @@ class PlaylistFragment : Fragment() {
         binding.rvPlaylists.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvPlaylists.adapter = playlistAdapter
 
-        viewModel.libraryPlaylist.observe(viewLifecycleOwner) {
-            renderPlaylistState(it)
-        }
+        viewModel.libraryPlaylist.observe(viewLifecycleOwner, ::renderPlaylistState)
 
         binding.btnPlaylistCreate.setOnClickListener {
             findNavController().navigate(R.id.action_libraryFragment_to_playlistCreateFragment)

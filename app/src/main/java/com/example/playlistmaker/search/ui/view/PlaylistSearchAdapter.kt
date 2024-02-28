@@ -7,7 +7,7 @@ import com.example.playlistmaker.models.Track
 class PlaylistSearchAdapter(private val clickListener: SearchClickListener) :
     RecyclerView.Adapter<PlaylistSearchViewHolder>() {
 
-    var tracks = ArrayList<Track>()
+    val tracks = ArrayList<Track>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistSearchViewHolder =
         PlaylistSearchViewHolder(parent, clickListener)

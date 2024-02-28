@@ -10,13 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.playlistmaker.R
@@ -32,14 +31,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
-    private lateinit var searchEditTxt: EditText
-    private lateinit var btnPlaceHolderUpdate: Button
-    private lateinit var placeHolder: LinearLayout
-    private lateinit var placeHolderImage: ImageView
-    private lateinit var placeHolderMessage: TextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var trackRecyclerView: RecyclerView
-    private lateinit var btnClearInput: ImageView
     private var textWatcher: TextWatcher? = null
     private val viewModel by viewModel<SearchViewModel>()
     private lateinit var onTrackClickDebounce: (Track) -> Unit
@@ -47,9 +38,23 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding: FragmentSearchBinding
         get() = _binding!!
+    
+    private val playlistAdapter = PlaylistSearchAdapter(object: PlaylistSearchAdapter.SearchClickListener{
+        override fun onTrackClick(track: Track) {
+            viewModel.addNewTrackToHistory(track)
+            onTrackClickDebounce(track)
+        }
 
-    private var playlistAdapter: PlaylistSearchAdapter? = null
-    private var searchHistoryAdapter: PlaylistSearchAdapter? = null
+        override fun onTrackLongClick(track: Track) = Unit
+    })
+
+    private val searchHistoryAdapter = PlaylistSearchAdapter(object: PlaylistSearchAdapter.SearchClickListener{
+        override fun onTrackClick(track: Track) {
+            onTrackClickDebounce(track)
+        }
+
+        override fun onTrackLongClick(track: Track) = Unit
+    })
 
     private var savedSearchEditText: String? = null
 
@@ -66,40 +71,10 @@ class SearchFragment : Fragment() {
             findNavController().navigate(R.id.action_searchFragment_to_audioplayerFragment, bundle)
         }
 
-        playlistAdapter = PlaylistSearchAdapter(object: PlaylistSearchAdapter.SearchClickListener{
-            override fun onTrackClick(track: Track) {
-                viewModel.addNewTrackToHistory(track)
-                onTrackClickDebounce(track)
-            }
+        binding.etInput.setText(savedSearchEditText)
 
-            override fun onTrackLongClick(track: Track) {}
-        })
-
-        searchHistoryAdapter = PlaylistSearchAdapter(object: PlaylistSearchAdapter.SearchClickListener{
-            override fun onTrackClick(track: Track) {
-                onTrackClickDebounce(track)
-            }
-
-            override fun onTrackLongClick(track: Track) {}
-        })
-
-        placeHolder = binding.llPlaceHolder
-        placeHolderImage = binding.ivPlaceHolder
-        placeHolderMessage = binding.tvPlaceholderMessage
-        btnPlaceHolderUpdate = binding.btnPlaylistCreate
-        searchEditTxt = binding.etInput
-        progressBar = binding.progressBar
-        trackRecyclerView = binding.rvTrack
-        btnClearInput = binding.ivClearIcon
-        val searchHistory = binding.llSearchHistory
-        val searchHistoryRecyclerView = binding.rvSearchHistory
-        val btnClearSearchHistory = binding.btnSearchHistoryClear
-        searchEditTxt.setText(savedSearchEditText)
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.searchState.observe(viewLifecycleOwner) {
-                renderState(it)
-            }
+        viewModel.apply {
+            searchState.observe(viewLifecycleOwner, ::renderState)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -108,25 +83,23 @@ class SearchFragment : Fragment() {
             }
         }
 
-        trackRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        trackRecyclerView.adapter = playlistAdapter
-
-        searchHistoryRecyclerView.layoutManager =
+        binding.rvTrack.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        searchHistoryRecyclerView.adapter = searchHistoryAdapter
+        binding.rvTrack.adapter = playlistAdapter
+
+        binding.rvSearchHistory.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.rvSearchHistory.adapter = searchHistoryAdapter
 
         textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                btnClearInput.visibility = clearButtonVisibility(s)
-                savedSearchEditText = searchEditTxt.text.toString()
+                binding.ivClearIcon.isVisible = clearButtonVisibility(s)
+                savedSearchEditText = binding.etInput.text.toString()
 
-                searchHistory.visibility =
-                    if (searchEditTxt.hasFocus() && s?.isEmpty() == true)
-                        View.VISIBLE
-                    else
-                        View.GONE
+                binding.llSearchHistory.isVisible =
+                    binding.etInput.hasFocus() && s?.isEmpty() == true
 
                 if (!s.isNullOrEmpty())
                     viewModel.searchDebounce(
@@ -134,15 +107,16 @@ class SearchFragment : Fragment() {
                     )
             }
 
-            override fun afterTextChanged(s: Editable?) {}
-        }
-        textWatcher.let {
-            searchEditTxt.addTextChangedListener(it)
+            override fun afterTextChanged(s: Editable?) = Unit
         }
 
-        searchEditTxt.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE && !searchEditTxt.text.toString().isNullOrEmpty()) {
-                viewModel.searchDebounce(searchEditTxt.text.toString())
+        textWatcher.let {
+            binding.etInput.addTextChangedListener(it)
+        }
+
+        binding.etInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE && binding.etInput.text.toString().isNotEmpty()) {
+                viewModel.searchDebounce(binding.etInput.text.toString())
                 closeKeybord()
                 true
             } else {
@@ -150,29 +124,29 @@ class SearchFragment : Fragment() {
             }
         }
 
-        searchEditTxt.setOnFocusChangeListener { view, hasFocus ->
+        binding.etInput.setOnFocusChangeListener { _, hasFocus ->
             val history = viewModel.historyState.value
 
-            searchHistory.visibility =
-                if (hasFocus && searchEditTxt.text.isEmpty() && !history.isNullOrEmpty()) {
+            binding.llSearchHistory.isVisible =
+                if (hasFocus && binding.etInput.text.isEmpty() && !history.isNullOrEmpty()) {
                     showHistory(history, true)
-                    View.VISIBLE
+                    true
                 } else
-                    View.GONE
+                    false
         }
 
-        btnClearSearchHistory.setOnClickListener {
+        binding.btnSearchHistoryClear.setOnClickListener {
             viewModel.removeHistory()
-            searchHistoryAdapter?.notifyDataSetChanged()
-            searchHistory.visibility = View.GONE
+            searchHistoryAdapter.notifyDataSetChanged()
+            binding.llSearchHistory.isVisible = false
         }
 
-        btnClearInput.setOnClickListener {
+        binding.ivClearIcon.setOnClickListener {
             clearAll()
         }
 
-        btnPlaceHolderUpdate.setOnClickListener {
-            viewModel.searchDebounce(searchEditTxt.text.toString())
+        binding.btnPlaylistCreate.setOnClickListener {
+            viewModel.searchDebounce(binding.etInput.text.toString())
         }
     }
 
@@ -186,13 +160,13 @@ class SearchFragment : Fragment() {
     }
 
     private fun showLoading() {
-        trackRecyclerView.visibility = View.GONE
-        progressBar.visibility = View.VISIBLE
+        binding.rvTrack.isVisible = false
+        binding.progressBar.isVisible = true
     }
 
     private fun showError() {
-        progressBar.visibility = View.GONE
-        trackRecyclerView.visibility = View.VISIBLE
+        binding.progressBar.isVisible = false
+        binding.rvTrack.isVisible = true
         showErrorMessage(
             getString(R.string.failed_connection),
             requireContext().getDrawable(R.drawable.failed_connection),
@@ -201,25 +175,28 @@ class SearchFragment : Fragment() {
     }
 
     private fun showContent(listTrack: List<Track>) {
-        trackRecyclerView.visibility = View.VISIBLE
-        placeHolder.visibility = View.GONE
-        progressBar.visibility = View.GONE
+        binding.rvTrack.isVisible = true
+        binding.llPlaceHolder.isVisible = false
+        binding.progressBar.isVisible = false
 
-
-        playlistAdapter?.tracks?.clear()
-        playlistAdapter?.tracks?.addAll(listTrack)
-        playlistAdapter?.notifyDataSetChanged()
+        with(playlistAdapter) {
+            tracks.clear()
+            tracks.addAll(listTrack)
+            notifyDataSetChanged()
+        }
     }
 
     private fun showHistory(historyList: List<Track>, show: Boolean) {
         if (show) {
-            trackRecyclerView.visibility = View.GONE
-            placeHolder.visibility = View.GONE
-            progressBar.visibility = View.GONE
+            binding.rvTrack.isVisible = false
+            binding.llPlaceHolder.isVisible = false
+            binding.progressBar.isVisible = false
 
-            searchHistoryAdapter?.tracks?.clear()
-            searchHistoryAdapter?.tracks?.addAll(historyList)
-            searchHistoryAdapter?.notifyDataSetChanged()
+            with(searchHistoryAdapter) {
+                tracks.clear()
+                tracks.addAll(historyList)
+                notifyDataSetChanged()
+            }
         }
     }
 
@@ -235,47 +212,42 @@ class SearchFragment : Fragment() {
         Glide.with(this)
             .load(image)
             .transform(CenterCrop())
-            .into(placeHolderImage)
+            .into(binding.ivPlaceHolder)
 
-        placeHolderMessage.text = text
-        placeHolder.visibility = View.VISIBLE
-        progressBar.visibility = View.GONE
-        if (update)
-            btnPlaceHolderUpdate.visibility = View.VISIBLE
-        else
-            btnPlaceHolderUpdate.visibility = View.GONE
-    }
-
-    private fun hideErrorMessage() {
-        placeHolder.visibility = View.GONE
-    }
-
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        hideErrorMessage()
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
+        with(binding) {
+            tvPlaceholderMessage.text = text
+            llPlaceHolder.isVisible = true
+            progressBar.isVisible = false
+            btnPlaylistCreate.isVisible = update
         }
     }
 
+    private fun hideErrorMessage() {
+        binding.llPlaceHolder.isVisible = false
+    }
+
+    private fun clearButtonVisibility(s: CharSequence?): Boolean {
+        hideErrorMessage()
+        return !s.isNullOrEmpty()
+    }
+
     private fun clearAll() {
-        searchEditTxt.text.clear()
+        binding.etInput.text.clear()
         showContent(listOf())
         closeKeybord()
-        searchEditTxt.clearFocus()
+        binding.etInput.clearFocus()
         hideErrorMessage()
     }
 
     private fun closeKeybord() {
         val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-        inputMethodManager?.hideSoftInputFromWindow(searchEditTxt.windowToken, 0)
+        inputMethodManager?.hideSoftInputFromWindow(binding.etInput.windowToken, 0)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         clearAll()
         viewModel.finishSearch()
-        textWatcher.let { searchEditTxt.removeTextChangedListener(it) }
+        textWatcher.let { binding.etInput.removeTextChangedListener(it) }
     }
 }

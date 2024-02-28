@@ -1,8 +1,8 @@
 package com.example.playlistmaker.root
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
@@ -25,13 +25,13 @@ class RootActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.audioplayerFragment, R.id.playlistCreateFragment, R.id.playlistDescriptionFragment, R.id.playlistEditFragment -> {
-                    binding.bottomNavigationView.visibility = View.GONE
-                    binding.horizontalGuideline.visibility = View.GONE
+                    binding.bottomNavigationView.isVisible = false
+                    binding.horizontalGuideline.isVisible = false
                 }
 
                 else -> {
-                    binding.bottomNavigationView.visibility = View.VISIBLE
-                    binding.horizontalGuideline.visibility = View.VISIBLE
+                    binding.bottomNavigationView.isVisible = true
+                    binding.horizontalGuideline.isVisible = true
                 }
             }
         }

@@ -43,4 +43,8 @@
     <string name="delete">Удалить</string>
     <string name="delete_playlist_message">Вы уверены, что хотите удалить этот плейлист?</string>
     <string name="save">Сохранить</string>
+    <string name="dialog_question">Завершить создание плейлиста?</string>
+    <string name="dialog_message">Все несохраненные данные будут потеряны</string>
+    <string name="dialog_negative_answer">Отмена</string>
+    <string name="dialog_positive_answer">Да</string>
 </resources>

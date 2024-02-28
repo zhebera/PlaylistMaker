@@ -4,17 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -39,25 +36,14 @@ class AudioplayerFragment : Fragment() {
     private var _binding: FragmentAudioplayerBinding? = null
     private val binding: FragmentAudioplayerBinding
         get() = _binding!!
+
     private lateinit var track: Track
-    private lateinit var playButton: ImageButton
-    private lateinit var timerTxt: TextView
-    private lateinit var btnBack: ImageView
-    private lateinit var placeholder: ImageView
-    private lateinit var trackName: TextView
-    private lateinit var artistName: TextView
-    private lateinit var trackTime: TextView
-    private lateinit var collectionName: TextView
-    private lateinit var releaseDate: TextView
-    private lateinit var primaryGenreName: TextView
-    private lateinit var country: TextView
-    private lateinit var favouriteButton: ImageView
-    private lateinit var addPlaylistBtn: ImageView
-    private lateinit var bottomSheet: ConstraintLayout
+
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private var playlistRecyclerView: RecyclerView? = null
-    private var playlistAdapter: PlaylistAdapter? = null
     private lateinit var onPlaylistClickDebounce: (Playlist) -> Unit
+    private val playlistAdapter = PlaylistAdapter(R.layout.playlist) { playlist ->
+        onPlaylistClickDebounce(playlist)
+    }
     private var preparedTrack = false
     private val viewModel by viewModel<PlayerViewModel>()
 
@@ -69,18 +55,14 @@ class AudioplayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        onPlaylistClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false) { playlist ->
-            viewModel.addTrackToPlaylist(playlist, track)
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        }
-
-        playlistAdapter = PlaylistAdapter(R.layout.playlist) { playlist ->
-            onPlaylistClickDebounce(playlist)
-        }
-
         if (savedInstanceState != null) {
             track = createTrackFromJson(savedInstanceState.getString(SAVED_AUDIOPLAYER_STATE))
             preparedTrack = savedInstanceState.getBoolean(PREPARED_TRACK)
+        }
+
+        onPlaylistClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false) { playlist ->
+            viewModel.addTrackToPlaylist(playlist, track)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         viewModel.apply {
@@ -94,25 +76,25 @@ class AudioplayerFragment : Fragment() {
 
         initializeView()
 
-        playlistRecyclerView?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        playlistRecyclerView?.adapter = playlistAdapter
+        binding.rvPlaylist.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.rvPlaylist.adapter = playlistAdapter
 
-        btnBack.setOnClickListener {
+        binding.ivBtnBack.setOnClickListener {
             findNavController().popBackStack()
         }
 
         if (!preparedTrack)
             viewModel.preparePlayer(track.previewUrl)
 
-        playButton.setOnClickListener {
+        binding.ibPlayButton.setOnClickListener {
             viewModel.playControl()
         }
 
-        favouriteButton.setOnClickListener {
+        binding.ibFavourite.setOnClickListener {
             viewModel.changeFavourite(track)
         }
 
-        addPlaylistBtn.setOnClickListener {
+        binding.ibAddPlaylistBtn.setOnClickListener {
             viewModel.getAllPlaylist()
             addTrackToPlaylist()
         }
@@ -126,18 +108,16 @@ class AudioplayerFragment : Fragment() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding.overlay.visibility = View.GONE
+                        binding.overlay.isVisible = false
                     }
 
                     else -> {
-                        binding.overlay.visibility = View.VISIBLE
+                        binding.overlay.isVisible = true
                     }
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
-
+            override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
         })
 
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
@@ -149,29 +129,13 @@ class AudioplayerFragment : Fragment() {
 
     private fun renderFavorite(favorite: Boolean) {
         if (favorite)
-            favouriteButton.setImageDrawable(requireContext().getDrawable(R.drawable.like))
+            binding.ibFavourite.setImageDrawable(requireContext().getDrawable(R.drawable.like))
         else
-            favouriteButton.setImageDrawable(requireContext().getDrawable(R.drawable.no_like))
+            binding.ibFavourite.setImageDrawable(requireContext().getDrawable(R.drawable.no_like))
     }
 
     private fun initializeView() {
-        btnBack = binding.ivBtnBack
-        placeholder = binding.ivPlaceholderPlayer
-        trackName = binding.tvTrackName
-        artistName = binding.tvArtistName
-        trackTime = binding.tvTrackTime
-        collectionName = binding.tvCollectionName
-        releaseDate = binding.tvReleaseDate
-        primaryGenreName = binding.tvPrimaryGenreName
-        country = binding.tvCountry
-        timerTxt = binding.tvTimer
-        playButton = binding.ibPlayButton
-        favouriteButton = binding.ibFavourite
-        bottomSheet = binding.bottomSheet
-        addPlaylistBtn = binding.ibAddPlaylistBtn
-        playlistRecyclerView = binding.rvPlaylist
-
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         Glide.with(this)
@@ -179,19 +143,21 @@ class AudioplayerFragment : Fragment() {
             .placeholder(R.drawable.music_note)
             .centerCrop()
             .transform(RoundedCorners(dpToPx(8.0F, requireContext())))
-            .into(placeholder)
+            .into(binding.ivPlaceholderPlayer)
 
-        trackName.text = track.trackName
-        artistName.text = track.artistName
-        trackTime.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
-        collectionName.text = track.collectionName
-        releaseDate.text = LocalDateTime.parse(
-            track.releaseDate,
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        ).year.toString()
-        primaryGenreName.text = track.primaryGenreName
-        country.text = track.country
+        with(binding){
+            tvTrackName.text = track.trackName
+            tvArtistName.text = track.artistName
+            tvTrackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+            tvCollectionName.text = track.collectionName
+            tvReleaseDate.text = LocalDateTime.parse(
+                track.releaseDate,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            ).year.toString()
+            tvPrimaryGenreName.text = track.primaryGenreName
+            tvCountry.text = track.country
+        }
+
         viewModel.checkFavorite(track.trackId)
     }
 
@@ -215,13 +181,13 @@ class AudioplayerFragment : Fragment() {
     }
 
     private fun onPlayerPauseView(timer: String) {
-        timerTxt.text = timer
-        playButton.setImageDrawable(requireContext().getDrawable(R.drawable.play))
+        binding.tvTimer.text = timer
+        binding.ibPlayButton.setImageDrawable(requireContext().getDrawable(R.drawable.play))
     }
 
     private fun onPlayerStartView(timer: String) {
-        timerTxt.text = timer
-        playButton.setImageDrawable(requireContext().getDrawable(R.drawable.pause))
+        binding.tvTimer.text = timer
+        binding.ibPlayButton.setImageDrawable(requireContext().getDrawable(R.drawable.pause))
     }
 
     private fun addTrackToPlaylist() {
@@ -236,9 +202,11 @@ class AudioplayerFragment : Fragment() {
     }
 
     private fun showPlaylists(listPlaylist: List<Playlist>) {
-        playlistAdapter?.playlists?.clear()
-        playlistAdapter?.playlists?.addAll(listPlaylist)
-        playlistAdapter?.notifyDataSetChanged()
+        with(playlistAdapter) {
+            playlists.clear()
+            playlists.addAll(listPlaylist)
+            notifyDataSetChanged()
+        }
     }
 
     private fun showToast(message: String?) {

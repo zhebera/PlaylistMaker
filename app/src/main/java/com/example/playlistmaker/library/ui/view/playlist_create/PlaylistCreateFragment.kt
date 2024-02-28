@@ -33,7 +33,7 @@ open class PlaylistCreateFragment : Fragment() {
     val binding: FragmentPlaylistCreatorBinding
         get() = _binding!!
 
-    val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
+    private val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
         binding.ivNewImage.background = null
         Glide.with(requireContext())
             .load(uri)
@@ -124,11 +124,10 @@ open class PlaylistCreateFragment : Fragment() {
 
     private fun showDialog() {
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.DialogButtons)
-            .setTitle("Завершить создание плейлиста?")
-            .setMessage("Все несохраненные данные будут потеряны")
-            .setNegativeButton("Отмена") { dialog, which ->
-            }
-            .setPositiveButton("Да") { dialog, which ->
+            .setTitle(getString(R.string.dialog_question))
+            .setMessage(getString(R.string.dialog_message))
+            .setNegativeButton(getString(R.string.dialog_negative_answer)) { _,_ -> }
+            .setPositiveButton(getString(R.string.dialog_positive_answer)) { _,_ ->
                 findNavController().popBackStack()
             }
         dialog.show()
